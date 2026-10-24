@@ -3569,14 +3569,10 @@ const UI = (() => {
     el.placeCenter    = document.getElementById('place-center');
     el.placeLine      = document.getElementById('place-line');
     el.handsHistoryRow = document.getElementById('hands-history-row');
-    el.handsHistoryLabel = document.getElementById('hands-history-label');
     el.handsHistoryCopied = document.getElementById('hands-history-copied');
     el.heroActions    = document.getElementById('hero-actions');
-    el.heroButtons    = document.getElementById('hero-buttons');
     el.sliderTrack    = document.getElementById('raise-slider-track');
     el.sliderSegments = document.getElementById('raise-slider-segments');
-    el.sliderCallSeg  = document.getElementById('raise-slider-call-seg');
-    el.sliderRaiseSeg = document.getElementById('raise-slider-raise-seg');
     el.sliderThumb    = document.getElementById('raise-slider-thumb');
     el.raiseAmountMini= document.getElementById('raise-amount-mini');
     el.quickPercentList = document.getElementById('quick-percent-list');
@@ -3602,9 +3598,7 @@ const UI = (() => {
     el.supportOverlay = document.getElementById('support-overlay');
     el.supportModalBox = document.getElementById('support-modal-box');
     el.supportModalContent = document.getElementById('support-modal-content');
-    el.supportModalTitle = document.getElementById('support-modal-title-el');
     el.finalOverlay   = document.getElementById('final-overlay');
-    el.finalDim       = document.getElementById('final-dim');
     el.finalFx        = document.getElementById('final-fx');
     el.setLanguage       = document.getElementById('set-language');
     el.setDifficulty     = document.getElementById('set-difficulty');
@@ -4449,7 +4443,7 @@ const UI = (() => {
     }
   }
 
-  function snapToValidValue(state, hero, toCall, rawTarget) {
+  function snapToValidValue(state, hero, rawTarget) {
     if (!sliderState.active) return rawTarget;
     const cv = sliderState.callValue;
     const minR = sliderState.minRaiseValue;
@@ -4509,7 +4503,7 @@ const UI = (() => {
         if (sliderState.active) {
           const v = Math.max(sliderState.callValue, Math.min(maxTarget, target));
           if (v <= sliderState.callValue) applySliderValue(state, hero, handlers, sliderState.callValue);
-          else applySliderValue(state, hero, handlers, snapToValidValue(state, hero, 0, v));
+          else applySliderValue(state, hero, handlers, snapToValidValue(state, hero, v));
         }
       });
       btn.__suppressClick = false;
@@ -4523,7 +4517,7 @@ const UI = (() => {
     bindPercentButtonPointerHandlers(state, heroIndex, handlers);
   }
 
-  function bindActionHandlers(state, heroIndex, toCall, handlers) {
+  function bindActionHandlers(state, heroIndex, handlers) {
     window.__heroHandlers = handlers;
     rebind(el.btnFold,  () => { if (!el.heroActions.classList.contains('inactive')) handlers.onFold(); });
     rebind(el.btnCheck, () => { if (!el.heroActions.classList.contains('inactive')) handlers.onCheck(); });
@@ -4906,7 +4900,6 @@ const UI = (() => {
     supportPaused: false,
     finalShown: false,
     heroTimerIntervalId: null,
-    heroTimerTimeoutId: null,
     heroTimerRemaining: 0,
     heroTimerTotal: 0,
     huAutoActive: false,
@@ -4977,16 +4970,13 @@ const UI = (() => {
     el.seats          = document.getElementById('seats');
     el.placeCenter    = document.getElementById('place-center');
     el.finalOverlay   = document.getElementById('final-overlay');
-    el.finalDim       = document.getElementById('final-dim');
     el.finalFx        = document.getElementById('final-fx');
     el.handsHistoryRow = document.getElementById('hands-history-row');
-    el.handsHistoryLabel = document.getElementById('hands-history-label');
     el.handsHistoryCopied = document.getElementById('hands-history-copied');
     el.pokerTableWood = document.getElementById('poker-table-wood');
     el.supportOverlay = document.getElementById('support-overlay');
     el.supportModalBox = document.getElementById('support-modal-box');
     el.supportModalContent = document.getElementById('support-modal-content');
-    el.supportModalTitle = document.getElementById('support-modal-title-el');
     el.boardCards     = document.getElementById('board-cards');
     el.boardCardsWrap = document.getElementById('board-cards-wrap');
     el.infoBlindsRow  = document.getElementById('info-blinds-row');
@@ -5784,7 +5774,7 @@ const UI = (() => {
 
     if (player.isHero && !session.heroEliminated) {
       session.waitingForHero = true;
-      heroTurn(player);
+      heroTurn();
     } else {
       session.waitingForHero = false;
       UI.setHeroActionsActive(false);
@@ -5797,7 +5787,7 @@ const UI = (() => {
     }
   }
 
-  function heroTurn(hero) {
+  function heroTurn() {
     const state = session.state;
     UI.showActions(state, session.heroIndex, {
       onFold:  () => heroAct({ type: 'fold' }),
@@ -5848,7 +5838,6 @@ const UI = (() => {
 
   function stopHeroTimer() {
     if (session.heroTimerIntervalId) { clearInterval(session.heroTimerIntervalId); session.heroTimerIntervalId = null; }
-    if (session.heroTimerTimeoutId) { clearTimeout(session.heroTimerTimeoutId); session.heroTimerTimeoutId = null; }
     session.heroTimerRemaining = 0;
   }
 
@@ -5859,9 +5848,8 @@ const UI = (() => {
     UI.setHeroActionsActive(false);
     UI.resetSliderToStart();
     const state = session.state;
-    const hero = state.players[session.heroIndex];
     const res = Engine.applyAction(state, session.heroIndex, action);
-    if (!res.ok) { session.waitingForHero = true; heroTurn(hero); return; }
+    if (!res.ok) { session.waitingForHero = true; heroTurn(); return; }
     pushActionLog(state, session.heroIndex, action.type, action.amount || 0);
     UI.updateSeats(state);
     UI.updatePot(state);
@@ -6586,7 +6574,7 @@ const UI = (() => {
       UI.alignPercentBlockBottom();
       UI.resetSliderToStart();
       refreshQuickPercentList();
-      if (session.waitingForHero && !session.heroEliminated) heroTurn(state.players[session.heroIndex]);
+      if (session.waitingForHero && !session.heroEliminated) heroTurn();
       else { UI.setHeroActionsActive(false); processTurn(); }
     }
     UI.updateHistoryInfo(session.history.length, session.history.length, false);
