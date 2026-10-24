@@ -2002,43 +2002,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
 }
 #tap-close.active { display: block; }
 
-/* ============================================================
-   ЭКРАН ВЫХОДА — только затемнение + кнопка «Выйти»
-   ============================================================ */
-#exit-confirm-overlay {
-  position: absolute; inset: 0;
-  z-index: 500;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  background: rgba(0,0,0,.78);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-}
-#exit-confirm-overlay.visible { display: flex; animation: tgFadeIn .18s ease; }
-
-#exit-confirm-yes {
-  padding: clamp(14px, 2vmin, 18px) clamp(36px, 5vmin, 56px);
-  border: none; border-radius: 12px;
-  background: linear-gradient(180deg, #ffcb2b, #e0a800);
-  color: #1a1a1a;
-  font-family: inherit;
-  font-weight: 900;
-  font-size: clamp(13px, 2vmin, 15px);
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  box-shadow: 0 3px 0 #8a6508, inset 0 1px 0 rgba(255,255,255,.35);
-  touch-action: manipulation;
-  min-height: 52px;
-  cursor: pointer;
-}
-#exit-confirm-yes:active {
-  transform: translateY(2px);
-  filter: brightness(1.1);
-  box-shadow: 0 1px 0 #8a6508, inset 0 1px 0 rgba(255,255,255,.35);
-}
-
 #final-overlay {
   position: absolute; inset: 0;
   z-index: 400;
@@ -2437,10 +2400,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
       <h2 class="support-modal-title" id="support-modal-title-el">ПОДДЕРЖИ АВТОРА</h2>
       <div id="support-modal-content"></div>
     </div>
-  </div>
-
-  <div id="exit-confirm-overlay">
-    <button id="exit-confirm-yes" type="button">Выйти</button>
   </div>
 
   <div id="final-overlay">
@@ -4363,8 +4322,6 @@ const UI = (() => {
     el.setHideBoardCards = document.getElementById('set-hide-board-cards');
     el.setShowAllShowdown = document.getElementById('set-show-all-showdown');
     el.btnRestartPanel   = document.getElementById('btn-restart-panel');
-    el.exitConfirmOverlay = document.getElementById('exit-confirm-overlay');
-    el.exitConfirmYes     = document.getElementById('exit-confirm-yes');
 
     applyCardStyle();
     applySettingsToUI();
@@ -4411,7 +4368,6 @@ const UI = (() => {
   function anyOverlayOpen() {
     return anyPanelOpen() ||
            (el.supportOverlay && el.supportOverlay.classList.contains('visible')) ||
-           (el.exitConfirmOverlay && el.exitConfirmOverlay.classList.contains('visible')) ||
            (el.finalOverlay && el.finalOverlay.classList.contains('visible'));
   }
 
@@ -5674,7 +5630,6 @@ const UI = (() => {
     isPaused: false,
     panelsPaused: false,
     supportPaused: false,
-    exitConfirmPaused: false,
     finalShown: false,
     heroTimerIntervalId: null,
     heroTimerRemaining: 0,
@@ -5759,8 +5714,6 @@ const UI = (() => {
     el.supportOverlay = document.getElementById('support-overlay');
     el.supportModalBox = document.getElementById('support-modal-box');
     el.supportModalContent = document.getElementById('support-modal-content');
-    el.exitConfirmOverlay = document.getElementById('exit-confirm-overlay');
-    el.exitConfirmYes     = document.getElementById('exit-confirm-yes');
     el.boardCards     = document.getElementById('board-cards');
     el.boardCardsWrap = document.getElementById('board-cards-wrap');
     el.infoBlindsRow  = document.getElementById('info-blinds-row');
@@ -5861,69 +5814,9 @@ const UI = (() => {
     session.streetRevealTimers = [];
   }
 
-  function showExitConfirm() {
-    if (!el.exitConfirmOverlay) return;
-    el.exitConfirmOverlay.classList.add('visible');
-    session.exitConfirmPaused = true;
-    if (inHistoryMode()) pauseReplayIfActive();
-    else pauseGame();
-  }
-
-  function hideExitConfirm() {
-    if (!el.exitConfirmOverlay) return;
-    el.exitConfirmOverlay.classList.remove('visible');
-  }
-
   function doExitToLanding() {
-    hideExitConfirm();
-    session.exitConfirmPaused = false;
     resetAppStateForExit();
     if (typeof window.__ppShowLanding === 'function') window.__ppShowLanding();
-  }
-
-  function cancelExitToLanding() {
-    hideExitConfirm();
-    if (!session.exitConfirmPaused) return;
-    session.exitConfirmPaused = false;
-    if (inHistoryMode()) resumeReplayIfPausedByWindow();
-    else resumeGameFromPause();
-  }
-
-  function resumeGameFromPause() {
-    const state = session.state;
-    if (!state) return;
-    session.isPaused = false;
-    if (state.handOver) {
-      if (session.autoNextTimerId === null) {
-        session.autoNextTimerId = setTimeout(() => {
-          if (!session.active || session.viewingIndex >= 0) return;
-          if (session.isPaused || session.replay.active || session.panelsPaused) return;
-          const period = UI.settings.blindGrowthHands || 10;
-          state.handsAtLevel++;
-          if (state.handsAtLevel >= period) {
-            state.handsAtLevel = 0;
-            state.levelIndex = Math.min(state.levelIndex + 1, Engine.BLIND_LEVELS.length - 1);
-          }
-          const alive = state.players.filter(p => !p.eliminated);
-          if (alive.length <= 1) {
-            session.tournamentOver = true;
-            UI.setHeroActionsActive(false);
-            UI.setHeroTimerIdle();
-            UI.updatePlaceCenter(state);
-            UI.updateBoardAreaOffset();
-            handleTournamentEnd(alive);
-            return;
-          }
-          startHand();
-        }, 4000);
-      }
-      return;
-    }
-    if (session.waitingForHero && !session.heroEliminated) {
-      heroTurn();
-    } else {
-      processTurn();
-    }
   }
 
   function resetAppStateForExit() {
@@ -5947,7 +5840,6 @@ const UI = (() => {
     session.isPaused = false;
     session.panelsPaused = false;
     session.supportPaused = false;
-    session.exitConfirmPaused = false;
     session.finalShown = false;
     session.replay.pausedByWindow = false;
     session.huAutoActive = false;
@@ -6173,7 +6065,6 @@ const UI = (() => {
               target.closest('#quick-percent-list') ||
               target.closest('.hero-timer-zone') ||
               target.closest('#support-overlay') ||
-              target.closest('#exit-confirm-overlay') ||
               target.closest('#final-overlay') ||
               target.closest('#top-dock') ||
               target.closest('#top-round-row') ||
@@ -6262,32 +6153,6 @@ const UI = (() => {
   }
 
   function bindGlobalHandlers() {
-    if (el.exitConfirmYes) {
-      let lastYesTs = 0;
-      const onYes = (e) => {
-        if (e.cancelable) e.preventDefault();
-        e.stopPropagation();
-        const now = Date.now();
-        if (now - lastYesTs < 350) return;
-        lastYesTs = now;
-        doExitToLanding();
-      };
-      el.exitConfirmYes.addEventListener('click', onYes);
-      el.exitConfirmYes.addEventListener('touchend', onYes, { passive: false });
-    }
-
-    if (el.exitConfirmOverlay) {
-      const backdrop = (e) => {
-        if (e.target === el.exitConfirmOverlay) {
-          if (e.cancelable) e.preventDefault();
-          e.stopPropagation();
-          cancelExitToLanding();
-        }
-      };
-      el.exitConfirmOverlay.addEventListener('click', backdrop);
-      el.exitConfirmOverlay.addEventListener('touchend', backdrop, { passive: false });
-    }
-
     let startX = 0, startY = 0, tracking = false;
     el.app.addEventListener('touchstart', (e) => {
       if (e.touches.length !== 1) return;
@@ -7452,7 +7317,6 @@ const UI = (() => {
 
   function resumeGame() {
     if (UI.anyPanelOpen()) return;
-    if (session.exitConfirmPaused) return;
     stopReplay(true);
     session.viewingIndex = -1;
     session.isPaused = false;
@@ -7581,7 +7445,7 @@ const UI = (() => {
     el.supportOverlay.classList.remove('visible');
     if (!session.supportPaused) return;
     session.supportPaused = false;
-    if (!session.panelsPaused && !UI.anyPanelOpen() && !inHistoryMode() && !session.exitConfirmPaused) resumeGame();
+    if (!session.panelsPaused && !UI.anyPanelOpen() && !inHistoryMode()) resumeGame();
     if (inHistoryMode()) resumeReplayIfPausedByWindow();
   }
 
@@ -7594,11 +7458,7 @@ const UI = (() => {
         const now = Date.now();
         if (now - lastHomeTs < 350) return;
         lastHomeTs = now;
-        if (inActiveGame()) {
-          showExitConfirm();
-        } else {
-          doExitToLanding();
-        }
+        doExitToLanding();
       };
       el.topHomeBtn.addEventListener('click', goHome);
       el.topHomeBtn.addEventListener('touchend', goHome, { passive: false });
@@ -7657,7 +7517,6 @@ const UI = (() => {
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         if (el.supportOverlay && el.supportOverlay.classList.contains('visible')) closeSupportOverlay();
-        else if (el.exitConfirmOverlay && el.exitConfirmOverlay.classList.contains('visible')) cancelExitToLanding();
       }
     });
   }
