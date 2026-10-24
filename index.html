@@ -606,12 +606,16 @@ button:disabled, button.disabled { cursor: default; }
 }
 .lnd-card.tappable:focus, .lnd-card.tappable:focus-visible { outline: none; }
 .lnd-card.tappable:active { transform: translateY(0); }
+/* На мобильном (без hover) при нажатии — такое же выделение,
+   как на десктопе при наведении: золотая рамка + мягкое свечение. */
 @media (hover: none) {
   .lnd-card.tappable:active {
-    border-color: #5a4a1a;
-    box-shadow: 0 0 0 1px rgba(255,203,43,.20), 0 0 28px rgba(255,203,43,.14);
-    background: linear-gradient(180deg, #1a1710 0%, #0f0d08 100%);
+    border-color: #4a3f18;
+    box-shadow: 0 0 0 1px rgba(255,203,43,.10), 0 18px 40px rgba(0,0,0,.5);
+    background: linear-gradient(180deg, #131313 0%, #0a0a0a 100%);
+    transform: translateY(-2px);
   }
+  .lnd-card.tappable:active .lnd-card-tap-icon { opacity: .55; }
 }
 .lnd-card-tap-icon {
   position: absolute; right: 10px; bottom: 10px;
