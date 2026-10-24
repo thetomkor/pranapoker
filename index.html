@@ -231,6 +231,7 @@ button:disabled, button.disabled { cursor: default; }
    ВЕРХНЯЯ ЗОЛОТАЯ ЛИНИЯ + СВЕЧЕНИЕ ВНИЗ
    Точно как в финальной секции «Готов тренировать…»:
    сначала линия, от неё вниз золотое свечение. Всё в потоке.
+   Линия и свечение сделаны ярче (как было до чистки).
    ============================================================ */
 .lnd-top-block {
   position: relative;
@@ -242,14 +243,14 @@ button:disabled, button.disabled { cursor: default; }
   position: absolute; top: 0; left: 50%;
   width: 90vmin; height: 90vmin;
   transform: translate(-50%, -50%);
-  background: radial-gradient(circle, rgba(255,203,43,.10) 0%, transparent 60%);
+  background: radial-gradient(circle, rgba(255,203,43,.14) 0%, rgba(255,203,43,.06) 35%, transparent 70%);
   pointer-events: none; z-index: 0; clip-path: inset(50% 0 0 0);
 }
 .lnd-top-block .lnd-top-rule {
   position: relative;
   left: 0; right: 0;
   height: 1px;
-  background: linear-gradient(to right, transparent 0%, rgba(255,203,43,.12) 18%, rgba(255,203,43,.12) 82%, transparent 100%);
+  background: linear-gradient(to right, transparent 0%, rgba(255,203,43,.32) 18%, rgba(255,203,43,.32) 82%, transparent 100%);
   pointer-events: none; z-index: 2;
 }
 
