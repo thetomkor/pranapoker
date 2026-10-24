@@ -578,10 +578,10 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
   pointer-events: none; z-index: 2;
 }
 
-/* ФУТЕР */
+/* ФУТЕР — отступ снизу увеличен на 4 px (было +8, стало +12) */
 .lnd-footer {
   position: relative; flex-shrink: 0;
-  padding: clamp(28px, 5vw, 44px) 0 calc(env(safe-area-inset-bottom, 0px) + 8px);
+  padding: clamp(28px, 5vw, 44px) 0 calc(env(safe-area-inset-bottom, 0px) + 12px);
   color: var(--muted); font-size: clamp(11px, 1.7vmin, 13px); line-height: 1.6;
 }
 .lnd-footer::before {
@@ -2641,7 +2641,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
   var startBtn = document.getElementById('btn-start');
   var startOverlay = document.getElementById('start-overlay');
   if (startBtn && startOverlay) {
-    var origClick = startBtn.onclick;
     startBtn.addEventListener('click', function() {
       startOverlay.classList.add('hidden');
     });
@@ -2830,50 +2829,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
       document.addEventListener('DOMContentLoaded', applyToTopRow);
     } else {
       applyToTopRow();
-    }
-  } catch (e) {}
-})();
-
-/* HARD LONG-PRESS KILLER FOR GLOBE */
-(function() {
-  try {
-    function hardKill(node) {
-      if (!node) return;
-      if (node.__hardKillBound) return;
-      node.__hardKillBound = true;
-      const swallow = (e) => {
-        if (e.cancelable) e.preventDefault();
-        e.stopPropagation();
-      };
-      node.addEventListener('touchstart', swallow, { passive: false, capture: true });
-      node.addEventListener('touchmove', swallow, { passive: false, capture: true });
-      node.addEventListener('touchend', swallow, { passive: false, capture: true });
-      node.addEventListener('touchcancel', swallow, { passive: false, capture: true });
-      node.addEventListener('contextmenu', (e) => { e.preventDefault(); e.stopPropagation(); return false; }, { passive: false, capture: true });
-      node.addEventListener('selectstart', (e) => { e.preventDefault(); e.stopPropagation(); return false; }, { passive: false, capture: true });
-      node.addEventListener('dragstart', (e) => { e.preventDefault(); e.stopPropagation(); return false; }, { passive: false, capture: true });
-      node.addEventListener('mousedown', (e) => {
-        if (e.button !== 0) return;
-        if (e.cancelable) e.preventDefault();
-      }, { passive: false });
-    }
-
-    function apply() {
-      const btn = document.getElementById('top-home-btn');
-      if (!btn) return;
-      hardKill(btn);
-      const svg = btn.querySelector('svg');
-      if (svg) {
-        hardKill(svg);
-        const kids = svg.querySelectorAll('*');
-        for (let i = 0; i < kids.length; i++) hardKill(kids[i]);
-      }
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', apply);
-    } else {
-      apply();
     }
   } catch (e) {}
 })();
@@ -5374,17 +5329,46 @@ const UI = (() => {
     bindPercentButtonPointerHandlers(state, heroIndex, handlers);
   }
 
-  function bindActionHandlers(state, heroIndex, handlers) {
-    window.__heroHandlers = handlers;
-    rebind(el.btnFold,  () => { if (!el.heroActions.classList.contains('inactive')) handlers.onFold(); });
-    rebind(el.btnCheck, () => { if (!el.heroActions.classList.contains('inactive')) handlers.onCheck(); });
+  /* === ПРАВКА 3: кнопки действий работают всегда ===
+     Обработчики на кнопках ставятся один раз через __ppHeroHandlers
+     и не пересоздаются при перерисовке стола. Это чинит ситуацию,
+     когда клик уходил в старую отвязанную кнопку. */
+  function bindActionHandlers(state, heroIndex, toCall, handlers) {
+    window.__ppHeroHandlers = handlers;
+    window.__ppHeroState = state;
+    window.__ppHeroIndex = heroIndex;
 
-    const callBtn = el.btnCall;
-    callBtn.onclick = (e) => {
-      e.preventDefault(); e.stopPropagation();
-      if (el.heroActions.classList.contains('inactive')) return;
-      triggerCallButton(state, heroIndex, handlers);
-    };
+    if (el.btnFold && !el.btnFold.__boundFold) {
+      el.btnFold.__boundFold = true;
+      el.btnFold.addEventListener('click', function(e) {
+        e.preventDefault(); e.stopPropagation();
+        if (el.heroActions.classList.contains('inactive')) return;
+        var h = window.__ppHeroHandlers;
+        if (h && typeof h.onFold === 'function') h.onFold();
+      });
+    }
+    if (el.btnCheck && !el.btnCheck.__boundCheck) {
+      el.btnCheck.__boundCheck = true;
+      el.btnCheck.addEventListener('click', function(e) {
+        e.preventDefault(); e.stopPropagation();
+        if (el.heroActions.classList.contains('inactive')) return;
+        var h = window.__ppHeroHandlers;
+        if (h && typeof h.onCheck === 'function') h.onCheck();
+      });
+    }
+    if (el.btnCall && !el.btnCall.__boundCall) {
+      el.btnCall.__boundCall = true;
+      el.btnCall.addEventListener('click', function(e) {
+        e.preventDefault(); e.stopPropagation();
+        if (el.heroActions.classList.contains('inactive')) return;
+        var h = window.__ppHeroHandlers;
+        var s = window.__ppHeroState;
+        var hi = window.__ppHeroIndex;
+        if (h && s && typeof triggerCallButton === 'function') {
+          triggerCallButton(s, hi, h);
+        }
+      });
+    }
 
     let dragging = false;
     function isDisabled() { return el.heroActions.classList.contains('inactive') || !sliderState.active; }
