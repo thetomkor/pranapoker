@@ -229,8 +229,8 @@ button:disabled, button.disabled { cursor: default; }
 
 /* ============================================================
    ВЕРХНЯЯ ЗОЛОТАЯ ЛИНИЯ + СВЕЧЕНИЕ ВНИЗ
-   Точно как в финальной секции «Готов тренировать…»:
-   сначала линия, от неё вниз золотое свечение. Всё в потоке.
+   Как в предыдущей версии: сначала линия, от неё вниз
+   золотое свечение. Всё в потоке страницы.
    ============================================================ */
 .lnd-top-block {
   position: relative;
@@ -260,6 +260,18 @@ button:disabled, button.disabled { cursor: default; }
   position: relative; z-index: 2;
   padding: 0; padding-bottom: calc(clamp(28px, 6vw, 56px) + 10px);
   overflow: visible;
+}
+#landing .lnd-hero::before {
+  content: ""; position: absolute; top: 0; left: 50%;
+  width: 90vmin; height: 90vmin; transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255,203,43,.10) 0%, transparent 60%);
+  pointer-events: none; z-index: 0; clip-path: inset(50% 0 0 0);
+}
+#landing .lnd-hero::after {
+  content: ""; position: absolute; bottom: -30%; left: -30%;
+  width: 70vmin; height: 70vmin;
+  background: radial-gradient(circle, rgba(255,203,43,.05) 0%, transparent 65%);
+  pointer-events: none; z-index: 0;
 }
 
 /* Название проекта — отдельный блок в самом верху, во всю ширину, по центру.
@@ -637,8 +649,8 @@ button:disabled, button.disabled { cursor: default; }
 <div id="landing" aria-label="Prana Poker — лендинг">
 
   <!-- ВЕРХНЯЯ ЗОЛОТАЯ ЛИНИЯ + СВЕЧЕНИЕ ВНИЗ
-       Точно как в финальной секции «Готов тренировать…»:
-       сначала линия, от неё вниз золотое свечение. -->
+       Как в предыдущей версии: сначала линия, от неё вниз
+       золотое свечение. Всё в потоке страницы. -->
   <div class="lnd-top-block" aria-hidden="true">
     <div class="lnd-top-glow"></div>
     <div class="lnd-top-rule"></div>
