@@ -5,11 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="referrer" content="no-referrer" />
-<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate, nocache" />
-<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
-<meta name="google" content="notranslate" />
-<meta name="bingbot" content="noindex, nofollow, noarchive" />
-<meta name="yandex" content="noindex, nofollow, noarchive" />
+<meta name="robots" content="index, follow" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="format-detection" content="telephone=no,date=no,address=no,email=no" />
@@ -17,19 +13,36 @@
 <meta name="msapplication-navbutton-color" content="#000000" />
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="copyright" content="All rights reserved" />
-<title>Prana Poker</title>
+<title>Prana Poker — тренировка логики и интуиции за покерным столом</title>
+<meta name="description" content="Симулятор турнирного стола с ботами PRO и VIP, имитирующими поведение человека. Тренажёр для развития логики и интуиции за покерным столом. Бесплатно, без установки, без регистрации." />
+<link rel="canonical" href="https://pranapoker.thetomtot.workers.dev/" />
+<meta property="og:site_name" content="Prana Poker" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="ru_RU" />
+<meta property="og:title" content="Prana Poker — тренировка логики и интуиции за покерным столом" />
+<meta property="og:description" content="Симулятор турнирного стола с ботами PRO и VIP. Бесплатно, без установки, без регистрации." />
+<meta property="og:url" content="https://pranapoker.thetomtot.workers.dev/" />
+<meta property="og:image" content="https://pranapoker.thetomtot.workers.dev/cover.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Prana Poker — тренировка логики и интуиции" />
+<meta name="twitter:description" content="Симулятор турнирного стола с ботами PRO и VIP." />
+<meta name="twitter:image" content="https://pranapoker.thetomtot.workers.dev/cover.jpg" />
 <style>
+/* ============================================================
+   БАЗОВЫЙ СБРОС И ПЕРЕМЕННЫЕ ДИЗАЙН-СИСТЕМЫ
+   ============================================================ */
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
 :root {
   --bg: #000000;
-  --bg-bottom: #000000;
   --gold: #ffcb2b;
   --gold-2: #e0a800;
   --text: #e8eef5;
   --muted: #8a8a8a;
   --muted-soft: #9a9a9a;
   --muted-soft-2: #a8a8a8;
+  --pro-color: #4a3a68;
+  --vip-color: #324a6e;
   --accent: #3fa9f5;
   --danger: #d94f3d;
   --ok: #2fb571;
@@ -62,20 +75,14 @@
 
 html, body {
   height: 100%;
-  background: var(--bg-bottom);
+  background: var(--bg);
   color: var(--text);
   font-family: "Inter", "Segoe UI", system-ui, sans-serif;
   font-size: 14px;
   overflow: hidden;
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-touch-callout: none;
   overscroll-behavior: none;
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top: 0; left: 0; right: 0; bottom: 0;
   color-scheme: dark;
 }
 
@@ -85,7 +92,7 @@ html {
   -moz-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  background: var(--bg-bottom);
+  background: var(--bg);
   color-scheme: dark;
 }
 
@@ -94,24 +101,508 @@ body {
   -moz-text-size-adjust: 100%;
   text-size-adjust: 100%;
   -ms-touch-action: manipulation;
-  background: var(--bg-bottom);
+  background: var(--bg);
   color-scheme: dark;
 }
 
 button { cursor: pointer; }
-button:disabled { cursor: default; }
-button:disabled,
-button.disabled { cursor: default; }
+button:disabled, button.disabled { cursor: default; }
 
-#hero-actions.inactive,
-#hero-actions.inactive *,
-#hero-actions.inactive input,
-#quick-percent-list.inactive,
-#quick-percent-list.inactive * { cursor: default !important; }
+html, body, #landing, #info-modal, #app, #bottom-panel, #support-modal-box { scrollbar-width: none; -ms-overflow-style: none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar,
+#landing::-webkit-scrollbar, #info-modal::-webkit-scrollbar,
+#landing *::-webkit-scrollbar, #info-modal *::-webkit-scrollbar,
+#app::-webkit-scrollbar, #bottom-panel::-webkit-scrollbar,
+#support-modal-box::-webkit-scrollbar {
+  width: 0 !important; height: 0 !important; display: none !important; background: transparent !important;
+}
 
-#hand-nav button { cursor: pointer !important; }
-#hand-nav button:disabled { cursor: default !important; }
+@media (min-width: 641px) {
+  #landing { scrollbar-width: auto; -ms-overflow-style: auto; }
+  #landing::-webkit-scrollbar { width: 10px !important; height: 10px !important; display: block !important; background: #0a0a0a !important; }
+  #landing::-webkit-scrollbar-track { background: #0a0a0a !important; }
+  #landing::-webkit-scrollbar-thumb { background: #2a2520 !important; border-radius: 5px; border: 2px solid #0a0a0a; }
+  #landing::-webkit-scrollbar-thumb:hover { background: #3a3520 !important; }
+  #info-modal::-webkit-scrollbar, #landing *::-webkit-scrollbar { width: 0 !important; height: 0 !important; display: none !important; background: transparent !important; }
+  #info-modal { scrollbar-width: none; -ms-overflow-style: none; }
+  #landing * { scrollbar-width: none; -ms-overflow-style: none; }
+}
 
+/* ============================================================
+   ИНФО-МОДАЛКА
+   ============================================================ */
+#info-modal {
+  position: fixed; inset: 0; z-index: 950;
+  display: none; align-items: center; justify-content: center;
+  padding: 20px; background: rgba(0,0,0,.82);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+#info-modal.open { display: flex; animation: tgFadeIn .2s ease; }
+@keyframes tgFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.info-modal-box {
+  position: relative; width: 100%; max-width: 620px; max-height: 86vh;
+  overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
+  background: linear-gradient(180deg, #141414 0%, #0a0a0a 100%);
+  border: 1px solid #3a3018; border-radius: 18px;
+  padding: clamp(20px, 4vw, 32px);
+  box-shadow: 0 30px 80px rgba(0,0,0,.8), 0 0 0 1px rgba(255,203,43,.08);
+  animation: tgSlideUp .28s cubic-bezier(.22,.61,.36,1);
+}
+@keyframes tgSlideUp {
+  from { transform: translateY(24px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.info-modal-title {
+  color: #fff; font-size: clamp(18px, 3.4vmin, 24px);
+  font-weight: 900; line-height: 1.2; margin-bottom: 16px;
+}
+.info-modal-title.title-normal-case { text-transform: none; text-align: left; }
+
+.info-modal-body {
+  color: var(--muted-soft-2);
+  font-size: clamp(13px, 2vmin, 15px); line-height: 1.65;
+  word-wrap: break-word; overflow-wrap: break-word;
+  user-select: text; -webkit-user-select: text;
+}
+.info-modal-body p { margin: 0 0 14px; }
+.info-modal-body p:last-child { margin-bottom: 0; }
+
+/* ============================================================
+   ЛЕНДИНГ: КОНТЕЙНЕР, СЕКЦИИ, ОБЩИЕ ЭЛЕМЕНТЫ
+   ============================================================ */
+#landing {
+  position: fixed; inset: 0; z-index: 500;
+  background: var(--bg); color: var(--text);
+  overflow-y: auto; overflow-x: hidden;
+  overscroll-behavior: none; -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  display: flex; flex-direction: column;
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px));
+}
+#landing.hidden { display: none !important; }
+.lnd-inner { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 clamp(18px, 4vw, 40px); }
+.lnd-section { padding: clamp(40px, 8vw, 84px) 0; position: relative; }
+
+.lnd-section + .lnd-section::before,
+#landing .lnd-hero + .lnd-section::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(to right, transparent 0%, rgba(255,255,255,.05) 18%, rgba(255,255,255,.05) 82%, transparent 100%);
+  pointer-events: none;
+}
+
+.lnd-kicker {
+  color: var(--gold); font-size: clamp(11px, 1.6vmin, 13px); font-weight: 800;
+  letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 20px; opacity: .9;
+}
+.lnd-h2 {
+  font-size: clamp(24px, 5vmin, 40px); font-weight: 900; line-height: 1.12;
+  letter-spacing: -.3px; margin-bottom: 14px; color: #fff;
+}
+.lnd-h2 .gold { color: var(--gold); }
+.lnd-lead {
+  color: var(--muted); font-size: clamp(14px, 2.2vmin, 17px);
+  line-height: 1.55; max-width: 62ch; margin-bottom: 10px;
+}
+.lnd-p {
+  color: var(--muted-soft-2); font-size: clamp(13px, 2vmin, 15px);
+  line-height: 1.6; max-width: 66ch; margin-bottom: 12px;
+}
+.lnd-p b, .lnd-p strong { color: var(--text); font-weight: 700; }
+.lnd-p .gold { color: var(--gold); font-weight: 700; }
+
+.lnd-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  border: none; border-radius: 12px;
+  background: linear-gradient(180deg, var(--gold) 0%, var(--gold-2) 100%);
+  color: #1a1a1a; font-family: inherit; font-weight: 900;
+  font-size: clamp(13px, 2vmin, 15px); letter-spacing: 1px; text-transform: uppercase;
+  padding: 16px 28px; min-height: 52px;
+  box-shadow: 0 3px 0 #8a6508, inset 0 1px 0 rgba(255,255,255,.35);
+  touch-action: manipulation;
+  transition: transform .08s ease, filter .08s ease, box-shadow .08s ease;
+  text-decoration: none; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
+  outline: none;
+}
+.lnd-btn:focus, .lnd-btn:focus-visible { outline: none; box-shadow: 0 3px 0 #8a6508, inset 0 1px 0 rgba(255,255,255,.35); }
+.lnd-btn:active { transform: scale(0.97); filter: brightness(1.1); box-shadow: 0 1px 0 #8a6508, inset 0 1px 0 rgba(255,255,255,.35); }
+
+/* ВЕРХНЯЯ ЗОЛОТАЯ ЛИНИЯ + СВЕЧЕНИЕ ВНИЗ */
+.lnd-top-block {
+  position: relative;
+  width: 100%;
+  padding-top: env(safe-area-inset-top, 0px);
+  overflow: visible;
+}
+.lnd-top-block .lnd-top-glow {
+  position: absolute; top: 0; left: 50%;
+  width: 90vmin; height: 90vmin;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255,203,43,.10) 0%, transparent 60%);
+  pointer-events: none; z-index: 0; clip-path: inset(50% 0 0 0);
+}
+.lnd-top-block .lnd-top-rule {
+  position: relative;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent 0%, rgba(255,203,43,.12) 18%, rgba(255,203,43,.12) 82%, transparent 100%);
+  pointer-events: none; z-index: 2;
+}
+
+/* HERO */
+#landing .lnd-hero {
+  position: relative; z-index: 2;
+  padding: 0; padding-bottom: calc(clamp(28px, 6vw, 56px) + 10px);
+  overflow: visible;
+}
+#landing .lnd-hero::before {
+  content: ""; position: absolute; top: 0; left: 50%;
+  width: 90vmin; height: 90vmin; transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255,203,43,.10) 0%, transparent 60%);
+  pointer-events: none; z-index: 0; clip-path: inset(50% 0 0 0);
+}
+#landing .lnd-hero::after {
+  content: ""; position: absolute; bottom: -30%; left: -30%;
+  width: 70vmin; height: 70vmin;
+  background: radial-gradient(circle, rgba(255,203,43,.05) 0%, transparent 65%);
+  pointer-events: none; z-index: 0;
+}
+
+.lnd-brand-top {
+  position: relative; z-index: 1;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: calc(clamp(18px, 2.6vw, 28px) + env(safe-area-inset-top, 0px) + 12px) clamp(18px, 4vw, 40px) 0;
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+}
+.lnd-brand-name {
+  font-weight: 900;
+  font-size: clamp(26px, 4.4vmin, 40px);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  line-height: 1.05;
+  display: inline-block;
+  transform: scaleX(1.14);
+  transform-origin: center center;
+  background: linear-gradient(180deg, #fff6d0 0%, var(--gold) 45%, #b8860b 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  padding-left: 2px;
+  white-space: nowrap;
+}
+@media (max-width: 420px) {
+  .lnd-brand-name { letter-spacing: 1px; font-size: clamp(20px, 5.6vmin, 24px); transform: scaleX(1.10); padding-left: 1px; }
+}
+
+.lnd-hero-grid {
+  position: relative; z-index: 1; display: grid; grid-template-columns: 1fr;
+  gap: clamp(28px, 6vw, 48px); align-items: center;
+  margin-top: clamp(22px, 3.4vw, 34px);
+  width: 100%;
+}
+@media (min-width: 860px) { .lnd-hero-grid { grid-template-columns: 1.15fr .85fr; } }
+
+.lnd-h1 {
+  font-size: clamp(24px, 5vmin, 40px); font-weight: 900; line-height: 1.12;
+  letter-spacing: -.3px; margin-bottom: 14px; color: #fff;
+}
+.lnd-h1 .gold { color: var(--gold); text-shadow: 0 0 26px rgba(255,203,43,.22); }
+.lnd-sub {
+  color: var(--muted-soft-2); font-size: clamp(14px, 2.2vmin, 17px);
+  line-height: 1.6; max-width: 54ch; margin-bottom: clamp(24px, 4vw, 34px);
+}
+.lnd-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: -4px; }
+
+.lnd-card-fan { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+.lnd-hero-visual {
+  position: relative; height: clamp(220px, 42vw, 380px);
+  display: flex; align-items: center; justify-content: center; perspective: 900px;
+}
+.lnd-play-card {
+  position: absolute; width: clamp(78px, 16vw, 130px); height: clamp(110px, 22vw, 184px);
+  border-radius: clamp(8px, 1.6vw, 12px);
+  background: #fafafa; color: #1a1a1a;
+  box-shadow: 0 10px 30px rgba(0,0,0,.7), 0 0 0 1px rgba(0,0,0,.1), 0 0 40px rgba(255,203,43,.10);
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: clamp(8px, 1.6vw, 14px); font-weight: 800;
+  transform-origin: 50% 110%;
+  transition: transform .4s cubic-bezier(.22,.61,.36,1);
+  will-change: transform;
+}
+.lnd-play-card .rank { font-size: clamp(18px, 3.4vw, 28px); line-height: 1; }
+.lnd-play-card .suit-big { font-size: clamp(30px, 6vw, 52px); line-height: 1; align-self: flex-end; }
+.lnd-play-card.ten-diamonds { color: #d63535; transform: rotate(-22deg) translate(-92%, 10%); }
+.lnd-play-card.jack-diamonds { color: #d63535; transform: rotate(-11deg) translate(-64%, 5%); }
+.lnd-play-card.queen-diamonds { color: #d63535; transform: rotate(0deg) translate(-32%, 0%); }
+.lnd-play-card.king-diamonds { color: #d63535; transform: rotate(11deg) translate(0%, 0%); }
+.lnd-play-card.ace-diamonds { color: #d63535; transform: rotate(22deg) translate(32%, 5%); }
+
+.lnd-chip {
+  position: absolute; width: clamp(44px, 9vw, 66px); height: clamp(44px, 9vw, 66px);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff6d0 0%, var(--gold) 45%, #b8860b 100%);
+  box-shadow: 0 6px 18px rgba(0,0,0,.7), 0 0 26px rgba(255,203,43,.35), inset 0 0 0 3px rgba(138,101,8,.7), inset 0 0 0 6px rgba(255,246,208,.35);
+  z-index: 3;
+}
+.lnd-chip.c1 { bottom: 4%; left: 4%; }
+.lnd-chip.c2 { bottom: 14%; left: 26%; width: clamp(30px, 6vw, 44px); height: clamp(30px, 6vw, 44px); opacity: .9; }
+.lnd-chip.c3 { bottom: 0%; right: 6%; width: clamp(36px, 7vw, 52px); height: clamp(36px, 7vw, 52px); opacity: .95; }
+
+.lnd-mobile-cta { display: none; }
+.lnd-sub-mobile-copy { display: none; }
+
+@media (max-width: 859px) {
+  .lnd-hero-grid { display: flex; flex-direction: column; gap: clamp(16px, 3.6vw, 22px); }
+  .lnd-hero-copy { order: 1; width: 100%; display: flex; flex-direction: column; align-items: flex-start; text-align: left; }
+  .lnd-h1 { text-align: left; margin-bottom: clamp(10px, 2.4vw, 14px); }
+  .lnd-sub { display: none; }
+  .lnd-sub-mobile-copy { display: block; text-align: left; margin: 0; max-width: 100%; color: var(--muted-soft-2); font-size: clamp(14px, 2.2vmin, 17px); line-height: 1.6; }
+  .lnd-hero-actions { display: none; }
+  .lnd-hero-visual { order: 2; width: 100%; margin-top: 0; }
+
+  .lnd-mobile-cta {
+    display: flex; flex-direction: column; align-items: center;
+    gap: clamp(20px, 5vw, 28px);
+    margin-top: clamp(22px, 6vw, 34px);
+    width: 100%; order: 3;
+  }
+  .lnd-mobile-cta .lnd-sub-mobile {
+    color: #ffffff;
+    font-size: clamp(13px, 3.4vmin, 15px);
+    line-height: 1.55;
+    text-align: center;
+    max-width: 40ch;
+    margin: 0;
+  }
+  .lnd-mobile-cta .lnd-btn { width: 100%; max-width: 340px; }
+}
+
+/* СЕТКИ И КАРТОЧКИ */
+.lnd-grid-3 {
+  display: grid; grid-template-columns: 1fr;
+  gap: clamp(14px, 2.4vw, 22px);
+  margin-top: clamp(22px, 4vw, 34px);
+}
+@media (min-width: 700px) { .lnd-grid-3 { grid-template-columns: repeat(3, 1fr); } }
+.lnd-grid-3-sections {
+  display: grid; grid-template-columns: 1fr;
+  gap: clamp(14px, 2.4vw, 22px);
+  margin-top: clamp(18px, 3vw, 28px);
+}
+@media (min-width: 760px) { .lnd-grid-3-sections { grid-template-columns: repeat(3, 1fr); } }
+
+.lnd-card {
+  background: linear-gradient(180deg, #131313 0%, #0a0a0a 100%);
+  border: 1px solid #2a2520; border-radius: 16px;
+  padding: clamp(18px, 3vw, 26px);
+  position: relative; overflow: hidden;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+@media (hover: hover) {
+  .lnd-card.tappable:hover {
+    border-color: #4a3f18;
+    box-shadow: 0 0 0 1px rgba(255,203,43,.10), 0 18px 40px rgba(0,0,0,.5);
+    transform: translateY(-2px);
+  }
+  .lnd-card.tappable:hover .lnd-card-tap-icon { opacity: .55; }
+}
+.lnd-card.tappable {
+  cursor: pointer; text-align: left; color: inherit; font-family: inherit;
+  display: flex; flex-direction: column; gap: 8px; width: 100%;
+  -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none;
+  -webkit-user-select: none; user-select: none; outline: none;
+}
+.lnd-card.tappable:focus, .lnd-card.tappable:focus-visible { outline: none; }
+
+.lnd-card.tappable.is-pressed {
+  border-color: #4a3f18;
+  box-shadow: 0 0 0 1px rgba(255,203,43,.10), 0 18px 40px rgba(0,0,0,.5);
+  background: linear-gradient(180deg, #131313 0%, #0a0a0a 100%);
+  transform: none;
+}
+.lnd-card.tappable.is-pressed .lnd-card-tap-icon { opacity: .55; }
+
+.lnd-card-tap-icon {
+  position: absolute; right: 10px; bottom: 10px;
+  width: 16px; height: 16px; opacity: .25; color: var(--gold);
+  transition: opacity .18s ease; pointer-events: none; display: block;
+}
+.lnd-card.gold-edge {
+  border-color: #5a4a1a;
+  box-shadow: 0 0 0 1px rgba(255,203,43,.08);
+  transition: none;
+}
+.lnd-card.gold-edge:hover, .lnd-card.gold-edge:active {
+  border-color: #5a4a1a;
+  box-shadow: 0 0 0 1px rgba(255,203,43,.08);
+  transform: none; background: linear-gradient(180deg, #131313 0%, #0a0a0a 100%);
+}
+.lnd-card .icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: rgba(255,203,43,.08); border: 1px solid #3a3018;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 16px; color: var(--gold);
+}
+.lnd-card .icon svg { width: 22px; height: 22px; display: block; }
+.lnd-card h3 {
+  color: #fff; font-size: clamp(15px, 2.4vmin, 18px); font-weight: 800;
+  margin-bottom: 8px; letter-spacing: .2px;
+}
+.lnd-card p { color: var(--muted-soft-2); font-size: clamp(12px, 1.9vmin, 14px); line-height: 1.55; }
+.lnd-card p + p { margin-top: 8px; }
+
+/* БОТЫ PRO И VIP */
+.lnd-bot-group { margin-top: clamp(22px, 4vw, 34px); }
+.lnd-bot-group-title {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 14px;
+  font-size: clamp(13px, 2vmin, 15px); font-weight: 800;
+  letter-spacing: 1.5px; text-transform: uppercase; color: #fff;
+}
+.lnd-bot-group-title .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--pro-color);
+  box-shadow: 0 0 6px rgba(74,58,104,1), 0 0 16px rgba(74,58,104,.85), 0 0 28px rgba(74,58,104,.55);
+}
+.lnd-bot-group-title .dot.vip {
+  background: var(--vip-color);
+  box-shadow: 0 0 6px rgba(50,74,110,1), 0 0 16px rgba(50,74,110,.85), 0 0 28px rgba(50,74,110,.55);
+}
+.lnd-bot-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 700px) { .lnd-bot-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1040px) { .lnd-bot-grid.cols-4 { grid-template-columns: repeat(4, 1fr); } }
+
+.lnd-bot {
+  background: linear-gradient(180deg, #111 0%, #0a0a0a 100%);
+  border: 1px solid #262220; border-radius: 14px;
+  padding: 16px 16px 18px; position: relative;
+}
+.lnd-bot .badge {
+  display: inline-block; font-size: 10px; font-weight: 800;
+  letter-spacing: 1px; padding: 4px 9px; border-radius: 5px;
+  color: #fff; margin-bottom: 12px; text-transform: uppercase;
+  border: none; box-shadow: none;
+}
+.badge.pro-gto, .badge.pro-solver, .badge.pro-icm, .badge.pro-lag { background: var(--pro-color); }
+.badge.vip-taglite, .badge.vip-loose, .badge.vip-rock, .badge.vip-maniac { background: var(--vip-color); }
+.lnd-bot h4 { color: #fff; font-size: clamp(13px, 2vmin, 15px); font-weight: 800; margin-bottom: 7px; }
+.lnd-bot p { color: var(--muted-soft-2); font-size: clamp(12px, 1.8vmin, 13.5px); line-height: 1.5; }
+
+/* ФИЧИ */
+.lnd-features {
+  display: grid; grid-template-columns: 1fr; gap: 10px;
+  margin-top: clamp(20px, 3.4vw, 30px);
+}
+@media (min-width: 620px) { .lnd-features { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 980px) { .lnd-features { grid-template-columns: repeat(3, 1fr); } }
+.lnd-feature {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px 16px;
+  background: linear-gradient(180deg, #101010, #0a0a0a);
+  border: 1px solid #222; border-radius: 12px;
+}
+.lnd-feature .tick {
+  flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+  background: rgba(255,203,43,.10); border: 1px solid #4a3f18;
+  color: var(--gold); display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 900; margin-top: 1px;
+}
+.lnd-feature span { color: var(--muted-soft-2); font-size: clamp(12px, 1.9vmin, 14px); line-height: 1.5; }
+.lnd-feature span b { color: var(--text); font-weight: 700; }
+
+.lnd-bot-cta { display: flex; justify-content: center; margin-top: clamp(44px, 8vw, 68px); }
+.lnd-bot-cta .lnd-btn { min-width: 240px; }
+@media (max-width: 640px) { .lnd-bot-cta .lnd-btn { width: auto; min-width: 0; } }
+
+.lnd-mobile-note {
+  margin-top: clamp(18px, 3vw, 26px);
+  padding: clamp(16px, 2.6vw, 22px);
+  border-radius: 14px;
+  border: 1px solid #5a4a1a;
+  background: linear-gradient(180deg, #101010, #0a0a0a);
+  box-shadow: 0 0 0 1px rgba(255,203,43,.08), 0 0 40px rgba(255,203,43,.05);
+  display: flex; align-items: flex-start; gap: 14px;
+}
+.lnd-mobile-note .ic {
+  flex-shrink: 0; width: 40px; height: 40px; border-radius: 10px;
+  background: rgba(255,203,43,.08); border: 1px solid #3a3018;
+  display: flex; align-items: center; justify-content: center; color: var(--gold);
+}
+.lnd-mobile-note .ic svg { width: 20px; height: 20px; display: block; }
+.lnd-mobile-note .txt { color: var(--muted-soft-2); font-size: clamp(12px, 1.9vmin, 14px); line-height: 1.55; }
+.lnd-mobile-note .txt b { color: var(--text); font-weight: 700; }
+
+@media (max-width: 520px) {
+  .lnd-hero-actions { flex-direction: column; align-items: stretch; }
+  .lnd-hero-actions .lnd-btn { width: 100%; }
+}
+@media (max-width: 859px) {
+  .lnd-hero-visual { height: clamp(180px, 42vw, 280px); margin-top: -10px; }
+  .lnd-card-fan { position: relative; }
+  .lnd-play-card.ten-diamonds { transform: rotate(-22deg) translate(calc(-92% + 32%), 10%); }
+  .lnd-play-card.jack-diamonds { transform: rotate(-11deg) translate(calc(-64% + 32%), 5%); }
+  .lnd-play-card.queen-diamonds { transform: rotate(0deg) translate(calc(-32% + 32%), 0%); }
+  .lnd-play-card.king-diamonds { transform: rotate(11deg) translate(calc(0% + 32%), 0%); }
+  .lnd-play-card.ace-diamonds { transform: rotate(22deg) translate(calc(32% + 32%), 5%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #landing { scroll-behavior: auto; }
+  .lnd-play-card { transition: none; }
+}
+
+/* ФИНАЛЬНАЯ СЕКЦИЯ CTA */
+.lnd-final {
+  position: relative; text-align: center;
+  padding: clamp(46px, 9vw, 90px) 0 clamp(60px, 11vw, 120px);
+}
+.lnd-final-glow {
+  position: absolute; top: 0; left: 50%; width: 90vmin; height: 90vmin;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255,203,43,.10) 0%, transparent 60%);
+  pointer-events: none; z-index: 0; clip-path: inset(50% 0 0 0);
+}
+.lnd-final .lnd-h2, .lnd-final .lnd-p, .lnd-final .lnd-btn { position: relative; z-index: 1; }
+.lnd-final .lnd-h2 { margin-left: auto; margin-right: auto; max-width: 18ch; }
+.lnd-final .lnd-p { margin-left: auto; margin-right: auto; }
+.lnd-final-rule {
+  position: absolute; top: 0;
+  left: clamp(18px, 4vw, 40px); right: clamp(18px, 4vw, 40px);
+  height: 1px;
+  background: linear-gradient(to right, transparent 0%, rgba(255,203,43,.12) 18%, rgba(255,203,43,.12) 82%, transparent 100%);
+  pointer-events: none; z-index: 2;
+}
+
+/* ФУТЕР */
+.lnd-footer {
+  position: relative; flex-shrink: 0;
+  padding: clamp(28px, 5vw, 44px) 0 calc(env(safe-area-inset-bottom, 0px) + 8px);
+  color: var(--muted); font-size: clamp(11px, 1.7vmin, 13px); line-height: 1.6;
+}
+.lnd-footer::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(to right, transparent 0%, rgba(255,255,255,.06) 18%, rgba(255,255,255,.06) 82%, transparent 100%);
+  pointer-events: none;
+}
+.lnd-footer .row {
+  display: flex; flex-wrap: wrap; gap: 10px 20px;
+  justify-content: space-between; align-items: center;
+}
+.lnd-footer .brand {
+  color: #fff; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;
+  font-size: clamp(11px, 1.7vmin, 13px);
+}
+.lnd-footer .copy { color: #555; }
+.lnd-footer .disclaimer { max-width: 58ch; color: var(--muted); }
+
+/* ============================================================
+   ПРИЛОЖЕНИЕ
+   ============================================================ */
 #app {
   position: fixed;
   top: 0;
@@ -122,8 +613,21 @@ button.disabled { cursor: default; }
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
-  background: var(--bg-bottom);
+  background: var(--bg);
+  z-index: 600;
+  display: none;
 }
+#app.visible { display: block; }
+#app.hidden { display: none !important; }
+
+#hero-actions.inactive,
+#hero-actions.inactive *,
+#hero-actions.inactive input,
+#quick-percent-list.inactive,
+#quick-percent-list.inactive * { cursor: default !important; }
+
+#hand-nav button { cursor: pointer !important; }
+#hand-nav button:disabled { cursor: default !important; }
 
 #table-scene {
   position: absolute;
@@ -1597,6 +2101,228 @@ button.disabled { cursor: default; }
 </style>
 </head>
 <body>
+
+<!-- ============================================================
+     ИНФО-МОДАЛКА ЛЕНДИНГА
+     ============================================================ -->
+<div id="info-modal" role="dialog" aria-modal="true" aria-labelledby="info-modal-title-el">
+  <div class="info-modal-box">
+    <h2 class="info-modal-title" id="info-modal-title-el"></h2>
+    <div class="info-modal-body" id="info-modal-body"></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     ЛЕНДИНГ
+     ============================================================ -->
+<div id="landing" aria-label="Prana Poker — лендинг">
+
+  <div class="lnd-top-block" aria-hidden="true">
+    <div class="lnd-top-glow"></div>
+    <div class="lnd-top-rule"></div>
+  </div>
+
+  <section class="lnd-hero" aria-labelledby="lnd-hero-title">
+
+    <div class="lnd-brand-top">
+      <div class="lnd-brand-name">Prana Poker</div>
+    </div>
+
+    <div class="lnd-inner lnd-hero-grid">
+      <div class="lnd-hero-copy">
+        <h1 class="lnd-h1" id="lnd-hero-title">Тренируй <span class="gold">логику</span> и <span class="gold">интуицию</span></h1>
+        <p class="lnd-sub">Симулятор турнирного стола с ботами PRO и VIP, имитирующими поведение человека. Тренажёр для развития логики и интуиции за покерным столом. Бесплатно. Без установки. Без регистрации.</p>
+        <p class="lnd-sub-mobile-copy">Симулятор турнирного стола с ботами PRO и VIP, имитирующими поведение человека. Тренажёр для развития логики и интуиции за покерным столом.</p>
+        <div class="lnd-hero-actions">
+          <button class="lnd-btn" type="button" data-lnd-start aria-label="Начать тренировку">Начать тренировку</button>
+        </div>
+      </div>
+      <div class="lnd-hero-visual" aria-hidden="true">
+        <div class="lnd-card-fan">
+          <div class="lnd-play-card ten-diamonds"><span class="rank">10</span><span class="suit-big">♥</span></div>
+          <div class="lnd-play-card jack-diamonds"><span class="rank">J</span><span class="suit-big">♥</span></div>
+          <div class="lnd-play-card queen-diamonds"><span class="rank">Q</span><span class="suit-big">♥</span></div>
+          <div class="lnd-play-card king-diamonds"><span class="rank">K</span><span class="suit-big">♥</span></div>
+          <div class="lnd-play-card ace-diamonds"><span class="rank">A</span><span class="suit-big">♥</span></div>
+          <div class="lnd-chip c1"></div><div class="lnd-chip c2"></div><div class="lnd-chip c3"></div>
+        </div>
+      </div>
+
+      <div class="lnd-mobile-cta">
+        <p class="lnd-sub-mobile">Бесплатно. Без установки. Без регистрации.</p>
+        <button class="lnd-btn" type="button" data-lnd-start aria-label="Начать тренировку">Начать тренировку</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="lnd-section" aria-labelledby="lnd-why-title">
+    <div class="lnd-inner">
+      <div>
+        <div class="lnd-kicker">Почему это работает</div>
+        <h2 class="lnd-h2" id="lnd-why-title">Солвер даёт правильный ответ. <span class="gold">Тренажёр учит точной игре</span></h2>
+        <p class="lnd-lead">Солверы, калькуляторы эквити и GTO-тренажёры отвечают на вопрос «как играть правильно в вакууме». Но в турнире вакуума нет. Есть оппонент с памятью, страхом, тильтом и привычками. Против него «правильная» игра часто проигрывает «точной» — той, что строится под его ошибки.</p>
+      </div>
+      <div class="lnd-grid-3">
+        <button class="lnd-card tappable" type="button" data-info-title-key="modal.logic.title" data-info-body-key="modal.logic.body">
+          <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div>
+          <h3>Логика</h3>
+          <p>Выстроить линию так, чтобы оппонент совершил ошибку, а не просто «сыграл по чарту». Каждое действие — осознанный ответ на вопрос «зачем».</p>
+          <svg class="lnd-card-tap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3H5a2 2 0 0 0-2 2v4M9 21H5a2 2 0 0 1-2-2v-4M15 3h4a2 2 0 0 1 2 2v4M15 21h4a2 2 0 0 0 2-2v-4"/></svg>
+        </button>
+        <button class="lnd-card tappable" type="button" data-info-title-key="modal.intuition.title" data-info-body-key="modal.intuition.body">
+          <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <h3>Интуиция</h3>
+          <p>Считать исход раздачи из поля информации до того, как карты открылись. Читать линию поведения и замечать повторяющиеся ошибки.</p>
+          <svg class="lnd-card-tap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3H5a2 2 0 0 0-2 2v4M9 21H5a2 2 0 0 1-2-2v-4M15 3h4a2 2 0 0 1 2 2v4M15 21h4a2 2 0 0 0 2-2v-4"/></svg>
+        </button>
+        <button class="lnd-card tappable" type="button" data-info-title-key="modal.link.title" data-info-body-key="modal.link.body">
+          <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg></div>
+          <h3>Связка логики и интуиции</h3>
+          <p>Мало знать, кто сильнее на вскрытии. Нужно выстроить действия так, чтобы выиграть максимум фишек, а не просто забрать банк.</p>
+          <svg class="lnd-card-tap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3H5a2 2 0 0 0-2 2v4M9 21H5a2 2 0 0 1-2-2v-4M15 3h4a2 2 0 0 1 2 2v4M15 21h4a2 2 0 0 0 2-2v-4"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="lnd-section" aria-labelledby="lnd-bots-title">
+    <div class="lnd-inner">
+      <div>
+        <div class="lnd-kicker">Против кого ты играешь</div>
+        <h2 class="lnd-h2" id="lnd-bots-title">Боты с <span class="gold">памятью и характером</span>, а не таблицы и расчёты</h2>
+        <p class="lnd-lead">За столом Prana Poker нет абстрактных «ботов». Есть характеры, повторяющие реальных игроков турниров. Два класса — PRO и VIP, четыре типа игроков в каждом классе.</p>
+      </div>
+      <div class="lnd-bot-group">
+        <div class="lnd-bot-group-title"><span class="dot"></span> <span>Класс PRO — сильные соперники</span></div>
+        <div class="lnd-bot-grid cols-4">
+          <article class="lnd-bot"><span class="badge pro-lag">PRO · 1</span><h4>LAG-Pro</h4><p>Топ мирового уровня. Постоянное давление, смена образа, ловушки, тонкие вэлью-беты, точные блефы. Тренирует умение строить ловушку — для неё нужна безупречная логика.</p></article>
+          <article class="lnd-bot"><span class="badge pro-icm">PRO · 2</span><h4>ICM-Exploiter</h4><p>Чистый турнирный расчёт. На бабле тайтовее, в призах давит на короткие стеки. Тренирует турнирные решения: когда риск оправдан, а когда — нет. Каждое решение имеет свою цену.</p></article>
+          <article class="lnd-bot"><span class="badge pro-solver">PRO · 3</span><h4>Solver-Hybrid</h4><p>Быстро читает вас и адаптируется. Тренирует вариативность: как только он понял ваш паттерн — вы уже проиграли раздачу. Учитесь не давать паттерн и оставаться непредсказуемым.</p></article>
+          <article class="lnd-bot"><span class="badge pro-gto">PRO · 4</span><h4>GTO-Reg</h4><p>Честный крепкий регуляр. Играет ровно, не разваливается под давлением, не делает лишних ошибок. Тренирует точную игру и дисциплину. Точность важнее блефа и риска.</p></article>
+        </div>
+      </div>
+      <div class="lnd-bot-group">
+        <div class="lnd-bot-group-title"><span class="dot vip"></span> <span>Класс VIP — слабые соперники</span></div>
+        <div class="lnd-bot-grid cols-4">
+          <article class="lnd-bot"><span class="badge vip-taglite">VIP · 1</span><h4>TAG-Lite</h4><p>Знает базу, но играет роботизированно. Слаб на ривере, его 3-беты предсказуемы. Тренирует ломать шаблон: баррелить там, где он фолдит, и блефовать там, где не ждёт.</p></article>
+          <article class="lnd-bot"><span class="badge vip-loose">VIP · 2</span><h4>Loose-Passive</h4><p>Коллит широко, агрессии почти нет, его рейз — всегда сила. Тренирует дисциплину: не блефовать, плотно вэлью-бетить и не тратить фишки там, где он не выкидывает.</p></article>
+          <article class="lnd-bot"><span class="badge vip-rock">VIP · 3</span><h4>Rock</h4><p>Только премиум-руки, абсолютно предсказуем. Вошёл — у него рука. Тренирует читать слабость и забирать бесплатно: стилить блайнды и фолдить против его крупных ставок.</p></article>
+          <article class="lnd-bot"><span class="badge vip-maniac">VIP · 4</span><h4>Maniac</h4><p>Рейзит всё, блефует на всех улицах, играет на эмоциях. Тренирует терпение и хладнокровие: ждать свою руку, плотно вэлью-бетить и никогда не блефовать в ответ.</p></article>
+        </div>
+      </div>
+      <div class="lnd-bot-cta"><button class="lnd-btn" type="button" data-lnd-start aria-label="Начать тренировку">Начать тренировку</button></div>
+    </div>
+  </section>
+
+  <section class="lnd-section" aria-labelledby="lnd-benefit-title">
+    <div class="lnd-inner">
+      <div>
+        <div class="lnd-kicker">Чему ты научишься</div>
+        <h2 class="lnd-h2" id="lnd-benefit-title">Польза <span class="gold">для всех игроков</span></h2>
+      </div>
+      <div class="lnd-grid-3">
+        <article class="lnd-card"><h3>Начинающему</h3><p>Научиться думать за столом, а не запоминать руки. Понять, что покер — это не карты, а оппоненты и их решения. Научиться задавать себе вопрос перед каждым действием.</p></article>
+        <article class="lnd-card"><h3>Опытному</h3><p>Перестать играть «по учебнику» и начать играть против конкретного оппонента. Увидеть, где чарты вас ограничивают. Читать людей и обыгрывать их ошибки, а не их карты.</p></article>
+        <article class="lnd-card"><h3>Профессионалу</h3><p>Уйти от перегруженных математических решений к чистой логике и абсолютной интуиции. Найти то, что не считается в солвере: момент, ритм, образ, ловушку.</p></article>
+      </div>
+      <div style="margin-top:30px;">
+        <div class="lnd-card gold-edge">
+          <h3>Почему тренировка против ботов учит играть против людей</h3>
+          <p>Навык, который вы развиваете в приложении, работает против любого соперника — и против человека, и против программы. Читать линию поведения, замечать ошибки, выстраивать действия под чужое мышление — всё это не зависит от того, кто сидит напротив.</p>
+          <p>Живой оппонент отличается от идеального калькулятора не тем, что он человек, а тем, что у него есть повторяющиеся ошибки. Он помнит прошлые раздачи, меняет стиль, ловит вас на паттерне, ошибается под давлением. Всё это — поведение. Поведение можно воспроизвести. Именно это и делают боты Prana Poker.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lnd-section" aria-labelledby="lnd-how-title">
+    <div class="lnd-inner">
+      <div>
+        <div class="lnd-kicker">Как устроена игра</div>
+        <h2 class="lnd-h2" id="lnd-how-title">Sit &amp; Go, 8 игроков, <span class="gold">призовая структура на 3 места</span></h2>
+        <p class="lnd-lead">Вы садитесь за стол из восьми игроков (вы и семь ботов) и играете турнир Sit &amp; Go. Каждая раздача — это отдельный урок. Каждое действие бота — информация для вас.</p>
+      </div>
+      <div class="lnd-grid-3">
+        <article class="lnd-card"><h3>Каждая раздача — урок</h3><p>Каждый ваш ход — попытка направить мышление оппонента туда, где он примет неверное решение и ошибётся в вашу пользу.</p></article>
+        <article class="lnd-card"><h3>Честная обратная связь</h3><p>WIN или LOSS, плюс или минус фишек. Никаких подсказок, никаких оценок. Только результат — как в реальном покере.</p></article>
+        <article class="lnd-card"><h3>Турнирная логика</h3><p>ICM на баббле и в призах. Давление на короткие стеки. Решения, когда риск оправдан, а когда нет — в условиях реальной структуры выплат.</p></article>
+      </div>
+      <div class="lnd-mobile-note">
+        <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg></div>
+        <div class="txt">Приложение оптимизировано под мобильные устройства. Управление одной рукой, безопасные отступы под вырез экрана и системную панель, свайпы открывают панели, тапы и удержания по стеку и картам, крупные зоны нажатия. Бесплатно, без регистрации и установки — работает прямо в браузере.</div>
+      </div>
+      <div style="margin-top:52px; text-align:center;"><button class="lnd-btn" type="button" data-lnd-start aria-label="Начать тренировку">Начать тренировку</button></div>
+    </div>
+  </section>
+
+  <section class="lnd-section" aria-labelledby="lnd-features-title">
+    <div class="lnd-inner">
+      <div>
+        <div class="lnd-kicker">Что внутри приложения</div>
+        <h2 class="lnd-h2" id="lnd-features-title">Инструменты <span class="gold">точной игры</span></h2>
+      </div>
+      <div class="lnd-features">
+        <div class="lnd-feature"><span class="tick">✓</span><span><b>Турнирный стол 8-max</b>, Texas Hold'em, Sit &amp; Go с призовой структурой на 3 места.</span></div>
+        <div class="lnd-feature"><span class="tick">✓</span><span><b>Боты с памятью и адаптацией</b> (PRO) и эксплуатируемые слабые боты (VIP).</span></div>
+        <div class="lnd-feature"><span class="tick">✓</span><span><b>Слайдер ставок</b>, быстрые проценты банка, BB-пресеты — всё под большой палец.</span></div>
+        <div class="lnd-feature"><span class="tick">✓</span><span><b>Таймер на ход</b> и тонкие настройки: сложность, стеки, рост блайндов, показ карт.</span></div>
+        <div class="lnd-feature"><span class="tick">✓</span><span><b>Реплей раздачи по шагам</b> — увидеть линию со стороны и найти свою ошибку.</span></div>
+        <div class="lnd-feature"><span class="tick">✓</span><span><b>ICM-логика</b> на баббле и в призах — турнирные решения, а не кэш-игра.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lnd-section" aria-labelledby="lnd-sections-title">
+    <div class="lnd-inner">
+      <div>
+        <div class="lnd-kicker">Разделы и режимы</div>
+        <h2 class="lnd-h2" id="lnd-sections-title">Как <span class="gold">ориентироваться</span> внутри</h2>
+      </div>
+      <div class="lnd-grid-3-sections">
+        <button class="lnd-card tappable" type="button" data-info-title-key="modal.settings.title" data-info-body-key="modal.settings.body">
+          <h3>Настройки</h3>
+          <p>Язык, уровень сложности, стеки (BB/фишки), стиль карт (2/4-цветные), рост блайндов, время на ход, типы игроков, показ карт (скрытие/открытие).</p>
+          <svg class="lnd-card-tap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3H5a2 2 0 0 0-2 2v4M9 21H5a2 2 0 0 1-2-2v-4M15 3h4a2 2 0 0 1 2 2v4M15 21h4a2 2 0 0 0 2-2v-4"/></svg>
+        </button>
+        <button class="lnd-card tappable" type="button" data-info-title-key="modal.control.title" data-info-body-key="modal.control.body">
+          <h3>Управление</h3>
+          <p>Всё управление строится под большой палец для удобной тренировки с телефона: свайпы, слайдеры, тапы по активным зонам, тапы и удержания.</p>
+          <svg class="lnd-card-tap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3H5a2 2 0 0 0-2 2v4M9 21H5a2 2 0 0 1-2-2v-4M15 3h4a2 2 0 0 1 2 2v4M15 21h4a2 2 0 0 0 2-2v-4"/></svg>
+        </button>
+        <button class="lnd-card tappable" type="button" data-info-title-key="modal.support.title" data-info-body-key="modal.support.body">
+          <h3>Поддержка</h3>
+          <p>Prana Poker — некоммерческий проект. Без подписок, без рекламы, без платы за доступ. Проект существует на средства от вашей поддержки.</p>
+          <svg class="lnd-card-tap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3H5a2 2 0 0 0-2 2v4M9 21H5a2 2 0 0 1-2-2v-4M15 3h4a2 2 0 0 1 2 2v4M15 21h4a2 2 0 0 0 2-2v-4"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="lnd-section lnd-final" aria-labelledby="lnd-final-title">
+    <div class="lnd-final-glow" aria-hidden="true"></div>
+    <div class="lnd-final-rule" aria-hidden="true"></div>
+    <div class="lnd-inner">
+      <h2 class="lnd-h2" id="lnd-final-title">Готов тренировать <span class="gold">логику</span> и <span class="gold">интуицию</span>?</h2>
+      <p class="lnd-p" style="margin-left:auto;margin-right:auto;">Бесплатно. Без установки. Без регистрации.</p>
+      <div style="margin-top:26px;"><button class="lnd-btn" type="button" data-lnd-start aria-label="Начать тренировку">Начать тренировку</button></div>
+    </div>
+  </section>
+
+  <footer class="lnd-footer">
+    <div class="lnd-inner">
+      <div class="row">
+        <div class="brand">Prana Poker</div>
+        <div class="copy">© Все права защищены</div>
+      </div>
+      <p class="disclaimer" style="margin-top:14px;">Тренажёр для тренировки покерных навыков. Некоммерческий проект. Не является азартной игрой на реальные деньги.</p>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ============================================================
+     ПРИЛОЖЕНИЕ
+     ============================================================ -->
 <div id="app">
 
   <div id="table-scene">
@@ -1791,6 +2517,137 @@ button.disabled { cursor: default; }
   </div>
 
 </div>
+
+<script>
+/* ============================================================
+   ЛЕНДИНГ: ИНФО-МОДАЛКИ И ПЕРЕКЛЮЧЕНИЕ НА ПРИЛОЖЕНИЕ
+   ============================================================ */
+(function() {
+  'use strict';
+
+  var infoModal = document.getElementById('info-modal');
+  var infoTitle = document.getElementById('info-modal-title-el');
+  var infoBody = document.getElementById('info-modal-body');
+  var landing = document.getElementById('landing');
+  var app = document.getElementById('app');
+
+  var I18N = {
+    'modal.logic.title': 'Логика',
+    'modal.logic.body': 'Логика в покере — это не про «правильные» решения по чарту, а про построение линии, при которой оппонент совершает ошибку. Каждое ваше действие должно иметь цель: заставить его сделать колл, когда он позади; фолд, когда он впереди; рейз, когда он блефует. Без этой цели действие превращается в угадывание, и вы теряете контроль над раздачей.\n\nВы учитесь задавать вопрос «зачем» перед каждым ходом. Не «что я должен сделать по GTO», а «что я хочу, чтобы сделал оппонент после моего действия». В этом и есть ключевое отличие правильной игры от точной: первая соответствует теории, вторая — управляет чужим решением и заставляет его ошибиться именно там, где вам выгодно.\n\nЗа столом Prana Poker логика тренируется через анализ линии каждого бота. Почему LAG-Pro рейзит именно здесь, почему ICM-Exploiter на баббле играет тайтовее, почему Solver-Hybrid меняет паттерн именно против вас. Вы начинаете видеть логику за чужими решениями — и постепенно строите свою так, чтобы управлять чужой.',
+    'modal.intuition.title': 'Интуиция',
+    'modal.intuition.body': 'Интуиция в покере — это способность считать исход раздачи из поля информации до того, как карты открылись. Это не мистика и не «чуйка». Это опыт, который мозг обрабатывает быстрее, чем сознание успевает облечь его в слова. Она работает не вместо логики, а поверх неё — там, где логика уже посчитала варианты и осталось выбрать точный.\n\nВы учитесь читать линию поведения оппонента: темп ставок, их размеры, ошибки, смену образа. Замечать, когда он блефует третий раз за один круг за столом. Чувствовать слоуплей — когда игрок, который только что давил, вдруг начинает чекать и коллировать — это не слабость, а приманка, и опытный игрок отличает одно от другого мгновенно.\n\nВ Prana Poker интуиция тренируется через многократное повторение и наблюдение. Боты играют по-разному каждый раз, но их характеры стабильны — и со временем вы начинаете узнавать их решения ещё до того, как они сделаны. Это и есть интуиция в чистом виде: быстрое считывание повторяющегося поведения, отточенное до автоматизма.',
+    'modal.link.title': 'Связка логики и интуиции',
+    'modal.link.body': 'Логика и интуиция в покере — не два отдельных навыка, а два конца одной линии. Логика говорит: «здесь я должен ставить 60% банка, чтобы у оппонента не было правильных шансов на колл». Интуиция говорит: «этот конкретный игрок на этой конкретной улице на такую ставку выкинет». Одно без другого теряет силу, только вместе они дают точное решение.\n\nПроблема в том, что по отдельности оба навыка ограничены. Чистая логика без интуиции превращается в игру по чарту — она правильная, но не эксплуатирует ошибки. Чистая интуиция без логики превращается в догадки — иногда гениальные, иногда катастрофические. Сила появляется только там, где одно подкрепляет другое.\n\nВ Prana Poker вы тренируете именно связку. Сначала считаете логически, какое действие было бы правильным в вакууме, потом через интуицию корректируете его под конкретного оппонента. И в этот момент ваша игра из правильной становится точной — она не просто соответствует теории, она забирает максимум фишек именно у этого игрока именно сейчас.',
+    'modal.settings.title': 'Настройки',
+    'modal.settings.body': 'В разделе «Настройки» вы управляете условиями тренировки. Язык интерфейса — русский или английский, сложность — от мягкой игры с VIP до жёсткого стола с PRO.\n\nСтеки отображаются в BB или в фишках — как удобнее для конкретного спота. Стиль карт — 2-цветный для классического вида или 4-цветный для быстрого считывания мастей.\n\nБлайнды растут по числу сыгранных раздач. Время на ход выбирается под ваш темп: 10 секунд или без ограничения. Бейджи типов игроков показывают, против кого вы играете.',
+    'modal.control.title': 'Управление',
+    'modal.control.body': 'Всё управление — под большой палец. Свайпы вверх и вниз открывают и закрывают настройки, не отрываясь от игры. Тренировка на телефоне — удобнее большого экрана.\n\nСлайдер ставки регулируется одним движением — точный размер бета без ручного ввода цифр. Тапы по стеку, картам и таймеру срабатывают мгновенно, без двойных кликов.\n\nНажатие на кнопках захватывает слайдер, а движение вверх или вниз задаёт сумму ставки. Долгое нажатие на картах героя скрывает их для тренировки интуиции.',
+    'modal.support.title': 'Поддержка',
+    'modal.support.body': 'Prana Poker — некоммерческий проект. Без подписок, без рекламы, без платы за доступ. Проект существует исключительно на средства от вашей поддержки.\n\nАдреса для переводов: GGPoker (перевод через покер-рум), USDT TRC20 (криптовалюта в сети Tron), VISA (карта для переводов в долларах и других валютах) по запросу в Telegram.\n\nКонтакты в Telegram — основной канал связи. Через него можно задать вопрос, предложить идею, сообщить об ошибке или просто поделиться впечатлениями от тренировки.'
+  };
+
+  function openInfo(titleKey, bodyKey) {
+    infoTitle.classList.add('title-normal-case');
+    infoTitle.textContent = I18N[titleKey] || titleKey || '';
+    var bodyText = I18N[bodyKey] || '';
+    var paragraphs = String(bodyText).split('\n\n');
+    var html = '';
+    for (var i = 0; i < paragraphs.length; i++) {
+      var p = paragraphs[i].trim();
+      if (!p) continue;
+      html += '<p>' + p.replace(/\n/g, '<br>') + '</p>';
+    }
+    infoBody.innerHTML = html || '<p></p>';
+    infoModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeInfo() {
+    infoModal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  infoModal.addEventListener('click', function() { closeInfo(); });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && infoModal.classList.contains('open')) closeInfo();
+  });
+
+  var tappables = document.querySelectorAll('.lnd-card.tappable');
+  for (var i = 0; i < tappables.length; i++) {
+    (function(card) {
+      card.addEventListener('click', function(e) {
+        e.preventDefault(); e.stopPropagation();
+        openInfo(card.getAttribute('data-info-title-key') || '', card.getAttribute('data-info-body-key') || '');
+      });
+    })(tappables[i]);
+  }
+
+  if (tappables && tappables.length) {
+    for (var j = 0; j < tappables.length; j++) {
+      (function(card) {
+        function press() { card.classList.add('is-pressed'); }
+        function release() { card.classList.remove('is-pressed'); }
+        card.addEventListener('touchstart', press, { passive: true });
+        card.addEventListener('touchend', release, { passive: true });
+        card.addEventListener('touchcancel', release, { passive: true });
+        card.addEventListener('touchmove', function(ev) {
+          if (!ev.touches || !ev.touches.length) { release(); return; }
+          var t = ev.touches[0];
+          var r = card.getBoundingClientRect();
+          var inside = t.clientX >= r.left && t.clientX <= r.right && t.clientY >= r.top && t.clientY <= r.bottom;
+          if (!inside) release();
+        }, { passive: true });
+      })(tappables[j]);
+    }
+  }
+
+  function showApp() {
+    if (!landing || !app) return;
+    landing.classList.add('hidden');
+    app.classList.add('visible');
+    app.classList.remove('hidden');
+    if (window.__ppAppActivate) {
+      try { window.__ppAppActivate(); } catch (e) {}
+    }
+  }
+
+  function showLanding() {
+    if (!landing || !app) return;
+    landing.classList.remove('hidden');
+    app.classList.remove('visible');
+    app.classList.add('hidden');
+    if (window.__ppAppDeactivate) {
+      try { window.__ppAppDeactivate(); } catch (e) {}
+    }
+    try { landing.scrollTop = 0; } catch (e) {}
+  }
+
+  window.__ppShowApp = showApp;
+  window.__ppShowLanding = showLanding;
+
+  var startButtons = document.querySelectorAll('[data-lnd-start]');
+  for (var s = 0; s < startButtons.length; s++) {
+    (function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault(); e.stopPropagation();
+        showApp();
+      });
+      btn.addEventListener('touchend', function(e) {
+        e.preventDefault(); e.stopPropagation();
+        showApp();
+      }, { passive: false });
+    })(startButtons[s]);
+  }
+
+  var startBtn = document.getElementById('btn-start');
+  var startOverlay = document.getElementById('start-overlay');
+  if (startBtn && startOverlay) {
+    var origClick = startBtn.onclick;
+    startBtn.addEventListener('click', function() {
+      startOverlay.classList.add('hidden');
+    });
+  }
+})();
+</script>
 
 <script>
 /* ANTI-COPY */
@@ -4913,13 +5770,14 @@ const UI = (() => {
       timerId: null,
       handSnapshot: null,
       pausedByWindow: false
-    }
+    },
+    appStarted: false
   };
 
   const el = {};
   const DOUBLE_TAP_WINDOW = 500;
 
-  window.addEventListener('DOMContentLoaded', () => {
+  function onDomReady() {
     UI.init();
     cacheDom();
     bindGlobalHandlers();
@@ -4948,7 +5806,13 @@ const UI = (() => {
     UI.setHeroTimerZoneEnabled(true);
     UI.setHeroTimerReady();
     updateHuGlowFromState();
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', onDomReady);
+  } else {
+    onDomReady();
+  }
 
   function cacheDom() {
     el.btnStart       = document.getElementById('btn-start');
@@ -4984,6 +5848,22 @@ const UI = (() => {
   }
 
   window.__ppToggleTurnTime = function() { toggleTurnTimeOption(); };
+
+  window.__ppAppActivate = function() {
+    if (!session.appStarted) return;
+    const overlay = document.getElementById('start-overlay');
+    if (overlay) {
+      if (!session.active) overlay.classList.remove('hidden');
+      else overlay.classList.add('hidden');
+    }
+  };
+
+  window.__ppAppDeactivate = function() {
+    if (!session.active) return;
+    if (session.state && !session.state.handOver && !session.waitingForHero) {
+      pauseGame();
+    }
+  };
 
   function updateHuGlowFromState() {
     UI.setHuGlow(!!session.huAutoActive);
@@ -5349,10 +6229,12 @@ const UI = (() => {
   }
 
   function bindGlobalHandlers() {
-    el.btnStart.addEventListener('click', () => {
-      el.startOverlay.classList.add('hidden');
-      startNewSession();
-    });
+    if (el.btnStart) {
+      el.btnStart.addEventListener('click', () => {
+        el.startOverlay.classList.add('hidden');
+        startNewSession();
+      });
+    }
 
     let startX = 0, startY = 0, tracking = false;
     el.app.addEventListener('touchstart', (e) => {
@@ -5632,6 +6514,7 @@ const UI = (() => {
     clearStreetRevealTimers();
     session.streetEndTimerId = null;
     session.active = true;
+    session.appStarted = true;
     session.waitingForHero = false;
     session.heroEliminated = false;
     session.heroFinishPlace = 0;
@@ -6660,7 +7543,7 @@ const UI = (() => {
         const now = Date.now();
         if (now - lastHomeTs < 350) return;
         lastHomeTs = now;
-        window.location.href = '/index.html';
+        if (typeof window.__ppShowLanding === 'function') window.__ppShowLanding();
       };
       el.topHomeBtn.addEventListener('click', goHome);
       el.topHomeBtn.addEventListener('touchend', goHome, { passive: false });
