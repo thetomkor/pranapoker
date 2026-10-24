@@ -328,7 +328,7 @@ button:disabled, button.disabled { cursor: default; }
   .support-card-copied { font-size: clamp(13px, 1.7vmin, 15.5px); }
   .support-card-gg { font-size: calc(clamp(10px, 1.4vmin, 11.5px) + 3px); }
   .support-card-name-label { font-size: clamp(11px, 1.7vmin, 13.5px); }
-  .support-card-name-value { font-size: calc(clamp(11px, 1.7vmin, 13.5px) + 2px); }
+  .support-card-name-value { font-size: clamp(11px, 1.7vmin, 13.5px); }
 }
 
 /* ============================================================
@@ -401,12 +401,9 @@ button:disabled, button.disabled { cursor: default; }
 .lnd-top-block {
   position: relative;
   width: 100%;
-  /* Отступ сверху под вырез экрана, чтобы линия не прилипала к краю. */
   padding-top: env(safe-area-inset-top, 0px);
   overflow: visible;
 }
-/* Свечение — точно как .lnd-final-glow: радиальное, обрезано
-   сверху, чтобы шло вниз от линии. */
 .lnd-top-block .lnd-top-glow {
   position: absolute; top: 0; left: 50%;
   width: 90vmin; height: 90vmin;
@@ -414,7 +411,6 @@ button:disabled, button.disabled { cursor: default; }
   background: radial-gradient(circle, rgba(255,203,43,.10) 0%, transparent 60%);
   pointer-events: none; z-index: 0; clip-path: inset(50% 0 0 0);
 }
-/* Линия — точно как .lnd-final-rule: градиент с затуханием по краям. */
 .lnd-top-block .lnd-top-rule {
   position: relative;
   left: 0; right: 0;
@@ -605,15 +601,14 @@ button:disabled, button.disabled { cursor: default; }
   -webkit-user-select: none; user-select: none; outline: none;
 }
 .lnd-card.tappable:focus, .lnd-card.tappable:focus-visible { outline: none; }
-.lnd-card.tappable:active { transform: translateY(0); }
-/* На мобильном (без hover) при нажатии — такое же выделение,
-   как на десктопе при наведении: золотая рамка + мягкое свечение. */
+/* Нажатие на мобильном — точно как ховер на десктопе:
+   золотая рамка #4a3f18 и мягкое золотое свечение вокруг. */
 @media (hover: none) {
   .lnd-card.tappable:active {
     border-color: #4a3f18;
     box-shadow: 0 0 0 1px rgba(255,203,43,.10), 0 18px 40px rgba(0,0,0,.5);
     background: linear-gradient(180deg, #131313 0%, #0a0a0a 100%);
-    transform: translateY(-2px);
+    transform: none;
   }
   .lnd-card.tappable:active .lnd-card-tap-icon { opacity: .55; }
 }
@@ -775,10 +770,13 @@ button:disabled, button.disabled { cursor: default; }
 
 /* ============================================================
    ФУТЕР
+   Убираем большой нижний отступ у дисклеймера — оставляем только
+   безопасную зону под системную панель мобильного, чтобы текст
+   не висел далеко от нижнего края окна браузера.
    ============================================================ */
 .lnd-footer {
   position: relative; flex-shrink: 0;
-  padding: clamp(28px, 5vw, 44px) 0 calc(clamp(40px, 8vw, 60px) + 16px + env(safe-area-inset-bottom, 0px));
+  padding: clamp(28px, 5vw, 44px) 0 calc(env(safe-area-inset-bottom, 0px) + 8px);
   color: var(--muted); font-size: clamp(11px, 1.7vmin, 13px); line-height: 1.6;
 }
 .lnd-footer::before {
