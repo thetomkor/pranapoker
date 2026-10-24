@@ -395,34 +395,32 @@ button:disabled, button.disabled { cursor: default; }
 
 /* ============================================================
    ВЕРХНЯЯ ЗОЛОТАЯ ЛИНИЯ + СВЕЧЕНИЕ ВНИЗ
-   Яркая, толстая линия с золотым ореолом и свечением вниз,
-   чтобы её было хорошо видно на голом чёрном фоне.
-   Всё в потоке страницы, едет вместе с контентом, не исчезает.
+   Точно как в финальной секции «Готов тренировать…»:
+   сначала линия, от неё вниз золотое свечение. Всё в потоке.
    ============================================================ */
-.lnd-top-rule {
+.lnd-top-block {
   position: relative;
   width: 100%;
-  height: 2px; /* толще, чтобы читалась */
-  z-index: 2;
-  pointer-events: none;
-  /* Яркая золотая линия: почти непрозрачная в центре, плавно к краям. */
-  background: linear-gradient(to right, transparent 0%, rgba(255,203,43,.95) 15%, rgba(255,203,43,1) 50%, rgba(255,203,43,.95) 85%, transparent 100%);
-  /* Золотой ореол вокруг линии — заметное свечение на чёрном. */
-  box-shadow:
-    0 0 6px rgba(255,203,43,.9),
-    0 0 14px rgba(255,203,43,.6),
-    0 0 26px rgba(255,203,43,.35);
+  /* Отступ сверху под вырез экрана, чтобы линия не прилипала к краю. */
+  padding-top: env(safe-area-inset-top, 0px);
+  overflow: visible;
 }
-.lnd-top-glow {
+/* Свечение — точно как .lnd-final-glow: радиальное, обрезано
+   сверху, чтобы шло вниз от линии. */
+.lnd-top-block .lnd-top-glow {
+  position: absolute; top: 0; left: 50%;
+  width: 90vmin; height: 90vmin;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255,203,43,.10) 0%, transparent 60%);
+  pointer-events: none; z-index: 0; clip-path: inset(50% 0 0 0);
+}
+/* Линия — точно как .lnd-final-rule: градиент с затуханием по краям. */
+.lnd-top-block .lnd-top-rule {
   position: relative;
-  width: 100%;
-  height: 90px;
-  z-index: 1;
-  pointer-events: none;
-  /* Свечение идёт вниз от линии: радиальный «купол», ярче у линии. */
-  background: radial-gradient(ellipse 65% 100% at 50% 0%, rgba(255,203,43,.28) 0%, rgba(255,203,43,.13) 35%, transparent 72%);
-  clip-path: inset(0 0 0 0);
-  margin-top: 0;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent 0%, rgba(255,203,43,.12) 18%, rgba(255,203,43,.12) 82%, transparent 100%);
+  pointer-events: none; z-index: 2;
 }
 
 /* ============================================================
@@ -813,9 +811,13 @@ button:disabled, button.disabled { cursor: default; }
      ============================================================ -->
 <div id="landing" aria-label="Prana Poker — лендинг">
 
-  <!-- Верхняя золотая линия + свечение вниз (в потоке страницы) -->
-  <div class="lnd-top-rule" aria-hidden="true"></div>
-  <div class="lnd-top-glow" aria-hidden="true"></div>
+  <!-- ВЕРХНЯЯ ЗОЛОТАЯ ЛИНИЯ + СВЕЧЕНИЕ ВНИЗ
+       Точно как в финальной секции «Готов тренировать…»:
+       сначала линия, от неё вниз золотое свечение. -->
+  <div class="lnd-top-block" aria-hidden="true">
+    <div class="lnd-top-glow"></div>
+    <div class="lnd-top-rule"></div>
+  </div>
 
   <!-- Hero-секция -->
   <section class="lnd-hero" aria-labelledby="lnd-hero-title">
