@@ -584,6 +584,9 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
 .lnd-footer .copy { color: #555; }
 .lnd-footer .disclaimer { max-width: 58ch; color: var(--muted); }
 
+/* ============================================================
+   ПРИЛОЖЕНИЕ
+   ============================================================ */
 #app {
   position: fixed;
   top: 0;
@@ -2000,35 +2003,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
 #tap-close.active { display: block; }
 
 /* ============================================================
-   СТАРТОВЫЙ ЭКРАН — только затемнение + кнопка «Начать игру»
-   ============================================================ */
-#start-overlay {
-  position: absolute; inset: 0;
-  background: rgba(0,0,0,.78);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  display: flex; justify-content: center; align-items: center;
-  z-index: 200;
-  padding: 20px;
-}
-#start-overlay.hidden { display: none; }
-
-#btn-start {
-  padding: clamp(14px, 2vmin, 18px) clamp(36px, 5vmin, 56px);
-  border: none; border-radius: 12px;
-  background: linear-gradient(180deg, #ffcb2b, #e0a800);
-  color: #1a1a1a; font-weight: 900;
-  font-size: clamp(15px, 2vmin, 19px);
-  letter-spacing: 1.5px; text-transform: uppercase;
-  box-shadow: 0 3px 0 #8a6508, inset 0 1px 0 rgba(255,255,255,.35);
-  touch-action: manipulation; min-height: 52px;
-  cursor: pointer;
-  font-family: inherit;
-}
-#btn-start:active { transform: translateY(2px); box-shadow: 0 1px 0 #8a6508; }
-
-/* ============================================================
-   ЭКРАН ВЫХОДА — только затемнение + кнопка «Выйти из игры»
+   ЭКРАН ВЫХОДА — только затемнение + кнопка «Закончить тренировку»
    ============================================================ */
 #exit-confirm-overlay {
   position: absolute; inset: 0;
@@ -2465,16 +2440,12 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
   </div>
 
   <div id="exit-confirm-overlay">
-    <button id="exit-confirm-yes" type="button">Выйти из игры</button>
+    <button id="exit-confirm-yes" type="button">Закончить тренировку</button>
   </div>
 
   <div id="final-overlay">
     <div id="final-dim"></div>
     <div id="final-fx"></div>
-  </div>
-
-  <div id="start-overlay">
-    <button id="btn-start">Начать игру</button>
   </div>
 
   <div id="top-dock">
@@ -2626,14 +2597,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
         showApp();
       }, { passive: false });
     })(startButtons[s]);
-  }
-
-  var startBtn = document.getElementById('btn-start');
-  var startOverlay = document.getElementById('start-overlay');
-  if (startBtn && startOverlay) {
-    startBtn.addEventListener('click', function() {
-      startOverlay.classList.add('hidden');
-    });
   }
 })();
 </script>
@@ -4400,8 +4363,6 @@ const UI = (() => {
     el.setHideBoardCards = document.getElementById('set-hide-board-cards');
     el.setShowAllShowdown = document.getElementById('set-show-all-showdown');
     el.btnRestartPanel   = document.getElementById('btn-restart-panel');
-    el.startOverlay      = document.getElementById('start-overlay');
-    el.btnStart          = document.getElementById('btn-start');
     el.exitConfirmOverlay = document.getElementById('exit-confirm-overlay');
     el.exitConfirmYes     = document.getElementById('exit-confirm-yes');
 
@@ -5774,8 +5735,6 @@ const UI = (() => {
   }
 
   function cacheDom() {
-    el.btnStart       = document.getElementById('btn-start');
-    el.startOverlay   = document.getElementById('start-overlay');
     el.bottomPanel    = document.getElementById('bottom-panel');
     el.tapClose       = document.getElementById('tap-close');
     el.hnPrev         = document.getElementById('hn-prev');
@@ -5812,12 +5771,11 @@ const UI = (() => {
 
   window.__ppAppActivate = function() {
     if (session.active && session.state && !session.state.handOver) {
-      if (el.startOverlay) el.startOverlay.classList.add('hidden');
       return;
     }
     session.active = false;
     session.appStarted = false;
-    if (el.startOverlay) el.startOverlay.classList.remove('hidden');
+    startNewSession();
   };
 
   window.__ppAppDeactivate = function() {
@@ -6004,7 +5962,6 @@ const UI = (() => {
     UI.clearWinnerHighlights();
     UI.setReplayButtonState('replay');
     updateHuGlowFromState();
-    if (el.startOverlay) el.startOverlay.classList.remove('hidden');
   }
 
   function bindHandsHistoryTap() {
@@ -6212,7 +6169,6 @@ const UI = (() => {
               target.closest('select') ||
               target.closest('a') ||
               target.closest('#bottom-panel') ||
-              target.closest('#start-overlay') ||
               target.closest('#hero-actions') ||
               target.closest('#quick-percent-list') ||
               target.closest('.hero-timer-zone') ||
@@ -6306,13 +6262,6 @@ const UI = (() => {
   }
 
   function bindGlobalHandlers() {
-    if (el.btnStart) {
-      el.btnStart.addEventListener('click', () => {
-        el.startOverlay.classList.add('hidden');
-        startNewSession();
-      });
-    }
-
     if (el.exitConfirmYes) {
       let lastYesTs = 0;
       const onYes = (e) => {
@@ -6337,18 +6286,6 @@ const UI = (() => {
       };
       el.exitConfirmOverlay.addEventListener('click', backdrop);
       el.exitConfirmOverlay.addEventListener('touchend', backdrop, { passive: false });
-    }
-
-    if (el.startOverlay) {
-      const backdropStart = (e) => {
-        if (e.target === el.startOverlay) {
-          if (e.cancelable) e.preventDefault();
-          e.stopPropagation();
-          if (typeof window.__ppShowLanding === 'function') window.__ppShowLanding();
-        }
-      };
-      el.startOverlay.addEventListener('click', backdropStart);
-      el.startOverlay.addEventListener('touchend', backdropStart, { passive: false });
     }
 
     let startX = 0, startY = 0, tracking = false;
