@@ -2,11 +2,10 @@
 <html lang="ru">
 <head>
 <!-- ============================================================
-     МЕТА-ИНФОРМАЦИЯ
-     Единый файл проекта Prana Poker: лендинг + приложение.
-     Лендинг индексируется (SEO). Приложение встроено в тот же
-     документ, поэтому весь файл помечен как index, follow.
-     Заголовок вкладки — «Prana Poker», без описания.
+     МЕТА-ИНФОРМАЦИЯ И SEO
+     Русская версия лендинга Prana Poker. Язык один, поэтому
+     hreflang и alternate-локаль не используются. Canonical
+     указывает на этот же URL.
      ============================================================ -->
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover" />
@@ -20,23 +19,25 @@
 <meta name="msapplication-navbutton-color" content="#000000" />
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="copyright" content="All rights reserved" />
-<title>Prana Poker</title>
+<title>Prana Poker — тренировка логики и интуиции за покерным столом</title>
 <meta name="description" content="Симулятор турнирного стола с ботами PRO и VIP, имитирующими поведение человека. Тренажёр для развития логики и интуиции за покерным столом. Бесплатно, без установки, без регистрации." />
-<link rel="canonical" href="https://pranapoker.workers.dev/" />
+<link rel="canonical" href="https://pranapoker.thetomtot.workers.dev/" />
 <meta property="og:site_name" content="Prana Poker" />
 <meta property="og:type" content="website" />
 <meta property="og:locale" content="ru_RU" />
 <meta property="og:title" content="Prana Poker — тренировка логики и интуиции за покерным столом" />
 <meta property="og:description" content="Симулятор турнирного стола с ботами PRO и VIP. Бесплатно, без установки, без регистрации." />
-<meta property="og:url" content="https://pranapoker.workers.dev/" />
-<meta name="twitter:card" content="summary" />
+<meta property="og:url" content="https://pranapoker.thetomtot.workers.dev/" />
+<meta property="og:image" content="https://pranapoker.thetomtot.workers.dev/cover.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Prana Poker — тренировка логики и интуиции" />
 <meta name="twitter:description" content="Симулятор турнирного стола с ботами PRO и VIP." />
+<meta name="twitter:image" content="https://pranapoker.thetomtot.workers.dev/cover.jpg" />
 <style>
 /* ============================================================
-   БАЗОВЫЙ СБРОС И ОБЩИЕ ТОКЕНЫ ОФОРМЛЕНИЯ
-   Общие для лендинга и приложения. Специфичные токены —
-   в своих разделах ниже.
+   БАЗОВЫЙ СБРОС И ПЕРЕМЕННЫЕ ДИЗАЙН-СИСТЕМЫ
+   Единые цвета, отступы, безопасные зоны под вырез экрана
+   и системную панель мобильного устройства.
    ============================================================ */
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
@@ -55,41 +56,11 @@
   --allin: #e63946;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
-
-  /* Токены лендинга */
   --pro-color: #4a3a68;
   --vip-color: #324a6e;
+  --ph-bg: radial-gradient(circle at 50% 40%, #1f1a0e 0%, #0f0d08 100%);
   --ph-heart: #b8924a;
   --ph-heart-bright: #c69a52;
-
-  /* Токены приложения */
-  --board-card-w: clamp(34px, 5.2vmin, 48px);
-  --board-card-h: clamp(48px, 7.3vmin, 67px);
-  --edge: clamp(6px, 1.1vmin, 10px);
-  --pct-block-w: clamp(88px, 13vmin, 110px);
-  --dash-inset: clamp(10px, 2vmin, 18px);
-  --small-text: clamp(11px, 1.4vmin, 13px);
-  --info-row-text: clamp(11px, 1.5vmin, 14px);
-  --place-text: clamp(12px, 1.6vmin, 15px);
-  --hands-history-text: calc(clamp(12px, 1.6vmin, 15px) + 4px);
-  --raise-amount-mini-w: clamp(66px, calc(9vmin + 10px), 86px);
-
-  --nav-btn: clamp(32px, 4.4vmin, 38px);
-  --nav-icon-size: clamp(16px, 2.4vmin, 19px);
-  --nav-gap: clamp(1px, 0.5vmin, 4px);
-  --nav-counter-w: clamp(44px, 6.2vmin, 54px);
-  --nav-counter-size: clamp(12px, 1.6vmin, 14px);
-
-  --table-radius: clamp(28px, 4vmin, 46px);
-  --table-border-w: clamp(8px, 1.4vmin, 14px);
-
-  --hero-timer-size: clamp(40px, 5.6vmin, 52px);
-  --hero-timer-left: calc(clamp(8px, 1.2vmin, 10px) + 2px);
-
-  --table-col-w: min(94vw, calc((100vh - clamp(8px, 1.6vmin, 20px)) * 9 / 16));
-
-  --pp-heart: #b8924a;
-  --pp-heart-bright: #c69a52;
 }
 
 html, body {
@@ -99,16 +70,29 @@ html, body {
   font-family: "Inter", "Segoe UI", system-ui, sans-serif;
   font-size: 14px;
   overflow: hidden;
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-touch-callout: none;
   overscroll-behavior: none;
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top: 0; left: 0; right: 0; bottom: 0;
   color-scheme: dark;
+}
+
+/* Скрываем полосы прокрутки на мобильных, но оставляем их на десктопе */
+html, body, #landing, #info-modal { scrollbar-width: none; -ms-overflow-style: none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar,
+#landing::-webkit-scrollbar, #info-modal::-webkit-scrollbar,
+#landing *::-webkit-scrollbar, #info-modal *::-webkit-scrollbar {
+  width: 0 !important; height: 0 !important; display: none !important; background: transparent !important;
+}
+
+@media (min-width: 641px) {
+  #landing { scrollbar-width: auto; -ms-overflow-style: auto; }
+  #landing::-webkit-scrollbar { width: 10px !important; height: 10px !important; display: block !important; background: #0a0a0a !important; }
+  #landing::-webkit-scrollbar-track { background: #0a0a0a !important; }
+  #landing::-webkit-scrollbar-thumb { background: #2a2520 !important; border-radius: 5px; border: 2px solid #0a0a0a; }
+  #landing::-webkit-scrollbar-thumb:hover { background: #3a3520 !important; }
+  #info-modal::-webkit-scrollbar, #landing *::-webkit-scrollbar { width: 0 !important; height: 0 !important; display: none !important; background: transparent !important; }
+  #info-modal { scrollbar-width: none; -ms-overflow-style: none; }
+  #landing * { scrollbar-width: none; -ms-overflow-style: none; }
 }
 
 html {
@@ -130,44 +114,27 @@ body {
   color-scheme: dark;
 }
 
-/* Правила скроллбара лендинга */
-html, body, #landing, #info-modal { scrollbar-width: none; -ms-overflow-style: none; }
-html::-webkit-scrollbar, body::-webkit-scrollbar,
-#landing::-webkit-scrollbar, #info-modal::-webkit-scrollbar,
-#landing *::-webkit-scrollbar, #info-modal *::-webkit-scrollbar {
-  width: 0 !important; height: 0 !important; display: none !important; background: transparent !important;
-}
-
-@media (min-width: 641px) {
-  #landing { scrollbar-width: auto; -ms-overflow-style: auto; }
-  #landing::-webkit-scrollbar { width: 10px !important; height: 10px !important; display: block !important; background: #0a0a0a !important; }
-  #landing::-webkit-scrollbar-track { background: #0a0a0a !important; }
-  #landing::-webkit-scrollbar-thumb { background: #2a2520 !important; border-radius: 5px; border: 2px solid #0a0a0a; }
-  #landing::-webkit-scrollbar-thumb:hover { background: #3a3520 !important; }
-  #info-modal::-webkit-scrollbar, #landing *::-webkit-scrollbar { width: 0 !important; height: 0 !important; display: none !important; background: transparent !important; }
-  #info-modal { scrollbar-width: none; -ms-overflow-style: none; }
-  #landing * { scrollbar-width: none; -ms-overflow-style: none; }
-}
-
 button { cursor: pointer; }
-button:disabled { cursor: default; }
-button:disabled,
-button.disabled { cursor: default; }
+button:disabled, button.disabled { cursor: default; }
 
 /* ============================================================
-   ВИДИМОСТЬ ЭКРАНОВ
-   Одновременно виден ровно один экран: лендинг или приложение.
-   Переключение — через PP_goToLanding() и PP_goToApp()
-   из скрипта-маршрутизатора в конце файла.
+   ЗАГЛУШКА КАРТИНОК (SVG-СЕРДЦЕ)
+   Используется, когда картинка не загрузилась или её нет.
+   НЕ ПУТАТЬ с кнопкой-сердцем — это разные вещи.
    ============================================================ */
-#landing.hidden { display: none !important; }
-#app.hidden { display: none !important; }
-</style>
+.ph-fallback {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ph-heart); background: var(--ph-bg);
+  pointer-events: none; user-select: none; opacity: .75;
+}
+.ph-fallback .ph-heart-svg {
+  width: 26px; height: 26px; display: block;
+  filter: drop-shadow(0 0 6px rgba(184,146,74,.75)) drop-shadow(0 0 14px rgba(184,146,74,.45));
+}
+.ph-fallback.lg .ph-heart-svg { width: 34px; height: 34px; }
+.ph-fallback.sm .ph-heart-svg { width: 20px; height: 20px; }
 
-<!-- ============================================================
-     СТИЛИ ЛЕНДИНГА
-   ============================================================ -->
-<style>
 /* ============================================================
    ИНФО-МОДАЛКА (тапзоны «Логика», «Настройки» и т.д.)
    ============================================================ */
@@ -221,8 +188,8 @@ button.disabled { cursor: default; }
 }
 
 /* ============================================================
-   КАРТОЧКИ ПОДДЕРЖКИ (GGPoker + USDT) — общие для лендинга
-   и приложения. Один вид, одно поведение.
+   КАРТОЧКИ ПОДДЕРЖКИ (GGPoker + USDT)
+   Вертикальный стек с перелистыванием свайпом.
    ============================================================ */
 .support-card-stack {
   position: relative; width: 100%;
@@ -427,6 +394,30 @@ button.disabled { cursor: default; }
 .lnd-btn:active { transform: scale(0.97); filter: brightness(1.1); box-shadow: 0 1px 0 #8a6508, inset 0 1px 0 rgba(255,255,255,.35); }
 
 /* ============================================================
+   ВЕРХНЯЯ ЗОЛОТАЯ ЛИНИЯ + СВЕЧЕНИЕ ВНИЗ
+   Как в финальной секции: сначала линия, от неё вниз свечение.
+   Всё в одном слое и движется вместе со страницей при прокрутке
+   (не фиксировано, не исчезает).
+   ============================================================ */
+.lnd-top-rule {
+  position: relative;
+  width: 100%;
+  height: 1px;
+  pointer-events: none;
+  z-index: 2;
+  background: linear-gradient(to right, transparent 0%, rgba(255,203,43,.32) 18%, rgba(255,203,43,.32) 82%, transparent 100%);
+  box-shadow: 0 0 8px rgba(255,203,43,.55);
+}
+.lnd-top-glow {
+  position: relative;
+  width: 100%;
+  height: 60px;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(ellipse at 50% 0%, rgba(255,203,43,.14) 0%, rgba(255,203,43,.06) 35%, transparent 70%);
+}
+
+/* ============================================================
    HERO-СЕКЦИЯ: НАЗВАНИЕ СВЕРХУ, ПОД НИМ СЕТКА
    ============================================================ */
 #landing .lnd-hero {
@@ -447,6 +438,10 @@ button.disabled { cursor: default; }
   pointer-events: none; z-index: 0;
 }
 
+/* Название проекта — отдельный блок в самом верху, во всю ширину, по центру.
+   Сверху отступ от верхнего края экрана + 12px.
+   Буквы сделаны плотнее, шире и крупнее, чтобы название смотрелось
+   солиднее и красивее. Градиент и центрирование сохранены. */
 .lnd-brand-top {
   position: relative; z-index: 1;
   width: 100%;
@@ -459,11 +454,11 @@ button.disabled { cursor: default; }
 .lnd-brand-name {
   font-weight: 900;
   font-size: clamp(26px, 4.4vmin, 40px);
-  letter-spacing: 2px;
+  letter-spacing: 2px; /* буквы ближе друг к другу */
   text-transform: uppercase;
   line-height: 1.05;
   display: inline-block;
-  transform: scaleX(1.14);
+  transform: scaleX(1.14); /* буквы шире по горизонтали */
   transform-origin: center center;
   background: linear-gradient(180deg, #fff6d0 0%, var(--gold) 45%, #b8860b 100%);
   -webkit-background-clip: text; background-clip: text;
@@ -529,18 +524,25 @@ button.disabled { cursor: default; }
 .lnd-chip.c2 { bottom: 14%; left: 26%; width: clamp(30px, 6vw, 44px); height: clamp(30px, 6vw, 44px); opacity: .9; }
 .lnd-chip.c3 { bottom: 0%; right: 6%; width: clamp(36px, 7vw, 52px); height: clamp(36px, 7vw, 52px); opacity: .95; }
 
+/* Мобильный блок с текстом и кнопкой под картами */
 .lnd-mobile-cta { display: none; }
+/* Отдельная мобильная версия текста под заголовком без фразы «Бесплатно...» */
 .lnd-sub-mobile-copy { display: none; }
 
 @media (max-width: 859px) {
+  /* На мобильном: заголовок и текст сверху (по левому краю), под ними карты, под картами — текст и кнопка */
   .lnd-hero-grid { display: flex; flex-direction: column; gap: clamp(16px, 3.6vw, 22px); }
   .lnd-hero-copy { order: 1; width: 100%; display: flex; flex-direction: column; align-items: flex-start; text-align: left; }
   .lnd-h1 { text-align: left; margin-bottom: clamp(10px, 2.4vw, 14px); }
+  /* Основной текст скрываем, показываем мобильный вариант без концовки */
   .lnd-sub { display: none; }
   .lnd-sub-mobile-copy { display: block; text-align: left; margin: 0; max-width: 100%; color: var(--muted-soft-2); font-size: clamp(14px, 2.2vmin, 17px); line-height: 1.6; }
   .lnd-hero-actions { display: none; }
   .lnd-hero-visual { order: 2; width: 100%; margin-top: 0; }
 
+  /* Блок под картами: текст над кнопкой, кнопка ещё ниже, с заметным отступом.
+     Строка «Бесплатно. Без установки. Без регистрации.» — белого цвета
+     ТОЛЬКО в мобильной версии. */
   .lnd-mobile-cta {
     display: flex; flex-direction: column; align-items: center;
     gap: clamp(20px, 5vw, 28px);
@@ -784,1735 +786,12 @@ button.disabled { cursor: default; }
 }
 .lnd-footer .copy { color: #555; }
 .lnd-footer .disclaimer { max-width: 58ch; color: var(--muted); }
-
-/* ============================================================
-   НИЖНЯЯ ПАНЕЛЬ ИКОНОК (карты, сердце, Telegram)
-   ============================================================ */
-#bottom-bar {
-  position: fixed; left: 0;
-  right: 10px;
-  bottom: 0;
-  z-index: 900;
-  display: flex; align-items: center; justify-content: center;
-  gap: 22px;
-  padding: 0 clamp(18px, 4vw, 40px);
-  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
-  padding-top: 14px;
-  background: #000;
-  pointer-events: none;
-  transform: translateY(100%);
-  transition: transform .5s ease-out;
-  will-change: transform;
-  touch-action: none;
-}
-@media (max-width: 640px) {
-  #bottom-bar { right: 0; padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 10px); }
-}
-#bottom-bar.visible {
-  transform: translateY(0);
-  pointer-events: auto;
-}
-#bottom-bar.moving { transition: none; }
-.bottom-bar-center {
-  display: flex; align-items: center; justify-content: center; gap: 22px;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity .5s ease-out .15s;
-}
-#bottom-bar.visible .bottom-bar-center {
-  opacity: 1;
-}
-.bottom-bar-center > * { pointer-events: auto; }
-.bottom-icon {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 26px; height: 26px; padding: 0; margin: 0; border: none; outline: none;
-  background: transparent; box-shadow: none;
-  color: var(--ph-heart); opacity: .75; cursor: pointer; line-height: 0;
-  -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none;
-  -webkit-user-select: none; user-select: none; -webkit-user-drag: none;
-  filter: drop-shadow(0 0 4px rgba(184,146,74,.35));
-  transition: opacity .18s ease, filter .18s ease, transform .12s ease;
-  text-decoration: none; overflow: visible;
-  -webkit-appearance: none; appearance: none; touch-action: manipulation;
-}
-.bottom-icon.bottom-icon--heart {
-  color: var(--ph-heart-bright);
-  filter: drop-shadow(0 0 5px rgba(198,154,82,.55));
-}
-@media (hover: hover) {
-  .bottom-icon:hover {
-    opacity: 1;
-    filter: drop-shadow(0 0 5px rgba(184,146,74,.75)) drop-shadow(0 0 10px rgba(184,146,74,.45));
-  }
-  .bottom-icon.bottom-icon--heart:hover {
-    filter: drop-shadow(0 0 6px rgba(198,154,82,.85)) drop-shadow(0 0 12px rgba(198,154,82,.5));
-  }
-}
-.bottom-icon:active {
-  transform: scale(0.86);
-  opacity: 1;
-  transition: opacity .08s ease, filter .08s ease, transform .08s ease;
-}
-.bottom-icon:active:not(.bottom-icon--heart) {
-  filter: drop-shadow(0 0 6px rgba(184,146,74,.95)) drop-shadow(0 0 12px rgba(184,146,74,.65));
-}
-.bottom-icon.bottom-icon--heart:active {
-  filter: drop-shadow(0 0 7px rgba(198,154,82,.95)) drop-shadow(0 0 14px rgba(198,154,82,.65));
-}
-.bottom-icon.is-pressed {
-  transform: scale(0.86);
-  opacity: 1;
-  transition: opacity .08s ease, filter .08s ease, transform .08s ease;
-}
-.bottom-icon.is-pressed:not(.bottom-icon--heart) {
-  filter: drop-shadow(0 0 6px rgba(184,146,74,.95)) drop-shadow(0 0 12px rgba(184,146,74,.65));
-}
-.bottom-icon.bottom-icon--heart.is-pressed {
-  filter: drop-shadow(0 0 7px rgba(198,154,82,.95)) drop-shadow(0 0 14px rgba(198,154,82,.65));
-}
-.bottom-icon svg { width: 26px; height: 26px; display: block; -webkit-user-drag: none; user-select: none; pointer-events: none; }
-.bottom-icon.bottom-icon-tg { width: 26px; height: 26px; }
-.bottom-icon.bottom-icon-tg svg { width: 38px; height: 38px; display: block; margin: -6px; transform: translateX(-6px); }
-
-/* ============================================================
-   ПОЛОСЫ ЗАТУХАНИЯ СВЕРХУ И СНИЗУ
-   ============================================================ */
-.lnd-fade-top {
-  position: fixed; left: 0; right: 10px; pointer-events: none; z-index: 850;
-  top: 0; height: 10px; display: flex; flex-direction: column;
-  background: transparent;
-  opacity: 0;
-  transition: opacity .2s ease-out;
-  will-change: opacity;
-}
-.lnd-fade-top.visible { opacity: 1; }
-.lnd-fade-top::before { content: ""; display: block; height: 3px; background: #000; }
-.lnd-fade-top::after {
-  content: ""; display: block; height: 7px; background: #000;
-  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,.9) 20%, rgba(0,0,0,.7) 40%, rgba(0,0,0,.45) 60%, rgba(0,0,0,.2) 80%, rgba(0,0,0,0) 100%);
-  mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,.9) 20%, rgba(0,0,0,.7) 40%, rgba(0,0,0,.45) 60%, rgba(0,0,0,.2) 80%, rgba(0,0,0,0) 100%);
-}
-.lnd-fade-bottom {
-  position: fixed; left: 0; right: 10px; pointer-events: none; z-index: 850;
-  bottom: 0; height: 60px; display: flex; flex-direction: column-reverse;
-  background: transparent; opacity: 0;
-  transition: opacity .22s ease-out;
-  will-change: opacity;
-}
-@media (max-width: 640px) {
-  .lnd-fade-top, .lnd-fade-bottom { right: 0; }
-}
-.lnd-fade-bottom.visible { opacity: 1; }
-.lnd-fade-bottom::before { content: ""; display: block; height: 50px; background: #000; }
-.lnd-fade-bottom::after {
-  content: ""; display: block; height: 10px; background: #000;
-  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,.95) 0%, rgba(0,0,0,.9) 10%, rgba(0,0,0,.7) 35%, rgba(0,0,0,.45) 60%, rgba(0,0,0,.2) 82%, rgba(0,0,0,0) 100%);
-  mask-image: linear-gradient(to top, rgba(0,0,0,.95) 0%, rgba(0,0,0,.9) 10%, rgba(0,0,0,.7) 35%, rgba(0,0,0,.45) 60%, rgba(0,0,0,.2) 82%, rgba(0,0,0,0) 100%);
-}
-
-/* ============================================================
-   ЗОЛОТАЯ ЛИНИЯ В САМОМ ВЕРХУ
-   ============================================================ */
-.lnd-top-rule {
-  position: fixed;
-  top: 0; left: 0; right: 10px;
-  height: 1px;
-  pointer-events: none;
-  z-index: 860;
-  background: linear-gradient(to right, transparent 0%, rgba(255,203,43,.12) 18%, rgba(255,203,43,.12) 82%, transparent 100%);
-  box-shadow: 0 0 8px rgba(255,203,43,.25);
-  opacity: 1;
-  transition: none;
-}
-.lnd-top-rule.hidden { opacity: 0; }
-@media (max-width: 640px) {
-  .lnd-top-rule { right: 0; }
-}
-</style>
-
-<!-- ============================================================
-     СТИЛИ ПРИЛОЖЕНИЯ
-   ============================================================ -->
-<style>
-#hero-actions.inactive,
-#hero-actions.inactive *,
-#hero-actions.inactive input,
-#quick-percent-list.inactive,
-#quick-percent-list.inactive * { cursor: default !important; }
-
-#hand-nav button { cursor: pointer !important; }
-#hand-nav button:disabled { cursor: default !important; }
-
-#app {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100vw;
-  height: 100vh;
-  height: 100dvh;
-  overflow: hidden;
-  background: var(--bg-bottom);
-  z-index: 400;
-}
-#app.hidden { display: none !important; }
-
-#table-scene {
-  position: absolute;
-  top: calc(var(--safe-top) + 2px);
-  left: 0; right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--bg);
-}
-
-#poker-table-wood {
-  position: relative;
-  aspect-ratio: 9 / 16;
-  height: calc(100% - clamp(8px, 1.6vmin, 20px));
-  width: auto;
-  max-width: 94vw;
-  background: linear-gradient(180deg, #6b4622 0%, #3d2512 40%, #2a1a0c 100%);
-  border-radius: var(--table-radius);
-  box-shadow:
-    0 0 0 3px #1a0f05,
-    0 0 60px rgba(0,0,0,.95);
-  padding: var(--table-border-w);
-  box-sizing: border-box;
-}
-
-#poker-table-wood.history-mode {
-  background: linear-gradient(180deg, #5a5a5a 0%, #3a3a3a 40%, #262626 100%);
-  box-shadow:
-    0 0 0 3px #141414,
-    0 0 60px rgba(0,0,0,.95);
-}
-
-#poker-table {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background:
-    radial-gradient(ellipse at 50% 45%, #322c26 0%, #1e1a16 55%, #0f0d0b 100%);
-  border-radius: calc(var(--table-radius) - var(--table-border-w) + 2px);
-  box-shadow:
-    inset 0 0 140px rgba(0,0,0,.7);
-  overflow: hidden;
-}
-
-#hu-glow {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 3;
-  border-radius: inherit;
-  opacity: 0;
-  transition: opacity .35s ease;
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 203, 43, 0.425),
-    inset 0 0 10px 2px rgba(255, 203, 43, 0.275),
-    inset 0 0 22px 4px rgba(255, 203, 43, 0.14);
-}
-#hu-glow.visible { opacity: 1; }
-
-#board-area {
-  position: absolute;
-  top: calc(46% - 6px); left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  pointer-events: none;
-  z-index: 5;
-  width: 72%;
-  max-width: 72%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-}
-
-#place-center {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1px;
-  color: var(--text);
-  font-weight: 700;
-  text-shadow: 0 1px 4px rgba(0,0,0,.95);
-  letter-spacing: .3px;
-  white-space: nowrap;
-  opacity: 0.45;
-  pointer-events: none;
-  text-align: center;
-  width: 100%;
-}
-#place-center.hidden { display: none; }
-#place-center .place-line {
-  font-size: var(--place-text);
-  line-height: 1.3;
-  min-height: 1.3em;
-}
-
-#hands-history-row {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 100%;
-  margin-bottom: 30px;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--hands-history-text);
-  color: #a8a8a8;
-  font-weight: 700;
-  letter-spacing: .3px;
-  line-height: 1.3;
-  min-height: 1.3em;
-  white-space: nowrap;
-  pointer-events: auto;
-  cursor: pointer;
-  touch-action: manipulation;
-  text-shadow: 0 1px 4px rgba(0,0,0,.95);
-  z-index: 6;
-}
-#hands-history-row.visible { display: flex; }
-#hands-history-row.pressed,
-#hands-history-row.pressed #hands-history-label { color: var(--gold); }
-
-#hands-history-label {
-  position: relative;
-  display: inline-block;
-}
-
-.hh-copy-icon {
-  position: absolute;
-  left: 100%;
-  margin-left: 6px;
-  top: 0;
-  transform: translateY(0);
-  width: 6px;
-  height: 6px;
-  pointer-events: none;
-}
-.hh-copy-icon::before,
-.hh-copy-icon::after {
-  content: "";
-  position: absolute;
-  border: 1px solid #a8a8a8;
-  border-radius: 1px;
-  background: #4a4a4a;
-}
-.hh-copy-icon::before {
-  width: 4px;
-  height: 4px;
-  left: 2px;
-  top: 0;
-  z-index: 1;
-}
-.hh-copy-icon::after {
-  width: 4px;
-  height: 4px;
-  left: 0;
-  top: 2px;
-  z-index: 2;
-}
-
-#hands-history-copied {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 100%;
-  margin-bottom: 6px;
-  font-size: var(--info-row-text);
-  color: var(--gold);
-  font-weight: 700;
-  letter-spacing: .3px;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .18s ease;
-}
-#hands-history-copied.visible { opacity: 1; }
-
-#swipe-center {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 66%;
-  height: 40%;
-  z-index: 4;
-  touch-action: pan-y;
-  pointer-events: auto;
-  background: transparent;
-}
-
-#top-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(2px, 0.4vmin, 4px);
-  margin-bottom: 0;
-  width: 100%;
-}
-
-#pot-display {
-  color: var(--gold);
-  font-weight: 800;
-  font-size: clamp(16px, 2.4vmin, 24px);
-  text-shadow: 0 2px 8px rgba(0,0,0,.95), 0 0 18px rgba(255,203,43,.25);
-  letter-spacing: .3px;
-  white-space: nowrap;
-}
-
-#board-cards-wrap {
-  position: relative;
-  margin-bottom: 0;
-  height: var(--board-card-h);
-  width: calc(var(--board-card-w) * 5 + clamp(3px, 0.6vmin, 5px) * 4);
-  max-width: 100%;
-  pointer-events: auto;
-  touch-action: manipulation;
-  cursor: pointer;
-}
-
-#board-brand-label {
-  position: absolute;
-  top: 5px;
-  bottom: 5px;
-  left: 0px;
-  right: 0px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  font-weight: 900;
-  font-size: clamp(20px, 3.2vmin, 32px);
-  letter-spacing: 0;
-  color: rgba(255, 255, 255, 0.2);
-  text-shadow:
-    0 -1px 0 rgba(255, 255, 255, 0.05),
-    0 1px 1px rgba(0, 0, 0, 0.85),
-    inset 0 1px 2px rgba(0, 0, 0, 0.9);
-  text-transform: uppercase;
-  pointer-events: none;
-  user-select: none;
-  white-space: nowrap;
-  z-index: 0;
-  line-height: 1;
-  overflow: hidden;
-  transform: scaleY(1.5);
-  transform-origin: center center;
-}
-
-#board-cards {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  gap: clamp(3px, 0.6vmin, 5px);
-  justify-content: center;
-  align-items: center;
-  z-index: 1;
-}
-#board-cards .card {
-  --card-w: var(--board-card-w);
-  --card-h: var(--board-card-h);
-  font-size: clamp(20px, 3.2vmin, 30px);
-  padding: 1px 4px;
-}
-#board-cards .card .suit { font-size: clamp(24px, 3.8vmin, 36px); }
-
-#board-cards .card.dimmed { position: relative; }
-#board-cards .card.dimmed::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(15, 13, 11, 0.65);
-  border-radius: inherit;
-  pointer-events: none;
-  z-index: 2;
-}
-
-#table-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  font-size: var(--info-row-text);
-  color: var(--text);
-  font-weight: 700;
-  text-shadow: 0 1px 4px rgba(0,0,0,.95);
-  letter-spacing: .3px;
-  width: 100%;
-}
-#table-info .info-row {
-  white-space: nowrap;
-  line-height: 1.3;
-  min-height: 1.3em;
-  pointer-events: auto;
-  touch-action: manipulation;
-  cursor: pointer;
-}
-#table-info .info-row.faded { opacity: 0.45; }
-#table-info .info-row.replay-locked { cursor: default; opacity: 0.45; }
-
-.card {
-  width: var(--card-w);
-  height: var(--card-h);
-  background: #fafafa;
-  border-radius: clamp(4px, 0.6vmin, 7px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
-  padding: 1px 3px;
-  font-weight: 800;
-  font-size: clamp(20px, 3vmin, 30px);
-  box-shadow:
-    0 3px 8px rgba(0,0,0,.7),
-    inset 0 0 0 1px rgba(0,0,0,.08);
-  position: relative;
-  flex-shrink: 0;
-  line-height: 1;
-}
-.card .rank { line-height: 1; }
-.card .suit { line-height: 1; font-size: clamp(24px, 3.6vmin, 36px); }
-
-.card.back {
-  background:
-    repeating-linear-gradient(45deg,
-      #1a2540 0px, #1a2540 3px,
-      #243255 3px, #243255 6px);
-  border: 1px solid #0a1225;
-}
-.card.back::after {
-  content: "";
-  position: absolute;
-  inset: 5px;
-  border: 1px solid rgba(255,203,43,.28);
-  border-radius: clamp(2px, 0.4vmin, 3px);
-  background:
-    radial-gradient(circle at 30% 30%, rgba(255,203,43,.22) 0%, transparent 55%),
-    radial-gradient(circle at center, rgba(255,203,43,.15) 0%, transparent 60%);
-}
-
-.style-4color .suit-spades   { color: #1a1a1a; }
-.style-4color .suit-hearts   { color: #d63535; }
-.style-4color .suit-diamonds { color: #2b6dd6; }
-.style-4color .suit-clubs    { color: #1fa04a; }
-
-.style-2color .suit-spades   { color: #1a1a1a; }
-.style-2color .suit-clubs    { color: #1a1a1a; }
-.style-2color .suit-hearts   { color: #d63535; }
-.style-2color .suit-diamonds { color: #d63535; }
-
-#seats { position: absolute; inset: 0; }
-
-.seat {
-  position: absolute;
-  width: clamp(72px, 11%, 120px);
-  transform: translate(-50%, -50%);
-  text-align: center;
-  font-size: 14px;
-  z-index: 10;
-  pointer-events: none;
-}
-.seat.eliminated { display: none; }
-
-.seat .strat-badge {
-  position: absolute;
-  top: calc(clamp(-22px, -3vmin, -18px) - 2px);
-  left: 50%;
-  transform: translateX(-50%);
-  color: #fff;
-  font-size: clamp(9px, 1.2vmin, 11px);
-  font-weight: 800;
-  padding: 3px 8px 5px 8px;
-  border-radius: 4px;
-  letter-spacing: .5px;
-  white-space: nowrap;
-  z-index: 15;
-  transition: opacity .2s;
-  text-shadow: 0 1px 2px rgba(0,0,0,.55);
-  line-height: 1;
-}
-.seat .strat-badge.hidden { display: none; }
-.seat .strat-badge.badge-dim { opacity: 0.35; }
-
-.seat .strat-badge.pro-gto      { background: #4a3a68; }
-.seat .strat-badge.pro-solver   { background: #4a3a68; }
-.seat .strat-badge.pro-icm      { background: #4a3a68; }
-.seat .strat-badge.pro-lag      { background: #4a3a68; }
-
-.seat .strat-badge.vip-taglite  { background: #324a6e; }
-.seat .strat-badge.vip-loose    { background: #324a6e; }
-.seat .strat-badge.vip-rock     { background: #324a6e; }
-.seat .strat-badge.vip-maniac   { background: #324a6e; }
-
-@media (max-width: 767px) {
-  .seat .strat-badge { padding-top: 5px; padding-bottom: 3px; }
-}
-
-.seat .strat-zone {
-  position: absolute;
-  left: 50%;
-  top: calc(clamp(-22px, -3vmin, -18px) - 2px);
-  transform: translateX(-50%);
-  width: clamp(52px, 16vmin, 84px);
-  height: clamp(18px, 2.6vmin, 24px);
-  z-index: 14;
-  pointer-events: auto;
-  touch-action: manipulation;
-  background: transparent;
-  cursor: pointer;
-}
-
-.seat .seat-cards {
-  display: flex;
-  gap: clamp(3px, 0.6vmin, 5px);
-  justify-content: center;
-  min-height: 0;
-  margin-bottom: clamp(3px, 0.6vmin, 5px);
-  position: relative;
-  pointer-events: auto;
-  touch-action: manipulation;
-  cursor: pointer;
-}
-
-.seat .seat-cards .card {
-  --card-w: clamp(34px, 5.2vmin, 48px);
-  --card-h: clamp(48px, 7.3vmin, 67px);
-  font-size: clamp(20px, 3.2vmin, 30px);
-  padding: 1px 4px;
-  border-radius: clamp(4px, 0.6vmin, 7px);
-}
-.seat .seat-cards .card .suit { font-size: clamp(24px, 3.8vmin, 36px); }
-
-.seat.hero .seat-cards .card {
-  --card-w: clamp(37.8px, 5.58vmin, 48.6px);
-  --card-h: clamp(53.1px, 7.83vmin, 68.4px);
-  font-size: clamp(21.6px, 3.42vmin, 30.6px);
-  box-shadow: 0 3px 10px rgba(0,0,0,.75);
-}
-.seat.hero .seat-cards .card .suit { font-size: clamp(25.2px, 3.96vmin, 36px); }
-
-.seat .pos-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 3px;
-  position: relative;
-}
-.seat .pos-name {
-  font-weight: 900;
-  font-size: clamp(12px, 1.8vmin, 16px);
-  color: var(--gold);
-  letter-spacing: .5px;
-  text-shadow: 0 1px 3px rgba(0,0,0,.95);
-  position: relative;
-  display: inline-block;
-  padding: 0 2px;
-}
-.seat.active .pos-name {
-  color: #fff;
-  text-shadow: 0 0 10px var(--gold), 0 1px 3px rgba(0,0,0,.95);
-}
-
-.seat .dealer-chip {
-  position: absolute;
-  width: clamp(16px, 2.2vmin, 20px);
-  height: clamp(16px, 2.2vmin, 20px);
-  background: radial-gradient(circle at 35% 35%, #fff6d0, #ffcb2b 60%, #b8860b);
-  color: #1a1a1a;
-  font-size: clamp(9px, 1.2vmin, 11px);
-  font-weight: 900;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 1px 4px rgba(0,0,0,.7);
-  border: 1px solid #8a6508;
-  z-index: 16;
-}
-.seat .dealer-chip.hidden { display: none; }
-
-.seat.left .dealer-chip { right: clamp(-26px, -3.4vmin, -22px); top: 28px; left: auto; }
-.seat.right .dealer-chip,
-.seat.top .dealer-chip { left: clamp(-26px, -3.4vmin, -22px); top: 28px; right: auto; }
-.seat.hero .dealer-chip {
-  top: clamp(-30px, -3.8vmin, -24px);
-  left: 50%;
-  right: auto;
-  transform: translateX(-50%);
-}
-
-@media (min-width: 768px) {
-  .seat.left .dealer-chip { right: calc(clamp(-26px, -3.4vmin, -22px) - 6px); }
-  .seat.right .dealer-chip,
-  .seat.top .dealer-chip { left: calc(clamp(-26px, -3.4vmin, -22px) - 6px); }
-}
-
-.seat .stack-wrap { position: relative; display: flex; justify-content: center; align-items: center; }
-.seat .stack {
-  color: var(--text);
-  font-weight: 700;
-  font-size: clamp(12px, 1.6vmin, 14px);
-  text-shadow: 0 1px 3px rgba(0,0,0,.95);
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-}
-
-.seat:not(.hero) .stack,
-.seat .delta-text { pointer-events: none; }
-
-.seat:not(.hero) .stack { pointer-events: auto; touch-action: manipulation; }
-.seat.hero .stack { pointer-events: auto; touch-action: manipulation; }
-
-.seat .delta-text {
-  position: absolute;
-  font-size: clamp(11px, 1.4vmin, 13px);
-  font-weight: 500;
-  white-space: nowrap;
-  text-shadow: 0 1px 3px rgba(0,0,0,.95);
-  pointer-events: none;
-  z-index: 20;
-}
-.seat .delta-text.hidden { display: none; }
-.seat .delta-text.positive { color: #4ae08a; }
-.seat .delta-text.negative { color: #e05a4a; }
-
-.seat.left .delta-text  { left: 100%; margin-left: 1px; top: 50%; transform: translateY(calc(-50% - 1px)); }
-.seat.right .delta-text { right: 100%; margin-right: 1px; top: 50%; transform: translateY(calc(-50% - 1px)); }
-.seat.top .delta-text   { left: 100%; margin-left: 0px; top: 50%; transform: translateY(calc(-50% - 1px)); }
-.seat.hero .delta-text  { top: auto; transform: translateY(-1px); left: 100%; margin-left: 0px; bottom: auto; top: calc(-1 * clamp(16px, 2.2vmin, 22px)); }
-
-.seat.active .seat-cards .card {
-  box-shadow: 0 0 12px rgba(255,203,43,.7), 0 3px 8px rgba(0,0,0,.7);
-}
-.seat.folded { opacity: .35; }
-
-.seat.winner .seat-cards .card {
-  box-shadow: 0 0 14px 3px rgba(255,203,43,.6), 0 3px 8px rgba(0,0,0,.7);
-}
-
-.seat .action-badge {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0,0,0,.9);
-  color: var(--text);
-  font-size: clamp(9px, 1.2vmin, 11px);
-  font-weight: 800;
-  padding: 4px 10px;
-  border-radius: 4px;
-  white-space: nowrap;
-  border: 1px solid #3a3530;
-  z-index: 22;
-  text-transform: uppercase;
-  letter-spacing: .5px;
-  bottom: clamp(-26px, -3.2vmin, -22px);
-  top: auto;
-  pointer-events: none;
-}
-.seat .action-badge.fold  { color: #d0d0d0; border-color: #4a4a4a; }
-.seat .action-badge.call  { color: #7ab8ff; border-color: #25445a; }
-.seat .action-badge.raise { color: #ff8a7a; border-color: #5a2a25; }
-.seat .action-badge.bet   { color: #ff8a7a; border-color: #5a2a25; }
-.seat .action-badge.check { color: #7ae5a0; border-color: #255a35; }
-.seat .action-badge.allin { color: var(--allin); border-color: #5a2028; }
-.seat .action-badge.blind { color: #ffcb2b; border-color: #8a6508; }
-.seat .action-badge.hidden { display: none; }
-
-.seat .winner-badge {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  color: #1a1a1a;
-  font-size: clamp(9px, 1.2vmin, 11px);
-  font-weight: 900;
-  padding: 4px 10px;
-  border-radius: 4px;
-  white-space: nowrap;
-  z-index: 23;
-  text-transform: uppercase;
-  letter-spacing: .8px;
-  bottom: clamp(-54px, -6.6vmin, -48px);
-  top: auto;
-  pointer-events: none;
-}
-.seat .winner-badge.hidden { display: none; }
-.seat .winner-badge.win {
-  background: linear-gradient(180deg, #ffd54a, #e0a800);
-  border: 1px solid #8a6508;
-  box-shadow: 0 0 8px 2px rgba(255,203,43,.7), 0 2px 6px rgba(0,0,0,.8);
-}
-.seat .winner-badge.loss {
-  background: linear-gradient(180deg, #b5674f, #6b3a2a);
-  color: #f5e0d8;
-  border: 1px solid #4a2a20;
-  box-shadow: 0 2px 6px rgba(0,0,0,.8);
-}
-
-.seat .bet-chips {
-  position: absolute;
-  background: linear-gradient(180deg, #ffcb2b, #e0a800);
-  color: #1a1a1a;
-  font-size: clamp(11px, 1.5vmin, 13px);
-  font-weight: 900;
-  padding: clamp(3px, 0.5vmin, 4px) clamp(9px, 1.4vmin, 12px);
-  border-radius: 12px;
-  white-space: nowrap;
-  box-shadow: 0 2px 6px rgba(0,0,0,.8);
-  border: 1px solid #8a6508;
-  z-index: 21;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: clamp(-54px, -6.6vmin, -48px);
-  top: auto;
-  pointer-events: none;
-}
-.seat .bet-chips.hidden { display: none; }
-
-.seat .hero-timer-wrap,
-.seat .hero-timer-zone {
-  position: absolute;
-  top: 50%;
-  left: 100%;
-  margin-left: var(--hero-timer-left);
-  transform: translateY(-50%);
-  width: var(--hero-timer-size);
-  height: var(--hero-timer-size);
-  display: block;
-}
-.seat .hero-timer-wrap { pointer-events: none; z-index: 30; }
-.seat .hero-timer-zone {
-  pointer-events: auto;
-  z-index: 200;
-  background: transparent;
-  touch-action: manipulation;
-  cursor: pointer;
-}
-.seat .hero-timer-zone.disabled { pointer-events: none; cursor: default; }
-.seat .hero-timer-wrap .hero-timer-svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-  opacity: 0.2;
-  transition: opacity .2s ease;
-  will-change: opacity;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  pointer-events: none;
-}
-.seat .hero-timer-wrap .timer-track {
-  fill: none;
-  stroke: rgba(255, 255, 255, 0.12);
-  stroke-width: 3.5;
-}
-.seat .hero-timer-wrap .timer-fill {
-  fill: none;
-  stroke: var(--gold);
-  stroke-width: 3.5;
-  stroke-linecap: round;
-  stroke-dasharray: 100.53 100.53;
-  stroke-dashoffset: 100.53;
-  transition: stroke-dashoffset 0.95s linear;
-}
-.seat .hero-timer-wrap .timer-num {
-  fill: #fff;
-  font-size: 18px;
-  font-weight: 900;
-  text-anchor: middle;
-  dominant-baseline: central;
-  paint-order: stroke;
-  stroke: #000;
-  stroke-width: 1.5px;
-}
-.seat .hero-timer-wrap[data-state="off"] .hero-timer-svg { opacity: 0.2; }
-.seat .hero-timer-wrap[data-state="off"] .timer-fill { stroke-dashoffset: 100.53; }
-.seat .hero-timer-wrap[data-state="ready"] .hero-timer-svg { opacity: 0.2; }
-.seat .hero-timer-wrap[data-state="ready"] .timer-fill { stroke-dashoffset: 0; }
-.seat .hero-timer-wrap[data-state="active"] .hero-timer-svg { opacity: 1; }
-
-#hero-actions {
-  position: absolute;
-  left: calc(var(--dash-inset) + var(--edge));
-  right: calc(var(--dash-inset) + var(--edge) + var(--pct-block-w) + var(--edge));
-  bottom: calc(var(--dash-inset) + var(--edge) - 1px);
-  display: flex;
-  flex-direction: column;
-  gap: clamp(3px, 0.5vmin, 5px);
-  background: rgba(20,18,16,.92);
-  border: 1px solid #3a3530;
-  border-radius: 10px;
-  padding: 1px clamp(6px, 0.9vmin, 9px) clamp(3px, 0.5vmin, 5px);
-  z-index: 45;
-  transition: opacity .2s ease;
-}
-#hero-actions.inactive { opacity: 0.4; }
-#hero-actions.inactive #hero-slider-row,
-#hero-actions.inactive #hero-buttons,
-#hero-actions.inactive #hero-slider-row *,
-#hero-actions.inactive #hero-buttons * { pointer-events: none !important; }
-#hero-actions.inactive #raise-amount-mini { opacity: 0.65; color: #6a5a1a; }
-#hero-actions.inactive #hero-buttons button {
-  opacity: 0.5;
-  filter: grayscale(0.6) brightness(0.5);
-  box-shadow: 0 3px 0 transparent, inset 0 1px 0 rgba(255,255,255,.1);
-}
-
-#hand-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 1px 0;
-  margin-bottom: -1px;
-  gap: 0;
-  min-height: 0;
-  position: relative;
-  line-height: 1;
-  transform: translateY(2px);
-}
-#hand-nav .nav-history { display: flex; align-items: center; gap: var(--nav-gap); flex-shrink: 0; }
-#hand-nav button {
-  background: transparent;
-  border: none;
-  color: var(--text);
-  font-size: var(--nav-icon-size);
-  font-weight: 800;
-  padding: 0;
-  line-height: 1;
-  width: var(--nav-btn);
-  height: var(--nav-btn);
-  min-width: var(--nav-btn);
-  min-height: var(--nav-btn);
-  border-radius: 6px;
-  position: relative;
-  top: -2px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  pointer-events: auto;
-  cursor: pointer;
-}
-#hand-nav button:active:not(:disabled) { background: rgba(255,255,255,.06); }
-#hand-nav button:disabled { opacity: .28; cursor: default !important; }
-
-#hand-nav .nav-counter {
-  color: var(--gold);
-  font-weight: 800;
-  text-align: center;
-  font-size: var(--nav-counter-size);
-  letter-spacing: .3px;
-  white-space: nowrap;
-  position: relative;
-  top: -2px;
-  padding: 0;
-  width: var(--nav-counter-w);
-  display: inline-block;
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-  flex-shrink: 0;
-  line-height: 1;
-  transform: translateY(1px);
-}
-#hand-nav .nav-counter .total { color: var(--muted); }
-
-#hn-resume { color: var(--ok); }
-#hn-resume:disabled { color: var(--text); }
-#hn-replay { color: var(--gold); }
-#hn-settings { color: var(--gold); }
-#hn-settings .hn-settings-svg {
-  display: block;
-  width: calc(var(--nav-icon-size) + 2px);
-  height: calc(var(--nav-icon-size) + 2px);
-  fill: currentColor;
-  pointer-events: none;
-}
-@media (max-width: 767px) {
-  #hand-nav button { font-size: calc(var(--nav-icon-size) + 2px); }
-}
-
-#hero-slider-row {
-  display: flex;
-  align-items: center;
-  gap: clamp(6px, 1vmin, 10px);
-  width: 100%;
-  padding: 3px 0;
-  transform: translateY(calc(-2px - 1px));
-}
-
-#raise-slider-track {
-  position: relative;
-  flex: 1 1 auto;
-  min-width: 0;
-  height: 18px;
-  touch-action: none;
-  pointer-events: auto;
-  user-select: none;
-  -webkit-user-select: none;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-#raise-slider-segments {
-  position: relative;
-  width: 100%;
-  height: 4px;
-  border-radius: 4px;
-  overflow: visible;
-}
-#raise-slider-call-seg {
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 1px;
-  background: #4a4540;
-  border-top-left-radius: 4px;
-  border-bottom-left-radius: 4px;
-  border: 1px solid #2a2520;
-  box-sizing: border-box;
-  pointer-events: none;
-}
-#raise-slider-raise-seg {
-  position: absolute;
-  left: 1px; right: 0; top: 0; bottom: 0;
-  background: #4a4540;
-  border: 1px solid #2a2520;
-  border-top-right-radius: 4px;
-  border-bottom-right-radius: 4px;
-  border-left: none;
-  box-sizing: border-box;
-  pointer-events: none;
-}
-#raise-slider-thumb {
-  position: absolute;
-  top: 50%;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #fff6d0, #ffcb2b 60%, #b8860b);
-  border: 1px solid #8a6508;
-  box-shadow: 0 2px 4px rgba(0,0,0,.7);
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  transition: transform .08s ease, filter .08s ease;
-  z-index: 2;
-}
-#raise-slider-thumb.pressed {
-  transform: translate(-50%, -50%) scale(0.85);
-  filter: brightness(1.35);
-}
-
-#raise-amount-mini {
-  color: var(--gold);
-  font-size: var(--small-text);
-  font-weight: 800;
-  white-space: nowrap;
-  text-shadow: 0 1px 3px rgba(0,0,0,.95);
-  width: var(--raise-amount-mini-w);
-  min-width: var(--raise-amount-mini-w);
-  max-width: var(--raise-amount-mini-w);
-  text-align: center;
-  background: rgba(0,0,0,.35);
-  border: 1px solid #3a3530;
-  border-radius: 6px;
-  padding: 2px clamp(4px, 0.6vmin, 6px);
-  flex: 0 0 auto;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  box-sizing: border-box;
-}
-#raise-amount-mini.allin-text { color: #e63946; font-weight: 900; }
-
-#hero-buttons { display: flex; gap: clamp(4px, 0.7vmin, 6px); width: 100%; }
-#hero-buttons button {
-  flex: 1;
-  padding: clamp(4px, 0.8vmin, 6px) clamp(4px, 0.8vmin, 7px);
-  border: none;
-  border-radius: 8px;
-  font-weight: 800;
-  font-size: clamp(10px, 1.4vmin, 12px);
-  color: #fff;
-  text-transform: uppercase;
-  letter-spacing: .3px;
-  box-shadow: 0 3px 0 rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.1);
-  touch-action: manipulation;
-  min-height: 36px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  line-height: 1.05;
-  transition: transform .08s ease, filter .08s ease;
-  cursor: pointer;
-}
-#hero-buttons button:active:not(:disabled) {
-  transform: scale(0.96);
-  filter: brightness(1.35);
-  box-shadow: 0 0 0 rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.1);
-}
-#hero-buttons button:disabled {
-  opacity: .28;
-  box-shadow: none;
-  filter: grayscale(0.5) brightness(0.55);
-  cursor: default !important;
-}
-
-#btn-fold  { background: linear-gradient(180deg, #5a5a5a, #3a3a3a); }
-#btn-check { background: linear-gradient(180deg, #2a4a3a, #14261c); }
-#btn-call  { background: linear-gradient(180deg, #3a7bd5, #1e4a8a); }
-#btn-call.mode-raise { background: linear-gradient(180deg, #c94b3d, #8a2a1f); }
-#btn-call.mode-bet   { background: linear-gradient(180deg, #c94b3d, #8a2a1f); }
-
-#btn-call .call-label { font-size: inherit; font-weight: 800; }
-#btn-call .call-amount { font-size: clamp(9px, 1.2vmin, 11px); font-weight: 700; opacity: 0.95; margin-top: 1px; }
-#btn-call .call-amount:empty { display: none; }
-
-#quick-percent-list {
-  position: absolute;
-  right: calc(var(--dash-inset) + var(--edge));
-  bottom: calc(var(--dash-inset) + var(--edge) - 1px);
-  width: var(--pct-block-w);
-  display: flex;
-  flex-direction: column;
-  gap: clamp(3px, 0.5vmin, 5px);
-  z-index: 45;
-  transition: opacity .2s ease;
-}
-#quick-percent-list.inactive { opacity: 0.55; }
-#quick-percent-list.inactive button,
-#quick-percent-list.inactive button * { pointer-events: none !important; }
-#quick-percent-list.inactive button .label { color: #6a5a1a; }
-#quick-percent-list.inactive button .value { color: #4a4a4a; }
-#quick-percent-list.inactive button .value.allin-text { color: #7a2028; }
-#quick-percent-list button {
-  background: rgba(20,18,16,.92);
-  border: 1px solid #3a3530;
-  color: var(--text);
-  padding: clamp(5px, 0.8vmin, 7px) clamp(8px, 1.1vmin, 10px);
-  border-radius: 7px;
-  font-size: clamp(10px, 1.3vmin, 12px);
-  font-weight: 800;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: clamp(4px, 0.7vmin, 8px);
-  white-space: nowrap;
-  touch-action: manipulation;
-  min-height: calc(32px + 2px);
-  width: 100%;
-  transition: transform .08s ease, filter .08s ease;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-  cursor: pointer;
-}
-#quick-percent-list button:active:not(:disabled) {
-  transform: scale(0.96);
-  filter: brightness(1.65);
-}
-#quick-percent-list button:disabled { opacity: 0.55; cursor: default !important; }
-#quick-percent-list button .label { color: var(--gold); font-weight: 800; }
-#quick-percent-list button .value { color: var(--muted); font-weight: 600; font-size: clamp(9px, 1.2vmin, 11px); }
-#quick-percent-list button .value.allin-text { color: #e63946; font-weight: 700; }
-
-#bottom-panel {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translate(-50%, 110%);
-  width: var(--table-col-w);
-  max-width: 94vw;
-  background: linear-gradient(0deg, #000000 0%, #0d0d0d 50%, #1a1a1a 100%);
-  border-top: 1px solid #2a2520;
-  border-left: 1px solid #2a2520;
-  border-right: 1px solid #2a2520;
-  border-top-left-radius: 14px;
-  border-top-right-radius: 14px;
-  padding: 24px 20px calc(30px + var(--safe-bottom));
-  transition: transform .28s ease;
-  z-index: 140;
-  max-height: calc(100dvh - var(--safe-top) - 4px);
-  overflow-y: auto;
-  touch-action: pan-y;
-  scrollbar-width: none;
-}
-#bottom-panel::-webkit-scrollbar { display: none; }
-#bottom-panel.open { transform: translate(-50%, 0); }
-
-#bottom-panel h3 {
-  color: var(--gold);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 12px;
-  font-weight: 800;
-  text-align: center;
-}
-
-#bottom-panel .setting {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid #1f1f1f;
-  color: var(--muted-soft);
-  font-size: 13px;
-}
-#bottom-panel .setting:last-of-type { border-bottom: none; }
-#bottom-panel .setting select {
-  background: #1a1a1a;
-  color: var(--text);
-  border: 1px solid #2a2520;
-  border-radius: 6px;
-  padding: 6px 10px;
-  font-size: 13px;
-  font-weight: 600;
-  min-height: 40px;
-  cursor: pointer;
-}
-#bottom-panel .setting input[type="checkbox"] {
-  width: 22px;
-  height: 22px;
-  accent-color: var(--gold);
-  cursor: pointer;
-}
-
-#btn-restart-panel {
-  display: block;
-  width: 100%;
-  margin-top: 20px;
-  padding: 14px 16px;
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(180deg, #ffcb2b, #e0a800);
-  color: #1a1a1a;
-  font-weight: 900;
-  font-size: 15px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  text-align: center;
-  box-shadow: 0 3px 0 #8a6508, inset 0 1px 0 rgba(255,255,255,.35);
-  touch-action: manipulation;
-  min-height: 48px;
-  transition: transform .08s ease, filter .08s ease;
-  font-family: inherit;
-  cursor: pointer;
-}
-#btn-restart-panel:active:not(:disabled) {
-  transform: scale(0.97);
-  filter: brightness(1.1);
-  box-shadow: 0 1px 0 #8a6508, inset 0 1px 0 rgba(255,255,255,.35);
-}
-
-#top-dock {
-  position: absolute;
-  left: 0; right: 0; top: 0; bottom: 0;
-  z-index: 130;
-  pointer-events: none;
-  background: none; border: 0; outline: 0; box-shadow: none;
-  margin: 0; padding: 0;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-  -webkit-touch-callout: none;
-  -webkit-user-select: none; user-select: none;
-  -webkit-user-drag: none;
-  touch-action: manipulation;
-  -webkit-appearance: none; appearance: none;
-}
-#top-dock, #top-dock:active, #top-dock:focus, #top-dock:focus-visible,
-#top-dock:focus-within, #top-dock:hover {
-  background: none !important;
-  border: 0 !important;
-  outline: 0 !important;
-  box-shadow: none !important;
-  -webkit-tap-highlight-color: transparent !important;
-}
-#top-dock::before, #top-dock::after { content: none !important; display: none !important; }
-#top-dock::selection, #top-dock *::selection { background: transparent; }
-
-#top-round-row {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 22px;
-  pointer-events: none;
-  left: 0; top: 0;
-  opacity: 0.85;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none; user-select: none;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-  touch-action: manipulation;
-  background: none; border: 0; outline: 0; box-shadow: none;
-  -webkit-appearance: none; appearance: none;
-  contain: layout style;
-  isolation: isolate;
-}
-#top-round-row, #top-round-row:active, #top-round-row:focus,
-#top-round-row:focus-visible, #top-round-row:focus-within, #top-round-row:hover {
-  background: none !important; border: 0 !important;
-  outline: 0 !important; box-shadow: none !important;
-  -webkit-tap-highlight-color: transparent !important;
-}
-#top-round-row::before, #top-round-row::after { content: none !important; display: none !important; }
-#top-round-row::selection, #top-round-row *::selection { background: transparent; }
-#top-round-row > * { pointer-events: auto; }
-
-.top-icon-slot {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px; height: 26px;
-  flex: 0 0 26px;
-  position: relative;
-  pointer-events: auto;
-  overflow: visible;
-}
-
-.top-icon-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px; height: 26px;
-  padding: 0; margin: 0;
-  border: none; outline: none;
-  background: transparent; box-shadow: none;
-  color: var(--pp-heart);
-  opacity: .85;
-  cursor: pointer;
-  line-height: 0;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-  -webkit-touch-callout: none;
-  -webkit-user-select: none; user-select: none;
-  -webkit-user-drag: none;
-  filter: none;
-  transition: opacity .18s ease, filter .18s ease;
-  text-decoration: none;
-  overflow: visible;
-  -webkit-appearance: none; appearance: none;
-  touch-action: manipulation;
-  transform: scale(1);
-  transform-origin: center center;
-  will-change: transform;
-  position: relative;
-  z-index: 1;
-}
-.top-icon-btn svg { width: 26px; height: 26px; display: block; -webkit-user-drag: none; user-select: none; pointer-events: none; }
-.top-icon-btn svg * { -webkit-user-select: none; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0,0,0,0); -webkit-touch-callout: none; pointer-events: none; outline: none; }
-
-.top-icon-btn.top-icon-btn--heart { color: var(--pp-heart-bright); filter: none; }
-
-.top-icon-btn:focus, .top-icon-btn:focus-visible, .top-icon-btn:focus-within, .top-icon-btn:hover {
-  outline: none; box-shadow: none; border: none;
-  background: transparent;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-}
-.top-icon-btn::-moz-focus-inner { border: 0; padding: 0; }
-.top-icon-btn::selection, .top-icon-btn *::selection { background: transparent; }
-.top-icon-btn:active { opacity: 1; transform: scale(0.9); }
-.top-icon-btn:active, .top-icon-btn.top-icon-btn--heart:active {
-  filter: drop-shadow(0 0 9px rgba(184,146,74,.95)) drop-shadow(0 0 22px rgba(184,146,74,.6));
-}
-@media (hover: hover) {
-  .top-icon-btn:hover { opacity: .95; filter: drop-shadow(0 0 8px rgba(184,146,74,.85)) drop-shadow(0 0 18px rgba(184,146,74,.55)); }
-  .top-icon-btn.top-icon-btn--heart:hover { filter: drop-shadow(0 0 8px rgba(184,146,74,.85)) drop-shadow(0 0 18px rgba(184,146,74,.55)); }
-}
-
-.top-icon-btn.top-icon-btn-tg { width: 26px; height: 26px; }
-.top-icon-btn.top-icon-btn-tg svg { width: 38px; height: 38px; margin: -6px; transform: none; flex-shrink: 0; }
-
-#top-home-btn,
-#top-home-btn:hover,
-#top-home-btn:focus,
-#top-home-btn:focus-visible,
-#top-home-btn:focus-within {
-  background: transparent !important;
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-  -webkit-tap-highlight-color: transparent !important;
-}
-
-@media (max-width: 767px) {
-  #top-round-row { gap: 12px; }
-}
-
-#support-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 950;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  background: rgba(0,0,0,.82);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
-#support-overlay.visible { display: flex; animation: supportFadeIn .2s ease; }
-@keyframes supportFadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-#support-modal-box {
-  position: relative;
-  width: 100%;
-  max-width: 380px;
-  max-height: 86vh;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-  background: linear-gradient(180deg, #141414 0%, #0a0a0a 100%);
-  border: 1px solid #3a3018;
-  border-radius: 18px;
-  padding: clamp(20px, 4vmin, 28px) clamp(18px, 3.6vmin, 26px) clamp(20px, 4vmin, 28px);
-  box-shadow: 0 30px 80px rgba(0,0,0,.8), 0 0 0 1px rgba(255,203,43,.08);
-  animation: supportSlideUp .28s cubic-bezier(.22,.61,.36,1);
-  text-align: left;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-#support-modal-box::-webkit-scrollbar { width: 0 !important; height: 0 !important; display: none !important; }
-@keyframes supportSlideUp {
-  from { transform: translateY(24px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-.support-modal-title {
-  color: var(--gold);
-  font-size: clamp(13px, 1.8vmin, 15px);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  text-align: center;
-  font-weight: 900;
-  margin-bottom: clamp(16px, 2.4vmin, 18px);
-}
-
-.support-card-stack {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1.586 / 1;
-  padding-bottom: 8px;
-  box-sizing: content-box;
-  margin-bottom: clamp(16px, 2.4vmin, 18px);
-  touch-action: none;
-  user-select: none;
-  -webkit-user-select: none;
-  overflow: visible;
-}
-.support-card {
-  position: absolute;
-  left: 0; right: 0; top: 0;
-  width: 100%;
-  aspect-ratio: 1.586 / 1;
-  border-radius: clamp(10px, 1.8vmin, 14px);
-  overflow: hidden;
-  padding: clamp(12px, 2.2vmin, 18px);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  color: #ffffff;
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-  will-change: transform;
-  transition: transform .38s cubic-bezier(.22,.61,.36,1);
-}
-.support-card-stack.dragging .support-card { transition: none; }
-
-.support-card.support-card-violet {
-  background: linear-gradient(135deg, #3d3548 0%, #4a3f57 45%, #5b4e6b 100%);
-  box-shadow: 0 12px 22px -8px rgba(0,0,0,.55), 0 6px 10px -4px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.2);
-}
-.support-card.support-card-gold {
-  background: linear-gradient(135deg, #4a3a10 0%, #6b5418 45%, #8a6f24 100%);
-  box-shadow: 0 12px 22px -8px rgba(0,0,0,.55), 0 6px 10px -4px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.2);
-}
-.support-card::before {
-  content: ""; position: absolute; top: -30%; right: -10%;
-  width: 65%; height: 160%;
-  background: rgba(255,255,255,0.08);
-  transform: rotate(22deg); pointer-events: none;
-}
-.support-card::after {
-  content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  background: radial-gradient(circle at 20% 15%, rgba(255,255,255,0.18) 0%, transparent 45%);
-  pointer-events: none; border-radius: inherit;
-}
-
-.support-card-top { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: flex-start; }
-.support-card-type.support-card-gg-wrap { transform: translateY(-3px); }
-.support-card-type {
-  font-size: clamp(11px, 1.55vmin, 12.5px); font-weight: 800;
-  letter-spacing: 1.2px; text-transform: uppercase; opacity: 0.9;
-}
-.support-card-club-top {
-  font-size: clamp(13px, 1.9vmin, 17px); font-weight: 900;
-  letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.95;
-  text-align: right; line-height: 1.2; text-shadow: 0 1px 2px rgba(0,0,0,.35);
-}
-.support-card-chip {
-  position: absolute; top: clamp(30px, 4.7vmin, 40px); left: clamp(12px, 2.2vmin, 18px);
-  width: clamp(27px, 4.1vmin, 35px); height: clamp(21px, 3.1vmin, 27px);
-  border-radius: 4px;
-  background: linear-gradient(135deg, #e8d9a0 0%, #c9b46a 50%, #a89040 100%);
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,.25);
-  z-index: 2;
-}
-.support-card-chip::before {
-  content: ""; position: absolute;
-  top: 20%; left: 10%; right: 10%; bottom: 20%;
-  border: 1px solid rgba(0,0,0,.25); border-radius: 2px;
-}
-.support-copy-text {
-  position: relative; display: inline-block; padding-right: 14px;
-  cursor: pointer; user-select: none; -webkit-user-select: none; -webkit-user-drag: none;
-}
-.support-copy-text:active { color: var(--gold); }
-.support-copy-icon {
-  position: absolute; right: 0; top: 0; width: 7px; height: 7px; pointer-events: none;
-}
-.support-copy-icon::before, .support-copy-icon::after {
-  content: ""; position: absolute;
-  border: 1px solid #ffffff; border-radius: 1px; background: #8a8a8a;
-}
-.support-copy-icon::before { width: 5px; height: 5px; left: 2px; top: 0; z-index: 1; }
-.support-copy-icon::after  { width: 5px; height: 5px; left: 0; top: 2px; z-index: 2; }
-
-.support-card-usdt-line {
-  position: relative; z-index: 2; margin-top: auto;
-  margin-bottom: clamp(6px, 1.2vmin, 10px);
-  text-align: left; white-space: nowrap;
-  font-size: clamp(11px, 1.9vmin, 13px); font-weight: 700;
-  letter-spacing: 0.2px; text-shadow: 0 1px 2px rgba(0,0,0,.4);
-  display: block; width: 100%;
-}
-.support-card-bottom-line {
-  position: relative; z-index: 2; white-space: nowrap;
-  font-size: clamp(12px, 1.85vmin, 14.5px); font-weight: 700; letter-spacing: 1px;
-}
-.support-card-bottom {
-  position: relative; z-index: 2; display: flex; justify-content: space-between;
-  align-items: flex-end; gap: 8px;
-}
-.support-card-copied {
-  position: absolute; left: 50%; top: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(20, 18, 16, 0.95); color: var(--gold);
-  font-weight: 800; font-size: clamp(14px, 1.85vmin, 16.5px);
-  padding: 10px 20px; border-radius: 10px;
-  border: 1px solid #8a6508; box-shadow: 0 4px 12px rgba(0,0,0,.8);
-  opacity: 0; pointer-events: none; transition: opacity .18s ease;
-  z-index: 5; white-space: nowrap;
-}
-.support-card-copied.visible { opacity: 1; }
-.support-card-gg { font-size: calc(clamp(11px, 1.55vmin, 12.5px) + 3px); }
-.support-card-name-label {
-  font-size: clamp(12px, 1.85vmin, 14.5px); font-weight: 700;
-  letter-spacing: 1px; text-transform: none;
-  display: inline-block; vertical-align: bottom; line-height: 1;
-}
-.support-card-name-value {
-  font-size: calc(clamp(12px, 1.85vmin, 14.5px) + 2px); font-weight: 800;
-  letter-spacing: 1px; text-shadow: 0 1px 2px rgba(0,0,0,.55);
-  display: inline-block; vertical-align: bottom; line-height: 1;
-}
-.support-card-nickname-row {
-  position: relative; z-index: 2; margin-top: auto;
-  margin-bottom: clamp(6px, 1.2vmin, 10px);
-  text-align: left; white-space: nowrap; font-weight: 700;
-  letter-spacing: 0.2px; display: block; width: 100%; line-height: 1;
-}
-.support-thanks {
-  text-align: center; color: var(--muted-soft-2);
-  font-size: clamp(13px, 1.85vmin, 14.5px); line-height: 1.5; letter-spacing: .3px;
-}
-
-@media (min-width: 641px) {
-  .support-card-type { font-size: clamp(10px, 1.4vmin, 11.5px); }
-  .support-card-club-top { font-size: clamp(12px, 1.75vmin, 16px); }
-  .support-card-usdt-line { font-size: clamp(10px, 1.75vmin, 12px); }
-  .support-card-bottom-line { font-size: clamp(11px, 1.7vmin, 13.5px); }
-  .support-card-copied { font-size: clamp(13px, 1.7vmin, 15.5px); }
-  .support-card-gg { font-size: calc(clamp(10px, 1.4vmin, 11.5px) + 3px); }
-  .support-card-name-label { font-size: clamp(11px, 1.7vmin, 13.5px); }
-  .support-card-name-value { font-size: calc(clamp(11px, 1.7vmin, 13.5px) + 2px); }
-}
-
-#tap-close {
-  position: absolute; inset: 0;
-  z-index: 90;
-  background: transparent;
-  display: none;
-}
-#tap-close.active { display: block; }
-
-#start-overlay {
-  position: absolute; inset: 0;
-  background: #000000;
-  display: flex; justify-content: center; align-items: center;
-  z-index: 200;
-  padding: 20px;
-}
-#start-overlay.hidden { display: none; }
-
-.start-card {
-  text-align: center;
-  padding: clamp(28px, 5vmin, 44px) clamp(24px, 5vmin, 52px);
-  background: linear-gradient(180deg, #1a1a1a, #0d0d0d);
-  border: 2px solid #3a3530;
-  border-radius: 20px;
-  box-shadow: 0 20px 60px rgba(0,0,0,.9), 0 0 80px rgba(255,203,43,.08);
-  max-width: 90vw;
-}
-.start-card h1 {
-  color: var(--gold);
-  font-size: clamp(20px, 3vmin, 28px);
-  margin-bottom: 12px;
-  letter-spacing: 1.5px;
-  font-weight: 900;
-}
-.start-card p {
-  color: var(--muted);
-  margin-bottom: 28px;
-  font-size: clamp(12px, 1.8vmin, 15px);
-  line-height: 1.5;
-}
-#btn-start {
-  padding: clamp(14px, 2vmin, 18px) clamp(36px, 5vmin, 56px);
-  border: none; border-radius: 12px;
-  background: linear-gradient(180deg, #ffcb2b, #e0a800);
-  color: #1a1a1a; font-weight: 900;
-  font-size: clamp(15px, 2vmin, 19px);
-  letter-spacing: 1.5px; text-transform: uppercase;
-  box-shadow: 0 3px 0 #8a6508, inset 0 1px 0 rgba(255,255,255,.35);
-  touch-action: manipulation; min-height: 52px;
-  cursor: pointer;
-}
-#btn-start:active { transform: translateY(2px); box-shadow: 0 1px 0 #8a6508; }
-
-#final-overlay {
-  position: absolute; inset: 0;
-  z-index: 400;
-  display: none;
-  overflow: hidden;
-  isolation: isolate;
-}
-#final-overlay.visible { display: block; }
-#final-dim {
-  position: absolute; inset: 0;
-  background: rgba(0, 0, 0, 0.65);
-  z-index: 0;
-  pointer-events: none;
-  transform: translateZ(0);
-  contain: strict;
-}
-#final-fx {
-  position: absolute; inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  transform: translateZ(0);
-  contain: strict;
-}
-.firework { position: absolute; pointer-events: none; width: 0; height: 0; }
-.firework .spark {
-  position: absolute; left: 0; top: 0;
-  width: 6px; height: 6px; border-radius: 50%;
-  pointer-events: none; opacity: 0;
-  animation: sparkFly 1.6s ease-out forwards;
-  will-change: transform, opacity;
-}
-@keyframes sparkFly {
-  0% { opacity: 1; transform: translate(0, 0) scale(1); }
-  70% { opacity: 1; }
-  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.2); }
-}
-
-/* ============================================================
-   ОКНО ПОДТВЕРЖДЕНИЯ ВЫХОДА НА ЛЕНДИНГ
-   Появляется при нажатии на глобус во время игры.
-   ============================================================ */
-#leave-game-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 300;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  background: rgba(0,0,0,.72);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
-}
-#leave-game-overlay.visible {
-  display: flex;
-  animation: leaveFadeIn .18s ease;
-}
-@keyframes leaveFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-#leave-game-overlay .leave-box {
-  width: 100%;
-  max-width: 320px;
-  background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
-  border: 1px solid #3a3018;
-  border-radius: 16px;
-  padding: clamp(20px, 4vmin, 26px) clamp(18px, 3.6vmin, 24px);
-  box-shadow: 0 24px 60px rgba(0,0,0,.85), 0 0 0 1px rgba(255,203,43,.08);
-  text-align: center;
-  animation: leaveSlideUp .24s cubic-bezier(.22,.61,.36,1);
-}
-@keyframes leaveSlideUp {
-  from { transform: translateY(16px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-#leave-game-overlay .leave-title {
-  color: #fff;
-  font-size: clamp(16px, 2.4vmin, 19px);
-  font-weight: 900;
-  line-height: 1.2;
-  margin-bottom: clamp(18px, 3vmin, 22px);
-}
-#leave-game-overlay .leave-buttons {
-  display: flex;
-  gap: clamp(8px, 1.6vmin, 12px);
-}
-#leave-game-overlay .leave-btn {
-  flex: 1;
-  min-height: 44px;
-  border: none;
-  border-radius: 10px;
-  font-weight: 900;
-  font-size: clamp(12px, 1.8vmin, 14px);
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  cursor: pointer;
-  touch-action: manipulation;
-  transition: transform .08s ease, filter .08s ease;
-  font-family: inherit;
-}
-#leave-game-overlay .leave-btn:active {
-  transform: scale(0.96);
-  filter: brightness(1.15);
-}
-#leave-game-overlay .leave-btn--yes {
-  background: linear-gradient(180deg, #ffcb2b, #e0a800);
-  color: #1a1a1a;
-  box-shadow: 0 3px 0 #8a6508, inset 0 1px 0 rgba(255,255,255,.35);
-}
-#leave-game-overlay .leave-btn--no {
-  background: linear-gradient(180deg, #4a4a4a, #2a2a2a);
-  color: #e8eef5;
-  box-shadow: 0 3px 0 #111, inset 0 1px 0 rgba(255,255,255,.12);
-}
 </style>
 </head>
 <body>
 
 <!-- ============================================================
-     ЛЕНДИНГ
+     ИНФО-МОДАЛКА (скрыта по умолчанию, открывается тапзонами)
      ============================================================ -->
 <div id="info-modal" role="dialog" aria-modal="true" aria-labelledby="info-modal-title-el">
   <div class="info-modal-box">
@@ -2521,20 +800,33 @@ button.disabled { cursor: default; }
   </div>
 </div>
 
+<!-- ============================================================
+     ЛЕНДИНГ
+     ============================================================ -->
 <div id="landing" aria-label="Prana Poker — лендинг">
 
+  <!-- Верхняя золотая линия + свечение вниз (в потоке страницы) -->
+  <div class="lnd-top-rule" aria-hidden="true"></div>
+  <div class="lnd-top-glow" aria-hidden="true"></div>
+
+  <!-- Hero-секция -->
   <section class="lnd-hero" aria-labelledby="lnd-hero-title">
+
+    <!-- Название проекта: отдельный блок сверху, во всю ширину, по центру -->
     <div class="lnd-brand-top">
       <div class="lnd-brand-name">Prana Poker</div>
     </div>
 
+    <!-- Сетка hero -->
     <div class="lnd-inner lnd-hero-grid">
       <div class="lnd-hero-copy">
         <h1 class="lnd-h1" id="lnd-hero-title">Тренируй <span class="gold">логику</span> и <span class="gold">интуицию</span></h1>
+        <!-- Десктопная версия текста (полная) -->
         <p class="lnd-sub">Симулятор турнирного стола с ботами PRO и VIP, имитирующими поведение человека. Тренажёр для развития логики и интуиции за покерным столом. Бесплатно. Без установки. Без регистрации.</p>
+        <!-- Мобильная версия текста (без фразы «Бесплатно...» — она ниже, над кнопкой) -->
         <p class="lnd-sub-mobile-copy">Симулятор турнирного стола с ботами PRO и VIP, имитирующими поведение человека. Тренажёр для развития логики и интуиции за покерным столом.</p>
         <div class="lnd-hero-actions">
-          <a class="lnd-btn pp-start-btn" href="#" role="button" aria-label="Начать тренировку">Начать тренировку</a>
+          <a class="lnd-btn" href="/app.html" aria-label="Начать тренировку">Начать тренировку</a>
         </div>
       </div>
       <div class="lnd-hero-visual" aria-hidden="true">
@@ -2548,13 +840,15 @@ button.disabled { cursor: default; }
         </div>
       </div>
 
+      <!-- Мобильный блок: текст над кнопкой, кнопка ниже под картами -->
       <div class="lnd-mobile-cta">
         <p class="lnd-sub-mobile">Бесплатно. Без установки. Без регистрации.</p>
-        <a class="lnd-btn pp-start-btn" href="#" role="button" aria-label="Начать тренировку">Начать тренировку</a>
+        <a class="lnd-btn" href="/app.html" aria-label="Начать тренировку">Начать тренировку</a>
       </div>
     </div>
   </section>
 
+  <!-- Секция «Почему это работает» -->
   <section class="lnd-section" aria-labelledby="lnd-why-title">
     <div class="lnd-inner">
       <div>
@@ -2585,6 +879,7 @@ button.disabled { cursor: default; }
     </div>
   </section>
 
+  <!-- Секция «Против кого ты играешь» -->
   <section class="lnd-section" aria-labelledby="lnd-bots-title">
     <div class="lnd-inner">
       <div>
@@ -2610,10 +905,11 @@ button.disabled { cursor: default; }
           <article class="lnd-bot"><span class="badge vip-maniac">VIP · 4</span><h4>Maniac</h4><p>Рейзит всё, блефует на всех улицах, играет на эмоциях. Тренирует терпение и хладнокровие: ждать свою руку, плотно вэлью-бетить и никогда не блефовать в ответ.</p></article>
         </div>
       </div>
-      <div class="lnd-bot-cta"><a class="lnd-btn pp-start-btn" href="#" role="button" aria-label="Начать тренировку">Начать тренировку</a></div>
+      <div class="lnd-bot-cta"><a class="lnd-btn" href="/app.html" aria-label="Начать тренировку">Начать тренировку</a></div>
     </div>
   </section>
 
+  <!-- Секция «Чему ты научишься» -->
   <section class="lnd-section" aria-labelledby="lnd-benefit-title">
     <div class="lnd-inner">
       <div>
@@ -2635,6 +931,7 @@ button.disabled { cursor: default; }
     </div>
   </section>
 
+  <!-- Секция «Как устроена игра» -->
   <section class="lnd-section" aria-labelledby="lnd-how-title">
     <div class="lnd-inner">
       <div>
@@ -2651,10 +948,11 @@ button.disabled { cursor: default; }
         <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg></div>
         <div class="txt">Приложение оптимизировано под мобильные устройства. Управление одной рукой, безопасные отступы под вырез экрана и системную панель, свайпы открывают панели, тапы и удержания по стеку и картам, крупные зоны нажатия. Бесплатно, без регистрации и установки — работает прямо в браузере.</div>
       </div>
-      <div style="margin-top:26px; text-align:center;"><a class="lnd-btn pp-start-btn" href="#" role="button" aria-label="Начать тренировку">Начать тренировку</a></div>
+      <div style="margin-top:26px; text-align:center;"><a class="lnd-btn" href="/app.html" aria-label="Начать тренировку">Начать тренировку</a></div>
     </div>
   </section>
 
+  <!-- Секция «Что внутри приложения» -->
   <section class="lnd-section" aria-labelledby="lnd-features-title">
     <div class="lnd-inner">
       <div>
@@ -2672,6 +970,7 @@ button.disabled { cursor: default; }
     </div>
   </section>
 
+  <!-- Секция «Разделы и режимы» -->
   <section class="lnd-section" aria-labelledby="lnd-sections-title">
     <div class="lnd-inner">
       <div>
@@ -2698,16 +997,18 @@ button.disabled { cursor: default; }
     </div>
   </section>
 
+  <!-- Финальный CTA -->
   <section class="lnd-section lnd-final" aria-labelledby="lnd-final-title">
     <div class="lnd-final-glow" aria-hidden="true"></div>
     <div class="lnd-final-rule" aria-hidden="true"></div>
     <div class="lnd-inner">
       <h2 class="lnd-h2" id="lnd-final-title">Готов тренировать <span class="gold">логику</span> и <span class="gold">интуицию</span>?</h2>
       <p class="lnd-p" style="margin-left:auto;margin-right:auto;">Бесплатно. Без установки. Без регистрации.</p>
-      <div style="margin-top:26px;"><a class="lnd-btn pp-start-btn" href="#" role="button" aria-label="Начать тренировку">Начать тренировку</a></div>
+      <div style="margin-top:26px;"><a class="lnd-btn" href="/app.html" aria-label="Начать тренировку">Начать тренировку</a></div>
     </div>
   </section>
 
+  <!-- Футер -->
   <footer class="lnd-footer">
     <div class="lnd-inner">
       <div class="row">
@@ -2720,247 +1021,37 @@ button.disabled { cursor: default; }
 
 </div>
 
-<div class="lnd-fade-top" id="lnd-fade-top" aria-hidden="true"></div>
-<div class="lnd-fade-bottom" id="lnd-fade-bottom" aria-hidden="true"></div>
-<div class="lnd-top-rule" id="lnd-top-rule" aria-hidden="true"></div>
-
-<div id="bottom-bar" aria-hidden="true">
-  <div class="bottom-bar-center">
-    <a class="bottom-icon pp-start-btn" href="#" role="button" aria-label="Начать тренировку">
-      <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <rect x="4" y="6" width="14" height="20" rx="2" transform="rotate(-8 11 16)" fill="#3a2c10"/>
-        <rect x="14" y="6" width="14" height="20" rx="2" transform="rotate(8 21 16)" fill="#3a2c10"/>
-      </svg>
-    </a>
-    <button class="bottom-icon bottom-icon--heart" type="button" data-action="open-support" aria-label="Поддержать автора">
-      <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
-        <path d="M16 28.5C16 28.5 3.5 20.4 3.5 11.9C3.5 7.5 6.9 4.1 11 4.1C13.2 4.1 15.1 5.1 16 6.6C16.9 5.1 18.8 4.1 21 4.1C25.1 4.1 28.5 7.5 28.5 11.9C28.5 20.4 16 28.5 16 28.5Z"/>
-      </svg>
-    </button>
-    <a class="bottom-icon bottom-icon-tg" href="https://t.me/pranapokerbot" target="_blank" rel="noopener noreferrer" aria-label="Открыть канал в Telegram">
-      <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
-        <path d="M23.06 9.07 8.32 14.76c-.98.4-.97 1.78.01 2.17l3.66 1.4 1.4 4.5c.2.64 1.02.82 1.48.32l1.98-2.14 3.86 2.83c.55.4 1.34.11 1.49-.56l2.66-12.62c.16-.75-.6-1.35-1.8-1.59zM12.7 17.36l8.02-5.02-6.55 6.14-.18 2.55-1.29-3.67z"/>
-      </svg>
-    </a>
-  </div>
-</div>
-
-<!-- ============================================================
-     ПРИЛОЖЕНИЕ
-     ============================================================ -->
-<div id="app" class="hidden">
-
-  <div id="table-scene">
-    <div id="poker-table-wood">
-      <div id="poker-table">
-        <div id="hu-glow"></div>
-        <div id="swipe-center"></div>
-        <div id="board-area">
-          <div id="place-center">
-            <div id="hands-history-row">
-              <span id="hands-history-label">Hands History<span class="hh-copy-icon"></span></span>
-              <span id="hands-history-copied">Copied</span>
-            </div>
-            <div class="place-line" id="place-line">Rank: 1/8 ITM: 3</div>
-          </div>
-          <div id="top-info">
-            <div id="pot-display">Pot: 0</div>
-          </div>
-          <div id="board-cards-wrap">
-            <div id="board-brand-label">PRANA POKER</div>
-            <div id="board-cards"></div>
-          </div>
-          <div id="table-info">
-            <div class="info-row" id="info-blinds-row">Blinds: 10/20</div>
-            <div class="info-row faded" id="info-timer-row">10 hands: 15/30</div>
-          </div>
-        </div>
-
-        <div id="seats"></div>
-
-        <div id="hero-actions" class="inactive">
-          <div id="hand-nav">
-            <div class="nav-history">
-              <button id="hn-prev" title="Назад" disabled>◀︎</button>
-              <span class="nav-counter"><span id="hn-cur">0</span><span class="total"> / </span><span id="hn-tot">0</span></span>
-              <button id="hn-next" title="Вперёд" disabled>▶︎</button>
-            </div>
-            <button id="hn-replay" title="Реплей">▶︎⏸︎</button>
-            <button id="hn-resume" title="Продолжить" disabled>▶︎▶︎</button>
-            <button id="hn-settings" title="Настройки"><svg class="hn-settings-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96a7.02 7.02 0 0 0-1.62-.94l-.36-2.54a.48.48 0 0 0-.48-.41h-3.84a.48.48 0 0 0-.47.41l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96a.49.49 0 0 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.49.49 0 0 0-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
-          </div>
-          <div id="hero-slider-row">
-            <div id="raise-slider-track">
-              <div id="raise-slider-segments">
-                <div id="raise-slider-call-seg"></div>
-                <div id="raise-slider-raise-seg"></div>
-                <div id="raise-slider-thumb"></div>
-              </div>
-            </div>
-            <span id="raise-amount-mini">0</span>
-          </div>
-          <div id="hero-buttons">
-            <button id="btn-fold" disabled>Fold</button>
-            <button id="btn-check" disabled>Check</button>
-            <button id="btn-call" disabled>
-              <span class="call-label">Call</span>
-              <span class="call-amount" id="call-amount"></span>
-            </button>
-          </div>
-        </div>
-
-        <div id="quick-percent-list" class="inactive"></div>
-      </div>
-    </div>
-  </div>
-
-  <div id="tap-close"></div>
-
-  <div id="bottom-panel">
-    <h3>Настройки</h3>
-
-    <label class="setting">
-      <span>Язык приложения</span>
-      <select id="set-language">
-        <option value="ru">Русский</option>
-        <option value="en">Английский</option>
-      </select>
-    </label>
-
-    <label class="setting">
-      <span>Уровень сложности</span>
-      <select id="set-difficulty">
-        <option value="min">Минимум</option>
-        <option value="mid" selected>Средний</option>
-        <option value="max">Максимум</option>
-      </select>
-    </label>
-
-    <label class="setting">
-      <span>Стеки игроков</span>
-      <select id="set-stack-display">
-        <option value="bb">BB</option>
-        <option value="chips">Фишки</option>
-      </select>
-    </label>
-
-    <label class="setting">
-      <span>Стиль карт</span>
-      <select id="set-card-style">
-        <option value="4color">4-цветные</option>
-        <option value="2color">2-цветные</option>
-      </select>
-    </label>
-
-    <label class="setting">
-      <span>Рост блайндов</span>
-      <select id="set-blind-growth">
-        <option value="10">Каждые 10 раздач</option>
-        <option value="5">Каждые 5 раздач</option>
-      </select>
-    </label>
-    <label class="setting">
-      <span>Время на ход</span>
-      <select id="set-turn-time">
-        <option value="0">Без времени</option>
-        <option value="10" selected>10 секунд</option>
-      </select>
-    </label>
-    <label class="setting">
-      <span>Показывать тип игроков</span>
-      <input type="checkbox" id="set-show-strategies" />
-    </label>
-    <label class="setting">
-      <span>Открыть карты игроков</span>
-      <input type="checkbox" id="set-show-all-hands" />
-    </label>
-    <label class="setting">
-      <span>Скрыть карты героя</span>
-      <input type="checkbox" id="set-hide-hero-hand" />
-    </label>
-    <label class="setting">
-      <span>Скрыть карты борда</span>
-      <input type="checkbox" id="set-hide-board-cards" />
-    </label>
-    <label class="setting">
-      <span>На вскрытии показывать карты всех</span>
-      <input type="checkbox" id="set-show-all-showdown" />
-    </label>
-    <button id="btn-restart-panel" type="button">Начать заново</button>
-  </div>
-
-  <div id="support-overlay" role="dialog" aria-modal="true" aria-labelledby="support-modal-title-el">
-    <div id="support-modal-box">
-      <h2 class="support-modal-title" id="support-modal-title-el">ПОДДЕРЖИ АВТОРА</h2>
-      <div id="support-modal-content"></div>
-    </div>
-  </div>
-
-  <div id="final-overlay">
-    <div id="final-dim"></div>
-    <div id="final-fx"></div>
-  </div>
-
-  <div id="leave-game-overlay" role="dialog" aria-modal="true" aria-labelledby="leave-game-title">
-    <div class="leave-box">
-      <div class="leave-title" id="leave-game-title">Выйти из игры?</div>
-      <div class="leave-buttons">
-        <button class="leave-btn leave-btn--yes" id="leave-game-yes" type="button">Да</button>
-        <button class="leave-btn leave-btn--no" id="leave-game-no" type="button">Нет</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="start-overlay">
-    <div class="start-card">
-      <h1>Prana Poker</h1>
-      <p>Тренируй свои покерные навыки</p>
-      <button id="btn-start">Начать игру</button>
-    </div>
-  </div>
-
-  <div id="top-dock">
-    <div id="top-round-row">
-      <span class="top-icon-slot">
-        <button id="top-home-btn" class="top-icon-btn" type="button" aria-label="На главную">
-          <svg viewBox="0 0 32 32" aria-hidden="true">
-            <circle cx="16" cy="16" r="12.5" fill="#3a2c10" stroke="#b8924a" stroke-width="1.6"/>
-            <g fill="none" stroke="#b8924a" stroke-width="1.4">
-              <ellipse cx="16" cy="16" rx="6" ry="12.5"/>
-              <line x1="3.5" y1="16" x2="28.5" y2="16"/>
-              <line x1="4.8" y1="9.5" x2="27.2" y2="9.5"/>
-              <line x1="4.8" y1="22.5" x2="27.2" y2="22.5"/>
-            </g>
-          </svg>
-        </button>
-      </span>
-      <span class="top-icon-slot">
-        <button id="top-heart-btn" class="top-icon-btn top-icon-btn--heart" type="button" aria-label="Поддержать автора">
-          <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
-            <path d="M16 28.5C16 28.5 3.5 20.4 3.5 11.9C3.5 7.5 6.9 4.1 11 4.1C13.2 4.1 15.1 5.1 16 6.6C16.9 5.1 18.8 4.1 21 4.1C25.1 4.1 28.5 7.5 28.5 11.9C28.5 20.4 16 28.5 16 28.5Z"/>
-          </svg>
-        </button>
-      </span>
-      <span class="top-icon-slot">
-        <a id="top-tg-btn" class="top-icon-btn top-icon-btn-tg" href="https://t.me/pranapokerbot" target="_blank" rel="noopener noreferrer" aria-label="Открыть канал в Telegram">
-          <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
-            <path d="M23.06 9.07 8.32 14.76c-.98.4-.97 1.78.01 2.17l3.66 1.4 1.4 4.5c.2.64 1.02.82 1.48.32l1.98-2.14 3.86 2.83c.55.4 1.34.11 1.49-.56l2.66-12.62c.16-.75-.6-1.35-1.8-1.59zM12.7 17.36l8.02-5.02-6.55 6.14-.18 2.55-1.29-3.67z"/>
-          </svg>
-        </a>
-      </span>
-    </div>
-  </div>
-
-</div>
-
-<!-- ============================================================
-     СКРИПТ ЛЕНДИНГА
-     Инфо-модалки, карточки поддержки, полосы затемнения,
-     нижняя панель. Работает независимо от скрипта приложения.
-     ============================================================ -->
 <script>
 /* ============================================================
-   ИНФО-МОДАЛКИ ЛЕНДИНГА
+   ОБРАБОТКА ОШИБОК КАРТИНОК: ЗАМЕНА НА SVG-СЕРДЦЕ
+   Если картинка не загрузилась — вставляем заглушку.
+   ============================================================ */
+(function() {
+  var HEART_SVG = '<svg class="ph-heart-svg" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 28.5C16 28.5 3.5 20.4 3.5 11.9C3.5 7.5 6.9 4.1 11 4.1C13.2 4.1 15.1 5.1 16 6.6C16.9 5.1 18.8 4.1 21 4.1C25.1 4.1 28.5 7.5 28.5 11.9C28.5 20.4 16 28.5 16 28.5Z"/></svg>';
+  function makeFallback() {
+    var el = document.createElement('div');
+    el.className = 'ph-fallback';
+    el.setAttribute('aria-hidden', 'true');
+    el.innerHTML = HEART_SVG;
+    return el;
+  }
+  function handleImg(img) {
+    if (!img || img.dataset.phDone === '1') return;
+    img.dataset.phDone = '1';
+    var parent = img.parentNode;
+    if (!parent) return;
+    while (parent.firstChild) parent.removeChild(parent.firstChild);
+    parent.appendChild(makeFallback());
+  }
+  document.addEventListener('error', function(e) {
+    var t = e.target;
+    if (t && t.tagName === 'IMG') handleImg(t);
+  }, true);
+  window.PP_HEART_SVG = HEART_SVG;
+})();
+
+/* ============================================================
+   ИНФО-МОДАЛКИ И МОДАЛКА «ПОДДЕРЖАТЬ АВТОРА»
    ============================================================ */
 (function() {
   'use strict';
@@ -2969,7 +1060,9 @@ button.disabled { cursor: default; }
   var infoBody = document.getElementById('info-modal-body');
   var infoBox = infoModal ? infoModal.querySelector('.info-modal-box') : null;
   if (!infoModal || !infoBox) return;
+  var isSupportOpen = false;
 
+  /* Тексты инфо-модалок (русские) */
   var I18N = {
     'modal.logic.title': 'Логика',
     'modal.logic.body': 'Логика в покере — это не про «правильные» решения по чарту, а про построение линии, при которой оппонент совершает ошибку. Каждое ваше действие должно иметь цель: заставить его сделать колл, когда он позади; фолд, когда он впереди; рейз, когда он блефует. Без этой цели действие превращается в угадывание, и вы теряете контроль над раздачей.\n\nВы учитесь задавать вопрос «зачем» перед каждым ходом. Не «что я должен сделать по GTO», а «что я хочу, чтобы сделал оппонент после моего действия». В этом и есть ключевое отличие правильной игры от точной: первая соответствует теории, вторая — управляет чужим решением и заставляет его ошибиться именно там, где вам выгодно.\n\nЗа столом Prana Poker логика тренируется через анализ линии каждого бота. Почему LAG-Pro рейзит именно здесь, почему ICM-Exploiter на баббле играет тайтовее, почему Solver-Hybrid меняет паттерн именно против вас. Вы начинаете видеть логику за чужими решениями — и постепенно строите свою так, чтобы управлять чужой.',
@@ -2982,1363 +1075,229 @@ button.disabled { cursor: default; }
     'modal.control.title': 'Управление',
     'modal.control.body': 'Всё управление — под большой палец. Свайпы вверх и вниз открывают и закрывают настройки, не отрываясь от игры. Тренировка на телефоне — удобнее большого экрана.\n\nСлайдер ставки регулируется одним движением — точный размер бета без ручного ввода цифр. Тапы по стеку, картам и таймеру срабатывают мгновенно, без двойных кликов.\n\nНажатие на кнопках захватывает слайдер, а движение вверх или вниз задаёт сумму ставки. Долгое нажатие на картах героя скрывает их для тренировки интуиции.',
     'modal.support.title': 'Поддержка',
-    'modal.support.body': 'Prana Poker — некоммерческий проект. Без подписок, без рекламы, без платы за доступ. Проект существует исключительно на средства от вашей поддержки.\n\nАдреса для переводов: GGPoker (перевод через покер-рум), USDT TRC20 (криптовалюта в сети Tron), VISA (карта для переводов в долларах и других валютах) или запрос в Telegram.\n\nКонтакты в Telegram — основной канал связи. Через него можно задать вопрос, предложить идею, сообщить об ошибке или просто поделиться впечатлениями от тренировки.'
+    'modal.support.body': 'Prana Poker — некоммерческий проект. Без подписок, без рекламы, без платы за доступ. Проект существует исключительно на средства от вашей поддержки.\n\nАдреса для переводов: GGPoker (перевод через покер-рум), USDT TRC20 (криптовалюта в сети Tron), VISA (карта для переводов в долларах и других валютах) или запрос в Telegram.\n\nКонтакты в Telegram — основной канал связи. Через него можно задать вопрос, предложить идею, сообщить об ошибке или просто поделиться впечатлениями от тренировки.',
+    'modal.supportAuthor.title': 'ПОДДЕРЖИ АВТОРА',
+    'modal.supportThanks': 'Благодарю за поддержку',
+    'modal.copiedText': 'Скопировано'
   };
 
-  function openInfo(titleKey, bodyKey) {
-    infoTitle.classList.add('title-normal-case');
-    infoBox.classList.remove('info-modal-box--support');
-    infoTitle.textContent = I18N[titleKey] || titleKey || '';
-    var bodyText = I18N[bodyKey] || '';
-    var paragraphs = String(bodyText).split('\n\n');
-    var html = '';
-    for (var i = 0; i < paragraphs.length; i++) {
-      var p = paragraphs[i].trim();
-      if (!p) continue;
-      html += '<p>' + p.replace(/\n/g, '<br>') + '</p>';
+  var NICK = 'LuckyLinka';
+  var WALLET = 'TAD6zXLvHEbUJvCjjeKLkm7MVkwyTbVLTu';
+
+  /* HTML для карточек поддержки (GGPoker + USDT) */
+  function buildSupportHtml() {
+    return '<div class="support-card-stack" id="support-card-stack">' +
+      '<div class="support-card support-card-gold" data-card="gold">' +
+        '<div class="support-card-top"><div class="support-card-bank support-card-gg-wrap" translate="no"><span class="support-card-gg">GG</span>POKER</div><div class="support-card-club-top" translate="no">Transfer</div></div>' +
+        '<div class="support-card-chip"></div>' +
+        '<div class="support-card-nickname-row" translate="no"><span class="support-card-name-label">Nickname:</span> <span class="support-copy-text support-card-name-value" data-copy-value="' + NICK + '">' + NICK + '<span class="support-copy-icon"></span></span></div>' +
+        '<div class="support-card-bottom"><div class="support-card-bottom-line" translate="no">Balance: $</div></div>' +
+        '<div class="support-card-copied" data-i18n="modal.copiedText">Скопировано</div>' +
+      '</div>' +
+      '<div class="support-card support-card-violet" data-card="violet">' +
+        '<div class="support-card-top"><div class="support-card-bank" translate="no">Cryptocurrency</div><div class="support-card-club-top" translate="no">Tether</div></div>' +
+        '<div class="support-card-chip"></div>' +
+        '<div class="support-card-usdt-line" translate="no"><span class="support-copy-text" data-copy-value="' + WALLET + '">' + WALLET + '<span class="support-copy-icon"></span></span></div>' +
+        '<div class="support-card-bottom"><div class="support-card-bottom-line" translate="no">USDT Tether → TRON (TRC20)</div></div>' +
+        '<div class="support-card-copied" data-i18n="modal.copiedText">Скопировано</div>' +
+      '</div></div>' +
+      '<div class="support-thanks" data-i18n="modal.supportThanks">Благодарю за поддержку</div>';
+  }
+
+  /* Открытие модалки: инфо или поддержка */
+  function openInfo(titleKey, bodyKey, isSupport) {
+    if (isSupport) {
+      isSupportOpen = true;
+      infoTitle.textContent = I18N['modal.supportAuthor.title'];
+      infoTitle.classList.remove('title-normal-case');
+      infoBox.classList.add('info-modal-box--support');
+      infoBody.innerHTML = buildSupportHtml();
+      initSupportCards();
+    } else {
+      isSupportOpen = false;
+      infoTitle.classList.add('title-normal-case');
+      infoBox.classList.remove('info-modal-box--support');
+      infoTitle.textContent = I18N[titleKey] || titleKey || '';
+      var bodyText = I18N[bodyKey] || '';
+      var paragraphs = String(bodyText).split('\n\n');
+      var html = '';
+      for (var i = 0; i < paragraphs.length; i++) {
+        var p = paragraphs[i].trim();
+        if (!p) continue;
+        html += '<p>' + p.replace(/\n/g, '<br>') + '</p>';
+      }
+      infoBody.innerHTML = html || '<p></p>';
     }
-    infoBody.innerHTML = html || '<p></p>';
     infoModal.classList.add('open');
     document.body.style.overflow = 'hidden';
   }
   function closeInfo() {
     infoModal.classList.remove('open');
     document.body.style.overflow = '';
+    isSupportOpen = false;
   }
 
-  infoModal.addEventListener('click', function() { closeInfo(); });
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && infoModal.classList.contains('open')) closeInfo();
+  infoModal.addEventListener('click', function(e) {
+    if (isSupportOpen) { if (e.target === infoModal) closeInfo(); return; }
+    closeInfo();
   });
+  infoBox.addEventListener('click', function(e) { if (isSupportOpen) e.stopPropagation(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && infoModal.classList.contains('open')) closeInfo(); });
 
+  /* Привязка тапзон (карточки «Логика», «Настройки» и т.д.) */
   var tappables = document.querySelectorAll('.lnd-card.tappable');
   for (var i = 0; i < tappables.length; i++) {
     (function(card) {
       card.addEventListener('click', function(e) {
         e.preventDefault(); e.stopPropagation();
-        openInfo(card.getAttribute('data-info-title-key') || '', card.getAttribute('data-info-body-key') || '');
+        openInfo(card.getAttribute('data-info-title-key') || '', card.getAttribute('data-info-body-key') || '', false);
       });
     })(tappables[i]);
   }
-})();
 
-/* ============================================================
-   ПОЛОСЫ ЗАТУХАНИЯ И НИЖНЯЯ ПАНЕЛЬ ЛЕНДИНГА
-   ============================================================ */
-(function() {
-  var landing = document.getElementById('landing');
-  var bottomBar = document.getElementById('bottom-bar');
-  var fadeBottom = document.getElementById('lnd-fade-bottom');
-  var fadeTop = document.getElementById('lnd-fade-top');
-  var topRule = document.getElementById('lnd-top-rule');
-  if (!landing || !bottomBar) return;
-  var bottomVisible = false;
-  var topVisible = false;
-  var topRuleHidden = false;
-  var panelProgress = 0;
-  var rafId = 0;
-  var lastY = landing.scrollTop || 0;
-  var target = 0;
-
-  function applyPanel() {
-    var ty = (1 - panelProgress) * 100;
-    bottomBar.style.transform = 'translateY(' + ty + '%)';
-    var shouldBeVisible = panelProgress > 0.5;
-    if (shouldBeVisible !== bottomVisible) {
-      bottomVisible = shouldBeVisible;
-      bottomBar.classList.toggle('visible', shouldBeVisible);
-      if (fadeBottom) fadeBottom.classList.toggle('visible', shouldBeVisible);
-    }
-  }
-
-  function tick() {
-    rafId = 0;
-    var speed = Math.min(0.28, Math.max(0.10, Math.abs(target - panelProgress) * 0.6 + 0.10));
-    if (panelProgress < target) {
-      panelProgress = Math.min(target, panelProgress + speed);
-    } else if (panelProgress > target) {
-      panelProgress = Math.max(target, panelProgress - speed);
-    }
-    applyPanel();
-    if (Math.abs(panelProgress - target) > 0.001) {
-      rafId = requestAnimationFrame(tick);
-    } else {
-      panelProgress = target;
-      applyPanel();
-    }
-  }
-
-  function kick() { if (!rafId) rafId = requestAnimationFrame(tick); }
-
-  function setTopVisible(v) { if (v === topVisible) return; topVisible = v; if (fadeTop) fadeTop.classList.toggle('visible', v); }
-  function setTopRuleHidden(v) { if (!topRule) return; if (v === topRuleHidden) return; topRuleHidden = v; topRule.classList.toggle('hidden', v); }
-
-  function onScroll() {
-    var y = landing.scrollTop || 0;
-    setTopVisible(y >= 1);
-    setTopRuleHidden(y >= 1);
-    var dy = y - lastY;
-    lastY = y;
-    target = (y > 1) ? 1 : 0;
-    if (target === 1) {
-      var boost = Math.min(0.35, Math.abs(dy) / 200);
-      if (panelProgress < target) panelProgress = Math.min(target, panelProgress + boost);
-    } else {
-      var boostDown = Math.min(0.35, Math.abs(dy) / 200);
-      if (panelProgress > target) panelProgress = Math.max(target, panelProgress - boostDown);
-    }
-    applyPanel();
-    kick();
-  }
-
-  landing.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('load', onScroll);
-  onScroll();
-})();
-
-/* ============================================================
-   МОБИЛЬНОЕ НАЖАТИЕ НА ИКОНКИ НИЖНЕЙ ПАНЕЛИ ЛЕНДИНГА
-   ============================================================ */
-(function() {
-  'use strict';
-  var icons = document.querySelectorAll('.bottom-icon');
-  if (!icons.length) return;
-
-  function press(el) { if (el) el.classList.add('is-pressed'); }
-  function release(el) { if (el) el.classList.remove('is-pressed'); }
-  function releaseAll() { for (var i = 0; i < icons.length; i++) icons[i].classList.remove('is-pressed'); }
-
-  for (var i = 0; i < icons.length; i++) {
-    (function(el) {
-      el.addEventListener('touchstart', function() { press(el); }, { passive: true });
-      el.addEventListener('touchend', function() { release(el); }, { passive: true });
-      el.addEventListener('touchcancel', function() { release(el); }, { passive: true });
-      el.addEventListener('touchmove', function(e) {
-        if (!e.touches || !e.touches.length) { release(el); return; }
-        var t = e.touches[0];
-        var r = el.getBoundingClientRect();
-        var inside = t.clientX >= r.left && t.clientX <= r.right && t.clientY >= r.top && t.clientY <= r.bottom;
-        if (!inside) release(el);
-      }, { passive: true });
-    })(icons[i]);
-  }
-  document.addEventListener('touchend', function() { setTimeout(releaseAll, 120); }, { passive: true });
-  document.addEventListener('touchcancel', releaseAll, { passive: true });
-})();
-
-/* ============================================================
-   ОБЩИЙ МЕХАНИЗМ ПОДДЕРЖКИ АВТОРА
-   Один на лендинг и приложение: одинаковые карточки GGPoker
-   и USDT, одинаковое поведение, одно и то же копирование.
-   ============================================================ */
-const Support = (() => {
-  const NICK_CODE = [76,117,99,107,121,76,105,110,107,97];
-  const WALLET_CODE = [84,65,68,54,122,88,76,118,72,69,98,85,74,118,67,106,106,101,75,76,107,109,55,77,86,107,119,121,84,98,86,76,84,117];
-
-  function decodeCodes(arr) {
-    let s = '';
-    for (let i = 0; i < arr.length; i++) s += String.fromCharCode(arr[i]);
-    return s;
-  }
-  function getNickname() { try { return decodeCodes(NICK_CODE); } catch (e) { return ''; } }
-  function getWallet()   { try { return decodeCodes(WALLET_CODE); } catch (e) { return ''; } }
-
-  function buildHtml() {
-    const nicknameValue = getNickname();
-    const walletValue = getWallet();
-    return (
-      '<div class="support-card-stack" id="support-card-stack">' +
-        '<div class="support-card support-card-gold" data-card="gold">' +
-          '<div class="support-card-top">' +
-            '<div class="support-card-bank support-card-gg-wrap" translate="no"><span class="support-card-gg">GG</span>POKER</div>' +
-            '<div class="support-card-club-top" translate="no">Transfer</div>' +
-          '</div>' +
-          '<div class="support-card-chip"></div>' +
-          '<div class="support-card-nickname-row" translate="no">' +
-            '<span class="support-card-name-label">Nickname:</span> ' +
-            '<span class="support-copy-text support-card-name-value" data-copy-value="' + nicknameValue + '">' + nicknameValue + '<span class="support-copy-icon"></span></span>' +
-          '</div>' +
-          '<div class="support-card-bottom">' +
-            '<div class="support-card-bottom-line" translate="no">Balance: $</div>' +
-          '</div>' +
-          '<div class="support-card-copied">Скопировано</div>' +
-        '</div>' +
-        '<div class="support-card support-card-violet" data-card="violet">' +
-          '<div class="support-card-top">' +
-            '<div class="support-card-bank" translate="no">Cryptocurrency</div>' +
-            '<div class="support-card-club-top" translate="no">Tether</div>' +
-          '</div>' +
-          '<div class="support-card-chip"></div>' +
-          '<div class="support-card-usdt-line" translate="no">' +
-            '<span class="support-copy-text" data-copy-value="' + walletValue + '">' + walletValue + '<span class="support-copy-icon"></span></span>' +
-          '</div>' +
-          '<div class="support-card-bottom">' +
-            '<div class="support-card-bottom-line" translate="no">USDT Tether → TRON (TRC20)</div>' +
-          '</div>' +
-          '<div class="support-card-copied">Скопировано</div>' +
-        '</div>' +
-      '</div>' +
-      '<div class="support-thanks">Благодарю за поддержку</div>'
-    );
-  }
-
-  function copyText(text, onSuccess) {
-    let ok = false;
-    try {
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      ta.setAttribute('readonly', '');
-      ta.style.position = 'fixed';
-      ta.style.top = '-1000px';
-      ta.style.left = '-1000px';
-      ta.style.opacity = '0';
-      document.body.appendChild(ta);
-      ta.focus();
-      ta.select();
-      ta.setSelectionRange(0, ta.value.length);
-      ok = document.execCommand && document.execCommand('copy');
-      document.body.removeChild(ta);
-    } catch (err) { ok = false; }
-    if (ok) { if (typeof onSuccess === 'function') onSuccess(); return; }
-    try {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(() => {
-          if (typeof onSuccess === 'function') onSuccess();
-        }).catch(() => {});
-      }
-    } catch (err) {}
-  }
-
-  function initCardsIn(container) {
-    const stack = container.querySelector('#support-card-stack');
+  /* Стек банковских карточек: свайп вверх для перелистывания */
+  function initSupportCards() {
+    var stack = document.getElementById('support-card-stack');
     if (!stack) return;
-    const OFFSET = 8;
-    const LIFT = 8;
-    const SWIPE_THRESHOLD = 8;
-
-    const gold = stack.querySelector('.support-card-gold');
-    const violet = stack.querySelector('.support-card-violet');
+    var OFFSET = 8, LIFT = 8, SWIPE_THRESHOLD = 8;
+    var gold = stack.querySelector('.support-card-gold');
+    var violet = stack.querySelector('.support-card-violet');
     if (!gold || !violet) return;
-
-    const cards = { gold: gold, violet: violet };
-    let order = ['gold', 'violet'];
-
-    let startY = 0;
-    let dragging = false;
-    let currentLift = 0;
-    let isAnimating = false;
-
+    var cards = { gold: gold, violet: violet };
+    var order = ['gold', 'violet'];
+    var startY = 0, dragging = false, currentLift = 0, isAnimating = false;
     function topKey() { return order[0]; }
     function zFor(pos) { return 2 - pos; }
     function yFor(pos) { return OFFSET * pos; }
-
     function applyPositions(animated) {
-      for (let i = 0; i < order.length; i++) {
-        const node = cards[order[i]];
+      for (var i = 0; i < order.length; i++) {
+        var node = cards[order[i]];
         if (!node) continue;
-        if (!animated) node.style.transition = 'none';
-        else node.style.transition = 'transform .38s cubic-bezier(.22,.61,.36,1)';
+        node.style.transition = animated ? 'transform .38s cubic-bezier(.22,.61,.36,1)' : 'none';
         node.style.transform = 'translateY(' + yFor(i) + 'px)';
         node.style.zIndex = String(zFor(i));
       }
-      if (!animated) {
-        requestAnimationFrame(() => {
-          for (let j = 0; j < order.length; j++) {
-            const nd = cards[order[j]];
-            if (nd) nd.style.transition = '';
-          }
-        });
-      }
+      if (!animated) requestAnimationFrame(function() {
+        for (var j = 0; j < order.length; j++) { var nd = cards[order[j]]; if (nd) nd.style.transition = ''; }
+      });
     }
-
-    function beginDragLift() {
-      const node = cards[topKey()];
-      if (!node) return;
-      node.style.transition = 'none';
-      node.style.transform = 'translateY(' + (-currentLift) + 'px)';
-    }
-
-    function snapBackTop() {
-      const node = cards[topKey()];
-      if (!node) return;
-      node.style.transition = 'transform .26s cubic-bezier(.22,.61,.36,1)';
-      node.style.transform = 'translateY(' + yFor(0) + 'px)';
-    }
-
+    function beginDragLift() { var n = cards[topKey()]; if (!n) return; n.style.transition = 'none'; n.style.transform = 'translateY(' + (-currentLift) + 'px)'; }
+    function snapBackTop() { var n = cards[topKey()]; if (!n) return; n.style.transition = 'transform .26s cubic-bezier(.22,.61,.36,1)'; n.style.transform = 'translateY(' + yFor(0) + 'px)'; }
     function rotateOnce() {
-      if (isAnimating) return;
-      isAnimating = true;
-      const topNode = cards[order[0]];
-      const secondNode = cards[order[1]];
-      const newOrder = [order[1], order[0]];
-
-      topNode.style.transition = 'transform .38s cubic-bezier(.22,.61,.36,1)';
-      secondNode.style.transition = 'transform .38s cubic-bezier(.22,.61,.36,1)';
-      topNode.style.transform = 'translateY(' + OFFSET + 'px)';
-      secondNode.style.transform = 'translateY(0px)';
-      topNode.style.zIndex = '1';
-      secondNode.style.zIndex = '2';
+      if (isAnimating) return; isAnimating = true;
+      var top = cards[order[0]], second = cards[order[1]];
+      var newOrder = [order[1], order[0]];
+      top.style.transition = 'transform .38s cubic-bezier(.22,.61,.36,1)';
+      second.style.transition = 'transform .38s cubic-bezier(.22,.61,.36,1)';
+      top.style.transform = 'translateY(' + OFFSET + 'px)';
+      second.style.transform = 'translateY(0px)';
+      top.style.zIndex = '1'; second.style.zIndex = '2';
       order = newOrder;
-
-      setTimeout(() => {
-        for (let j = 0; j < order.length; j++) {
-          const nd = cards[order[j]];
-          if (nd) nd.style.transition = '';
-        }
-        applyPositions(false);
-        isAnimating = false;
+      setTimeout(function() {
+        for (var j = 0; j < order.length; j++) { var nd = cards[order[j]]; if (nd) nd.style.transition = ''; }
+        applyPositions(false); isAnimating = false;
       }, 390);
       currentLift = 0;
     }
-
-    function isTopCard(node) { return node === cards[order[0]]; }
-
-    let lastCopyTs = 0;
-    const COPY_COOLDOWN = 400;
-
-    stack.addEventListener('click', (e) => {
-      const copyEl = e.target.closest('.support-copy-text');
+    function isTopCard(el) { return el === cards[order[0]]; }
+    var lastCopyTs = 0, COPY_COOLDOWN = 400;
+    stack.addEventListener('click', function(e) {
+      var copyEl = e.target.closest('.support-copy-text');
       if (!copyEl) return;
-      const card = copyEl.closest('.support-card');
-      if (!card) return;
-      if (!isTopCard(card)) return;
-      const now = Date.now();
+      var card = copyEl.closest('.support-card');
+      if (!card || !isTopCard(card)) return;
+      var now = Date.now();
       if (now - lastCopyTs < COPY_COOLDOWN) return;
       lastCopyTs = now;
-      const text = copyEl.getAttribute('data-copy-value') || copyEl.textContent.trim();
-      copyText(text, () => {
-        const hint = card.querySelector('.support-card-copied');
-        if (!hint) return;
-        hint.classList.add('visible');
-        clearTimeout(hint._timer);
-        hint._timer = setTimeout(() => hint.classList.remove('visible'), 1200);
-      });
+      copySupportText(copyEl.getAttribute('data-copy-value') || '', card);
     });
-
-    stack.addEventListener('touchstart', (e) => {
-      if (isAnimating) return;
-      if (e.touches.length !== 1) return;
-      startY = e.touches[0].clientY;
-      dragging = false;
-      currentLift = 0;
+    function showCopied(cardEl) {
+      if (!cardEl) return;
+      var hint = cardEl.querySelector('.support-card-copied');
+      if (!hint) return;
+      hint.classList.add('visible');
+      clearTimeout(hint._timer);
+      hint._timer = setTimeout(function() { hint.classList.remove('visible'); }, 1200);
+    }
+    function copySupportText(text, cardEl) {
+      if (!text || !cardEl) return;
+      var ok = false;
+      try {
+        var ta = document.createElement('textarea');
+        ta.value = text; ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed'; ta.style.top = '-1000px'; ta.style.left = '-1000px'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.focus(); ta.select(); ta.setSelectionRange(0, ta.value.length);
+        ok = document.execCommand && document.execCommand('copy');
+        document.body.removeChild(ta);
+      } catch (err) { ok = false; }
+      if (ok) { showCopied(cardEl); return; }
+      try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function() { showCopied(cardEl); }).catch(function() {}); } catch (e) {}
+    }
+    stack.addEventListener('touchstart', function(e) {
+      if (isAnimating || e.touches.length !== 1) return;
+      startY = e.touches[0].clientY; dragging = false; currentLift = 0;
       stack.classList.add('dragging');
-      const node = cards[topKey()];
-      if (node) node.style.transition = 'none';
+      var n = cards[topKey()]; if (n) n.style.transition = 'none';
     }, { passive: true });
-
-    stack.addEventListener('touchmove', (e) => {
-      if (isAnimating) return;
-      if (e.touches.length !== 1) return;
-      const dy = startY - e.touches[0].clientY;
-      if (!dragging) {
-        if (dy < -3 || dy > 3) dragging = true;
-        else return;
-      }
-      if (dy > 0) currentLift = Math.max(0, Math.min(LIFT, dy));
-      else currentLift = 0;
-      beginDragLift();
-      e.preventDefault();
+    stack.addEventListener('touchmove', function(e) {
+      if (isAnimating || e.touches.length !== 1) return;
+      var dy = startY - e.touches[0].clientY;
+      if (!dragging) { if (dy < -3 || dy > 3) dragging = true; else return; }
+      currentLift = dy > 0 ? Math.max(0, Math.min(LIFT, dy)) : 0;
+      beginDragLift(); e.preventDefault();
     }, { passive: false });
-
-    stack.addEventListener('touchend', () => {
+    stack.addEventListener('touchend', function() {
       if (isAnimating) return;
       stack.classList.remove('dragging');
-      const wasDragging = dragging;
-      dragging = false;
-      if (!wasDragging) return;
+      var was = dragging; dragging = false;
+      if (!was) return;
       if (currentLift >= SWIPE_THRESHOLD) rotateOnce();
-      else {
-        snapBackTop();
-        currentLift = 0;
-        setTimeout(() => {
-          const node = cards[topKey()];
-          if (node) node.style.transition = '';
-        }, 280);
-      }
+      else { snapBackTop(); currentLift = 0; setTimeout(function() { var n = cards[topKey()]; if (n) n.style.transition = ''; }, 280); }
     }, { passive: false });
-
-    stack.addEventListener('touchcancel', () => {
+    stack.addEventListener('touchcancel', function() {
       if (isAnimating) return;
-      stack.classList.remove('dragging');
-      dragging = false;
-      snapBackTop();
-      currentLift = 0;
-      setTimeout(() => {
-        const node = cards[topKey()];
-        if (node) node.style.transition = '';
-      }, 280);
+      stack.classList.remove('dragging'); dragging = false;
+      snapBackTop(); currentLift = 0;
+      setTimeout(function() { var n = cards[topKey()]; if (n) n.style.transition = ''; }, 280);
     }, { passive: true });
-
-    let mouseDown = false;
-    let mouseStartY = 0;
-    let mouseDragging = false;
-
-    stack.addEventListener('mousedown', (e) => {
-      if (isAnimating) return;
-      if (e.button !== 0) return;
-      mouseDown = true;
-      mouseStartY = e.clientY;
-      mouseDragging = false;
-      currentLift = 0;
+    var mouseDown = false, mouseStartY = 0, mouseDragging = false;
+    stack.addEventListener('mousedown', function(e) {
+      if (isAnimating || e.button !== 0) return;
+      mouseDown = true; mouseStartY = e.clientY; mouseDragging = false; currentLift = 0;
       stack.classList.add('dragging');
-      const node = cards[topKey()];
-      if (node) node.style.transition = 'none';
+      var n = cards[topKey()]; if (n) n.style.transition = 'none';
       e.preventDefault();
     });
-
-    stack.addEventListener('mousemove', (e) => {
+    stack.addEventListener('mousemove', function(e) {
       if (!mouseDown || isAnimating) return;
-      const dy = mouseStartY - e.clientY;
-      if (!mouseDragging) {
-        if (Math.abs(dy) < 3) return;
-        mouseDragging = true;
-      }
-      if (dy > 0) currentLift = Math.max(0, Math.min(LIFT, dy));
-      else currentLift = 0;
+      var dy = mouseStartY - e.clientY;
+      if (!mouseDragging) { if (Math.abs(dy) < 3) return; mouseDragging = true; }
+      currentLift = dy > 0 ? Math.max(0, Math.min(LIFT, dy)) : 0;
       beginDragLift();
     });
-
-    stack.addEventListener('mouseup', () => {
+    stack.addEventListener('mouseup', function() {
       if (!mouseDown) return;
-      mouseDown = false;
-      stack.classList.remove('dragging');
+      mouseDown = false; stack.classList.remove('dragging');
       if (isAnimating) return;
-      if (!mouseDragging) {
-        const node = cards[topKey()];
-        if (node) node.style.transition = '';
-        return;
-      }
+      if (!mouseDragging) { var n = cards[topKey()]; if (n) n.style.transition = ''; return; }
       mouseDragging = false;
       if (currentLift >= SWIPE_THRESHOLD) rotateOnce();
-      else {
-        snapBackTop();
-        currentLift = 0;
-        setTimeout(() => {
-          const node = cards[topKey()];
-          if (node) node.style.transition = '';
-        }, 280);
-      }
+      else { snapBackTop(); currentLift = 0; setTimeout(function() { var n = cards[topKey()]; if (n) n.style.transition = ''; }, 280); }
     });
-
-    stack.addEventListener('mouseleave', () => {
+    stack.addEventListener('mouseleave', function() {
       if (!mouseDown) return;
-      mouseDown = false;
-      stack.classList.remove('dragging');
-      if (!mouseDragging) {
-        const node = cards[topKey()];
-        if (node) node.style.transition = '';
-        return;
-      }
-      mouseDragging = false;
-      snapBackTop();
-      currentLift = 0;
-      setTimeout(() => {
-        const node = cards[topKey()];
-        if (node) node.style.transition = '';
-      }, 280);
+      mouseDown = false; stack.classList.remove('dragging');
+      if (!mouseDragging) { var n = cards[topKey()]; if (n) n.style.transition = ''; return; }
+      mouseDragging = false; snapBackTop(); currentLift = 0;
+      setTimeout(function() { var n = cards[topKey()]; if (n) n.style.transition = ''; }, 280);
     });
-
-    stack.addEventListener('dblclick', (e) => {
+    stack.addEventListener('dblclick', function(e) {
       if (isAnimating) return;
-      e.preventDefault();
-      e.stopPropagation();
+      e.preventDefault(); e.stopPropagation();
       rotateOnce();
     });
-
     applyPositions(false);
   }
-
-  return { buildHtml, initCardsIn, copyText };
-})();
-
-/* ============================================================
-   МОДАЛКА «ПОДДЕРЖИ АВТОРА» НА ЛЕНДИНГЕ
-   ============================================================ */
-(function() {
-  'use strict';
-  var infoModal = document.getElementById('info-modal');
-  var infoTitle = document.getElementById('info-modal-title-el');
-  var infoBody = document.getElementById('info-modal-body');
-  var infoBox = infoModal ? infoModal.querySelector('.info-modal-box') : null;
-  if (!infoModal || !infoBox) return;
-  var isSupportOpen = false;
-
-  function openSupport() {
-    isSupportOpen = true;
-    infoTitle.textContent = 'ПОДДЕРЖИ АВТОРА';
-    infoTitle.classList.remove('title-normal-case');
-    infoBox.classList.add('info-modal-box--support');
-    infoBody.innerHTML = Support.buildHtml();
-    Support.initCardsIn(infoBody);
-    infoModal.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeSupport() {
-    infoModal.classList.remove('open');
-    document.body.style.overflow = '';
-    isSupportOpen = false;
-  }
-
-  infoModal.addEventListener('click', function(e) {
-    if (isSupportOpen) { if (e.target === infoModal) closeSupport(); return; }
-  });
-  infoBox.addEventListener('click', function(e) { if (isSupportOpen) e.stopPropagation(); });
-
-  document.addEventListener('click', function(e) {
-    var btn = e.target.closest ? e.target.closest('[data-action="open-support"]') : null;
-    if (!btn) return;
-    e.preventDefault(); e.stopPropagation();
-    openSupport();
-  });
-})();
-</script>
-
-<!-- ============================================================
-     СКРИПТ ПРИЛОЖЕНИЯ
-     ============================================================ -->
-<script>
-/* ============================================================
-   ANTI-COPY
-   ============================================================ */
-(function() {
-  try {
-    console.log('%cSTOP!', 'color:#e63946;font-size:48px;font-weight:900;text-shadow:2px 2px 0 #000;');
-    console.log('%cЭтот код защищён авторским правом.', 'color:#ffcb2b;font-size:16px;font-weight:700;');
-    console.log('%cКопирование, распространение и использование без разрешения автора запрещено.', 'color:#ffcb2b;font-size:14px;');
-    console.log('%c© Все права защищены.', 'color:#8a8a8a;font-size:12px;');
-  } catch (e) {}
-})();
-
-(function() {
-  try {
-    document.addEventListener('contextmenu', (e) => { e.preventDefault(); return false; }, { capture: true });
-    document.addEventListener('selectstart', (e) => { e.preventDefault(); return false; }, { capture: true });
-    document.addEventListener('dragstart', (e) => { e.preventDefault(); return false; }, { capture: true });
-
-    document.addEventListener('keydown', (e) => {
-      const k = (e.key || '').toLowerCase();
-      if (e.key === 'F12') { e.preventDefault(); return false; }
-      if (e.ctrlKey && e.shiftKey && (k === 'i' || k === 'j' || k === 'c' || k === 'k')) { e.preventDefault(); return false; }
-      if (e.metaKey && e.altKey && (k === 'i' || k === 'j' || k === 'c' || k === 'k')) { e.preventDefault(); return false; }
-      if ((e.ctrlKey || e.metaKey) && k === 'u') { e.preventDefault(); return false; }
-      if ((e.ctrlKey || e.metaKey) && k === 's') { e.preventDefault(); return false; }
-      if ((e.ctrlKey || e.metaKey) && k === 'a') { e.preventDefault(); return false; }
-    }, { capture: true });
-  } catch (e) {}
-})();
-
-/* ============================================================
-   VIEWPORT LOCK AND ZOOM GUARD
-   ============================================================ */
-(function() {
-  try {
-    const VIEWPORT_LOCK = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover';
-
-    function forceViewportLock() {
-      try {
-        let meta = document.querySelector('meta[name="viewport"]');
-        if (!meta) {
-          meta = document.createElement('meta');
-          meta.setAttribute('name', 'viewport');
-          document.head.appendChild(meta);
-        }
-        meta.setAttribute('content', VIEWPORT_LOCK);
-      } catch (e) {}
-    }
-
-    function resetZoomToDefault() {
-      try {
-        forceViewportLock();
-        try {
-          const old = document.querySelector('meta[name="viewport"]');
-          if (old && old.parentNode) {
-            const fresh = document.createElement('meta');
-            fresh.setAttribute('name', 'viewport');
-            fresh.setAttribute('content', VIEWPORT_LOCK);
-            old.parentNode.removeChild(old);
-            document.head.appendChild(fresh);
-          }
-        } catch (e) {}
-        try {
-          window.scrollTo(0, 0);
-          document.documentElement.scrollTop = 0;
-          document.body.scrollTop = 0;
-        } catch (e) {}
-      } catch (e) {}
-    }
-
-    forceViewportLock();
-
-    document.addEventListener('wheel', (e) => {
-      if (e.ctrlKey) { e.preventDefault(); return false; }
-    }, { passive: false, capture: true });
-
-    document.addEventListener('keydown', (e) => {
-      if (!(e.ctrlKey || e.metaKey)) return;
-      const k = e.key;
-      if (k === '+' || k === '-' || k === '=' || k === '0' || k === '_' ||
-          k === 'Add' || k === 'Subtract' || k === 'NumpadAdd' || k === 'NumpadSubtract' ||
-          e.code === 'Equal' || e.code === 'Minus' || e.code === 'Digit0' ||
-          e.code === 'NumpadAdd' || e.code === 'NumpadSubtract' || e.code === 'Numpad0') {
-        e.preventDefault();
-        return false;
-      }
-    }, { capture: true });
-
-    document.addEventListener('touchstart', (e) => {
-      if (e.touches && e.touches.length > 1) { e.preventDefault(); return false; }
-    }, { passive: false, capture: true });
-
-    document.addEventListener('touchmove', (e) => {
-      if (e.touches && e.touches.length > 1) { e.preventDefault(); return false; }
-    }, { passive: false, capture: true });
-
-    document.addEventListener('touchend', (e) => {
-      if (e.touches && e.touches.length > 1) { e.preventDefault(); return false; }
-    }, { passive: false, capture: true });
-
-    document.addEventListener('gesturestart', (e) => { e.preventDefault(); return false; }, { passive: false, capture: true });
-    document.addEventListener('gesturechange', (e) => { e.preventDefault(); return false; }, { passive: false, capture: true });
-    document.addEventListener('gestureend', (e) => { e.preventDefault(); return false; }, { passive: false, capture: true });
-
-    document.addEventListener('dblclick', (e) => { e.preventDefault(); return false; }, { passive: false, capture: true });
-
-    function checkZoomAndFix() {
-      try {
-        const vv = window.visualViewport;
-        if (vv && vv.scale && vv.scale > 1.01) { resetZoomToDefault(); }
-      } catch (e) {}
-    }
-
-    let zoomGuardTimer = null;
-    function scheduleZoomGuard() {
-      if (zoomGuardTimer) clearTimeout(zoomGuardTimer);
-      zoomGuardTimer = setTimeout(checkZoomAndFix, 60);
-    }
-
-    document.addEventListener('touchend', (e) => { scheduleZoomGuard(); }, { passive: true, capture: true });
-
-    window.addEventListener('load', () => {
-      resetZoomToDefault();
-      setTimeout(resetZoomToDefault, 50);
-      setTimeout(resetZoomToDefault, 250);
-      setTimeout(checkZoomAndFix, 500);
-    });
-
-    document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) { resetZoomToDefault(); setTimeout(checkZoomAndFix, 100); }
-    });
-
-    window.addEventListener('focus', () => { resetZoomToDefault(); setTimeout(checkZoomAndFix, 100); });
-    window.addEventListener('pageshow', () => { resetZoomToDefault(); setTimeout(checkZoomAndFix, 100); });
-
-    if (window.visualViewport) {
-      try {
-        window.visualViewport.addEventListener('resize', () => {
-          if (window.visualViewport.scale > 1.01) { resetZoomToDefault(); }
-        });
-      } catch (e) {}
-    }
-  } catch (e) {}
-})();
-
-/* ============================================================
-   LONG-PRESS KILLER FOR TOP DOCK ICONS
-   ============================================================ */
-(function() {
-  try {
-    function killLongPress(el) {
-      if (!el) return;
-      el.addEventListener('touchstart', function(e) {
-        if (e.cancelable) e.preventDefault();
-      }, { passive: false, capture: true });
-      el.addEventListener('touchmove', function(e) {
-        if (e.cancelable) e.preventDefault();
-      }, { passive: false, capture: true });
-      el.addEventListener('contextmenu', function(e) {
-        e.preventDefault(); e.stopPropagation(); return false;
-      }, { passive: false, capture: true });
-      el.addEventListener('selectstart', function(e) {
-        e.preventDefault(); return false;
-      }, { passive: false, capture: true });
-      el.addEventListener('dragstart', function(e) {
-        e.preventDefault(); return false;
-      }, { passive: false, capture: true });
-    }
-
-    function applyToTopRow() {
-      var dock = document.getElementById('top-dock');
-      if (dock) killLongPress(dock);
-      var row = document.getElementById('top-round-row');
-      if (row) killLongPress(row);
-      var g = document.getElementById('top-home-btn');
-      if (g) killLongPress(g);
-      var h = document.getElementById('top-heart-btn');
-      if (h) killLongPress(h);
-      var t = document.getElementById('top-tg-btn');
-      if (t) killLongPress(t);
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', applyToTopRow);
-    } else {
-      applyToTopRow();
-    }
-  } catch (e) {}
-})();
-
-/* ============================================================
-   HARD LONG-PRESS KILLER FOR HOME (GLOBE) BUTTON ONLY
-   ============================================================ */
-(function() {
-  try {
-    function hardKill(node) {
-      if (!node) return;
-      if (node.__hardKillBound) return;
-      node.__hardKillBound = true;
-      const swallow = (e) => {
-        if (e.cancelable) e.preventDefault();
-        e.stopPropagation();
-      };
-      node.addEventListener('touchstart', swallow, { passive: false, capture: true });
-      node.addEventListener('touchmove', swallow, { passive: false, capture: true });
-      node.addEventListener('touchend', swallow, { passive: false, capture: true });
-      node.addEventListener('touchcancel', swallow, { passive: false, capture: true });
-      node.addEventListener('contextmenu', (e) => { e.preventDefault(); e.stopPropagation(); return false; }, { passive: false, capture: true });
-      node.addEventListener('selectstart', (e) => { e.preventDefault(); e.stopPropagation(); return false; }, { passive: false, capture: true });
-      node.addEventListener('dragstart', (e) => { e.preventDefault(); e.stopPropagation(); return false; }, { passive: false, capture: true });
-      node.addEventListener('mousedown', (e) => {
-        if (e.button !== 0) return;
-        if (e.cancelable) e.preventDefault();
-      }, { passive: false });
-    }
-
-    function apply() {
-      const btn = document.getElementById('top-home-btn');
-      if (!btn) return;
-      hardKill(btn);
-      const svg = btn.querySelector('svg');
-      if (svg) {
-        hardKill(svg);
-        const kids = svg.querySelectorAll('*');
-        for (let i = 0; i < kids.length; i++) hardKill(kids[i]);
-      }
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', apply);
-    } else {
-      apply();
-    }
-  } catch (e) {}
-})();
-
-/* ============================================================
-   ENGINE
-   ============================================================ */
-const Engine = (() => {
-
-  const SUITS = ['s', 'h', 'd', 'c'];
-  const RANKS = ['2','3','4','5','6','7','8','9','T','J','Q','K','A'];
-  const RANK_VALUE = { '2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'T':10,'J':11,'Q':12,'K':13,'A':14 };
-  const HAND_CATEGORIES = { HIGH_CARD:0, PAIR:1, TWO_PAIR:2, TRIPS:3, STRAIGHT:4, FLUSH:5, FULL_HOUSE:6, QUADS:7, STRAIGHT_FLUSH:8, ROYAL_FLUSH:9 };
-  const BLIND_LEVELS = [
-    { sb: 10, bb: 20, ante: 0 }, { sb: 15, bb: 30, ante: 0 },
-    { sb: 25, bb: 50, ante: 0 }, { sb: 50, bb: 100, ante: 10 },
-    { sb: 75, bb: 150, ante: 15 }, { sb: 100, bb: 200, ante: 25 },
-    { sb: 150, bb: 300, ante: 30 }, { sb: 200, bb: 400, ante: 50 },
-    { sb: 300, bb: 600, ante: 75 }, { sb: 400, bb: 800, ante: 100 },
-    { sb: 500, bb: 1000, ante: 100 }, { sb: 750, bb: 1500, ante: 150 },
-    { sb: 1000, bb: 2000, ante: 200 }, { sb: 1500, bb: 3000, ante: 300 },
-    { sb: 2000, bb: 4000, ante: 400 }, { sb: 3000, bb: 6000, ante: 600 }
-  ];
-  const STARTING_STACK = 2000;
-  const SEATS = 8;
-  const STREETS = ['preflop', 'flop', 'turn', 'river'];
-
-  const POSITION_LABELS = {
-    8: ['BTN','SB','BB','UTG','UTG1','LJ','HJ','CO'],
-    7: ['BTN','SB','BB','UTG1','LJ','HJ','CO'],
-    6: ['BTN','SB','BB','LJ','HJ','CO'],
-    5: ['BTN','SB','BB','HJ','CO'],
-    4: ['BTN','SB','BB','CO'],
-    3: ['BTN','SB','BB'],
-    2: ['BTN','BB'],
-    1: []
-  };
-
-  function cryptoRandomInt(maxExclusive) {
-    if (maxExclusive <= 0) return 0;
-    const range = 0x100000000;
-    const limit = range - (range % maxExclusive);
-    const buf = new Uint32Array(1);
-    let x;
-    do { crypto.getRandomValues(buf); x = buf[0]; } while (x >= limit);
-    return x % maxExclusive;
-  }
-
-  function createDeck() {
-    const deck = [];
-    for (const s of SUITS) for (const r of RANKS) deck.push({ rank: r, suit: s });
-    return deck;
-  }
-
-  function shuffle(deck) {
-    const d = deck.slice();
-    for (let i = d.length - 1; i > 0; i--) {
-      const j = cryptoRandomInt(i + 1);
-      [d[i], d[j]] = [d[j], d[i]];
-    }
-    return d;
-  }
-
-  function combinations(arr, k) {
-    const result = [];
-    const combo = [];
-    (function recurse(start) {
-      if (combo.length === k) { result.push(combo.slice()); return; }
-      for (let i = start; i < arr.length; i++) { combo.push(arr[i]); recurse(i + 1); combo.pop(); }
-    })(0);
-    return result;
-  }
-
-  function evaluate5(cards) {
-    const values = cards.map(c => RANK_VALUE[c.rank]).sort((a,b) => b - a);
-    const suits = cards.map(c => c.suit);
-    const isFlush = suits.every(s => s === suits[0]);
-    const uniqueVals = [...new Set(values)].sort((a,b) => b - a);
-    let straightHigh = 0;
-    for (let i = 0; i <= uniqueVals.length - 5; i++) {
-      if (uniqueVals[i] - uniqueVals[i+4] === 4) { straightHigh = uniqueVals[i]; break; }
-    }
-    if (!straightHigh && uniqueVals.includes(14) && uniqueVals.includes(2) &&
-        uniqueVals.includes(3) && uniqueVals.includes(4) && uniqueVals.includes(5)) straightHigh = 5;
-
-    const freq = {};
-    for (const v of values) freq[v] = (freq[v] || 0) + 1;
-    const groups = Object.entries(freq).map(([v, c]) => [c, Number(v)]).sort((a, b) => b[0] - a[0] || b[1] - a[1]);
-
-    if (isFlush && straightHigh) {
-      if (straightHigh === 14) return { category: HAND_CATEGORIES.ROYAL_FLUSH, ranks: [14], cards, name: 'Роял-флеш' };
-      return { category: HAND_CATEGORIES.STRAIGHT_FLUSH, ranks: [straightHigh], cards, name: 'Стрит-флеш' };
-    }
-    if (groups[0][0] === 4) return { category: HAND_CATEGORIES.QUADS, ranks: [groups[0][1], groups[1][1]], cards, name: 'Каре' };
-    if (groups[0][0] === 3 && groups[1] && groups[1][0] === 2) return { category: HAND_CATEGORIES.FULL_HOUSE, ranks: [groups[0][1], groups[1][1]], cards, name: 'Фулл-хаус' };
-    if (isFlush) return { category: HAND_CATEGORIES.FLUSH, ranks: values, cards, name: 'Флеш' };
-    if (straightHigh) return { category: HAND_CATEGORIES.STRAIGHT, ranks: [straightHigh], cards, name: 'Стрит' };
-    if (groups[0][0] === 3) return { category: HAND_CATEGORIES.TRIPS, ranks: [groups[0][1], ...groups.slice(1).map(g => g[1])], cards, name: 'Сет' };
-    if (groups[0][0] === 2 && groups[1] && groups[1][0] === 2) return { category: HAND_CATEGORIES.TWO_PAIR, ranks: [groups[0][1], groups[1][1], groups[2][1]], cards, name: 'Две пары' };
-    if (groups[0][0] === 2) return { category: HAND_CATEGORIES.PAIR, ranks: [groups[0][1], ...groups.slice(1).map(g => g[1])], cards, name: 'Пара' };
-    return { category: HAND_CATEGORIES.HIGH_CARD, ranks: values, cards, name: 'Старшая карта' };
-  }
-
-  function compareScores(a, b) {
-    if (a.category !== b.category) return a.category - b.category;
-    const len = Math.max(a.ranks.length, b.ranks.length);
-    for (let i = 0; i < len; i++) {
-      const ra = a.ranks[i] ?? 0, rb = b.ranks[i] ?? 0;
-      if (ra !== rb) return ra - rb;
-    }
-    return 0;
-  }
-
-  function evaluateHand(cards) {
-    if (cards.length < 5) return null;
-    const combos = combinations(cards, 5);
-    let best = null;
-    for (const combo of combos) {
-      const score = evaluate5(combo);
-      if (!best || compareScores(score, best) > 0) best = score;
-    }
-    return best;
-  }
-
-  function buildSidePots(contributions, activePlayers) {
-    const entries = Object.entries(contributions).filter(([_, amt]) => amt > 0).map(([id, amt]) => ({ id, amt }));
-    entries.sort((a, b) => a.amt - b.amt);
-    const pots = [];
-    let prev = 0;
-    const remaining = entries.map(e => ({ ...e }));
-    while (remaining.length > 0) {
-      const minAmt = remaining[0].amt;
-      const level = minAmt - prev;
-      if (level <= 0) { remaining.shift(); continue; }
-      let potAmount = 0;
-      const contributors = [];
-      for (const e of remaining) { potAmount += level; contributors.push(e.id); e.amt -= level; }
-      prev = minAmt;
-      const eligible = contributors.filter(id => activePlayers.has(id));
-      if (potAmount > 0) pots.push({ amount: potAmount, eligible });
-      while (remaining.length > 0 && remaining[0].amt <= 0) remaining.shift();
-    }
-    return pots;
-  }
-
-  function getBlindLevel(levelIndex) {
-    return BLIND_LEVELS[Math.min(levelIndex, BLIND_LEVELS.length - 1)];
-  }
-
-  function createInitialState(playerConfigs) {
-    const players = playerConfigs.map((cfg, i) => ({
-      id: cfg.id, seatIndex: i, name: cfg.name, isHero: !!cfg.isHero,
-      botType: cfg.botType || null, botClass: cfg.botClass || null,
-      stack: cfg.stack ?? STARTING_STACK,
-      holeCards: [], folded: false, allIn: false, eliminated: false,
-      committedThisStreet: 0, committedTotal: 0, hasActedThisStreet: false,
-      lastAction: null, position: null,
-      acted: false, blindPaid: 0, revealed: false,
-      inHand: false,
-      heroFinishPlace: 0
-    }));
-    return {
-      handNumber: 0, levelIndex: 0, handsAtLevel: 0, buttonIndex: 0,
-      players, deck: [], board: [], pot: 0, currentBet: 0, minRaise: 0,
-      street: 'preflop', actingIndex: 0, lastAggressorIndex: null,
-      actionLog: [], handOver: false, showdownResults: null,
-      finalStreet: null,
-      blinds: { sb: 10, bb: 20, ante: 0 },
-      _deckIdx: 0
-    };
-  }
-
-  function dealHoleCards(state) {
-    state.deck = shuffle(createDeck());
-    let deckIdx = 0;
-    const n = state.players.length;
-    const sbIndex = (state.buttonIndex + 1) % n;
-    for (const p of state.players) p.holeCards = [];
-    for (let round = 0; round < 2; round++) {
-      for (let i = 0; i < n; i++) {
-        const idx = (sbIndex + i) % n;
-        const p = state.players[idx];
-        if (p.eliminated) continue;
-        p.holeCards.push(state.deck[deckIdx++]);
-      }
-    }
-    state._deckIdx = deckIdx;
-  }
-
-  function burnCard(state) { state._deckIdx += 1; }
-
-  function dealBoard(state, count) {
-    burnCard(state);
-    for (let i = 0; i < count; i++) state.board.push(state.deck[state._deckIdx++]);
-  }
-
-  function assignPositions(state) {
-    const n = state.players.length;
-    let alive = 0;
-    for (const p of state.players) if (!p.eliminated) alive++;
-    const labels = POSITION_LABELS[alive] || [];
-    if (alive <= 1) {
-      for (const p of state.players) {
-        if (p.eliminated) p.position = null;
-        else p.position = '—';
-      }
-      return;
-    }
-    const aliveOrder = [];
-    for (let i = 0; i < n; i++) {
-      const idx = (state.buttonIndex + i) % n;
-      if (!state.players[idx].eliminated) aliveOrder.push(idx);
-    }
-    for (let i = 0; i < aliveOrder.length; i++) {
-      state.players[aliveOrder[i]].position = labels[i] || '—';
-    }
-    for (const p of state.players) {
-      if (p.eliminated) p.position = null;
-    }
-  }
-
-  function preflopOrder(state) {
-    const n = state.players.length;
-    const alive = state.players.filter(p => !p.eliminated).length;
-    if (alive === 2) {
-      const btnIdx = state.buttonIndex;
-      const order = [];
-      let cur = btnIdx;
-      for (let i = 0; i < n; i++) {
-        if (!state.players[cur].eliminated) order.push(cur);
-        cur = (cur + 1) % n;
-      }
-      return order;
-    }
-    const order = [];
-    for (let i = 0; i < n; i++) order.push((state.buttonIndex + 3 + i) % n);
-    return order;
-  }
-
-  function postflopOrder(state) {
-    const n = state.players.length;
-    const order = [];
-    for (let i = 0; i < n; i++) order.push((state.buttonIndex + 1 + i) % n);
-    return order;
-  }
-
-  function postBlinds(state) {
-    const n = state.players.length;
-    const alive = state.players.filter(p => !p.eliminated).length;
-    let sbIndex = (state.buttonIndex + 1) % n;
-    let guard = 0;
-    while (state.players[sbIndex].eliminated && guard < n) { sbIndex = (sbIndex + 1) % n; guard++; }
-    let bbIndex = (sbIndex + 1) % n;
-    guard = 0;
-    while (state.players[bbIndex].eliminated && guard < n) { bbIndex = (bbIndex + 1) % n; guard++; }
-
-    const { sb, bb, ante } = state.blinds;
-
-    if (ante > 0) {
-      for (const p of state.players) {
-        if (p.eliminated || p.stack <= 0) continue;
-        const pay = Math.min(ante, p.stack);
-        p.stack -= pay; p.committedTotal += pay; state.pot += pay;
-      }
-    }
-
-    if (alive === 2) {
-      const btnPlayer = state.players[state.buttonIndex];
-      if (!btnPlayer.eliminated) {
-        const pay = Math.min(sb, btnPlayer.stack);
-        btnPlayer.stack -= pay; btnPlayer.committedThisStreet += pay;
-        btnPlayer.committedTotal += pay; state.pot += pay;
-        btnPlayer.lastAction = 'sb';
-        btnPlayer.blindPaid = pay;
-        if (btnPlayer.stack === 0) btnPlayer.allIn = true;
-      }
-      const bbPlayer = state.players[bbIndex];
-      if (!bbPlayer.eliminated) {
-        const pay = Math.min(bb, bbPlayer.stack);
-        bbPlayer.stack -= pay; bbPlayer.committedThisStreet += pay;
-        bbPlayer.committedTotal += pay; state.pot += pay;
-        bbPlayer.lastAction = 'bb';
-        bbPlayer.blindPaid = pay;
-        if (bbPlayer.stack === 0) bbPlayer.allIn = true;
-      }
-      state.currentBet = bb;
-      state.minRaise = bb;
-      return { sbIndex: state.buttonIndex, bbIndex };
-    }
-
-    const sbPlayer = state.players[sbIndex];
-    if (!sbPlayer.eliminated) {
-      const pay = Math.min(sb, sbPlayer.stack);
-      sbPlayer.stack -= pay; sbPlayer.committedThisStreet += pay;
-      sbPlayer.committedTotal += pay; state.pot += pay;
-      sbPlayer.lastAction = 'sb';
-      sbPlayer.blindPaid = pay;
-    }
-    const bbPlayer = state.players[bbIndex];
-    if (!bbPlayer.eliminated) {
-      const pay = Math.min(bb, bbPlayer.stack);
-      bbPlayer.stack -= pay; bbPlayer.committedThisStreet += pay;
-      bbPlayer.committedTotal += pay; state.pot += pay;
-      bbPlayer.lastAction = 'bb';
-      bbPlayer.blindPaid = pay;
-      if (bbPlayer.stack === 0) bbPlayer.allIn = true;
-    }
-    state.currentBet = bb;
-    state.minRaise = bb;
-    return { sbIndex, bbIndex };
-  }
-
-  function canAct(player) {
-    return !player.folded && !player.allIn && !player.eliminated && player.stack > 0;
-  }
-
-  function isBettingRoundComplete(state) {
-    const active = state.players.filter(p => !p.folded && !p.eliminated);
-    if (active.length <= 1) return true;
-    for (const p of active) {
-      if (p.allIn) continue;
-      if (!p.hasActedThisStreet) return false;
-      if (p.committedThisStreet < state.currentBet) return false;
-    }
-    return true;
-  }
-
-  function applyAction(state, playerIndex, action) {
-    const p = state.players[playerIndex];
-    if (!p || p.folded || p.allIn || p.eliminated) return { ok: false, error: 'Игрок не может действовать' };
-    const toCall = Math.max(0, state.currentBet - p.committedThisStreet);
-
-    switch (action.type) {
-      case 'fold':
-        p.folded = true; p.hasActedThisStreet = true; p.lastAction = 'fold';
-        break;
-
-      case 'check':
-        if (toCall > 0) return { ok: false, error: 'Нельзя чекнуть' };
-        p.hasActedThisStreet = true; p.lastAction = 'check';
-        p.acted = true;
-        break;
-
-      case 'call': {
-        const pay = Math.min(toCall, p.stack);
-        p.stack -= pay; p.committedThisStreet += pay;
-        p.committedTotal += pay; state.pot += pay;
-        p.hasActedThisStreet = true;
-        p.lastAction = (p.stack === 0) ? 'allin' : 'call';
-        p.acted = true;
-        if (p.stack === 0) p.allIn = true;
-        break;
-      }
-
-      case 'bet': {
-        if (state.currentBet > 0) return { ok: false, error: 'На этой улице уже есть ставка' };
-        if (p.committedThisStreet > 0) return { ok: false, error: 'Уже есть вложение' };
-        const target = action.amount;
-        if (target <= 0) return { ok: false, error: 'Ставка должна быть больше нуля' };
-        const need = target - p.committedThisStreet;
-        if (need > p.stack) return { ok: false, error: 'Недостаточно фишек' };
-        p.stack -= need; p.committedThisStreet += need;
-        p.committedTotal += need; state.pot += need;
-        state.minRaise = Math.max(state.minRaise, target);
-        state.currentBet = target; state.lastAggressorIndex = playerIndex;
-        for (const other of state.players) {
-          if (other !== p && !other.folded && !other.eliminated && !other.allIn) other.hasActedThisStreet = false;
-        }
-        p.hasActedThisStreet = true;
-        p.lastAction = (p.stack === 0) ? 'allin' : 'bet';
-        p.acted = true;
-        if (p.stack === 0) p.allIn = true;
-        break;
-      }
-
-      case 'raise': {
-        const target = action.amount;
-        if (target <= state.currentBet) return { ok: false, error: 'Рейз меньше ставки' };
-        const need = target - p.committedThisStreet;
-        if (need > p.stack) return { ok: false, error: 'Недостаточно фишек' };
-        const raiseSize = target - state.currentBet;
-        if (raiseSize < state.minRaise && need < p.stack) return { ok: false, error: 'Рейз меньше минимума' };
-        p.stack -= need; p.committedThisStreet += need;
-        p.committedTotal += need; state.pot += need;
-        state.minRaise = Math.max(state.minRaise, raiseSize);
-        state.currentBet = target; state.lastAggressorIndex = playerIndex;
-        for (const other of state.players) {
-          if (other !== p && !other.folded && !other.eliminated && !other.allIn) other.hasActedThisStreet = false;
-        }
-        p.hasActedThisStreet = true;
-        p.lastAction = (p.stack === 0) ? 'allin' : 'raise';
-        p.acted = true;
-        if (p.stack === 0) p.allIn = true;
-        break;
-      }
-
-      case 'allin': {
-        const pay = p.stack;
-        const target = p.committedThisStreet + pay;
-        p.stack = 0; p.committedThisStreet = target;
-        p.committedTotal += pay; state.pot += pay;
-        p.allIn = true; p.hasActedThisStreet = true;
-        p.lastAction = 'allin';
-        p.acted = true;
-        if (target > state.currentBet) {
-          const raiseSize = target - state.currentBet;
-          state.minRaise = Math.max(state.minRaise, raiseSize);
-          state.currentBet = target; state.lastAggressorIndex = playerIndex;
-          for (const other of state.players) {
-            if (other !== p && !other.folded && !other.eliminated && !other.allIn) other.hasActedThisStreet = false;
-          }
-        }
-        break;
-      }
-
-      default: return { ok: false, error: 'Неизвестное действие: ' + action.type };
-    }
-    return { ok: true };
-  }
-
-  function nextActor(state) {
-    const n = state.players.length;
-    const start = state.actingIndex;
-    for (let step = 1; step <= n; step++) {
-      const idx = (start + step) % n;
-      const p = state.players[idx];
-      if (canAct(p)) {
-        if (!p.hasActedThisStreet) return idx;
-        if (p.committedThisStreet < state.currentBet) return idx;
-      }
-    }
-    return -1;
-  }
-
-  function resetStreetState(state) {
-    for (const p of state.players) {
-      p.committedThisStreet = 0; p.hasActedThisStreet = false;
-      if (p.lastAction !== 'fold' && p.lastAction !== 'allin') p.lastAction = null;
-    }
-    state.currentBet = 0; state.minRaise = state.blinds.bb; state.lastAggressorIndex = null;
-  }
-
-  function startStreet(state, street) {
-    state.street = street;
-    resetStreetState(state);
-    if (street === 'flop')  dealBoard(state, 3);
-    if (street === 'turn')  dealBoard(state, 1);
-    if (street === 'river') dealBoard(state, 1);
-    const actionable = state.players.filter(p => canAct(p) && !p.folded);
-    if (actionable.length < 2) return false;
-    const order = postflopOrder(state);
-    for (const idx of order) {
-      if (canAct(state.players[idx])) { state.actingIndex = idx; return true; }
-    }
-    return false;
-  }
-
-  function finalizeHand(state) {
-    const lastStreet = state.street;
-    state.finalStreet = lastStreet;
-    while (state.board.length < 5) {
-      if (state.board.length === 0) dealBoard(state, 3);
-      else dealBoard(state, 1);
-    }
-    for (const p of state.players) {
-      if (p.eliminated) { p.revealed = false; continue; }
-      p.revealed = !p.folded || p.acted;
-    }
-  }
-
-  function showdown(state) {
-    const contenders = state.players.filter(p => !p.folded && !p.eliminated);
-    const scores = new Map();
-    for (const p of contenders) {
-      const allCards = [...p.holeCards, ...state.board];
-      scores.set(p.id, allCards.length >= 5 ? evaluateHand(allCards) : null);
-    }
-    const contributions = {};
-    for (const p of state.players) contributions[p.id] = p.committedTotal;
-    const activeIds = new Set(contenders.map(p => p.id));
-    const pots = buildSidePots(contributions, activeIds);
-    const payouts = {};
-    const potResults = [];
-
-    for (const pot of pots) {
-      const eligible = pot.eligible.filter(id => scores.get(id));
-      if (eligible.length === 0) continue;
-      let bestScore = null; let winners = [];
-      for (const id of eligible) {
-        const sc = scores.get(id);
-        if (!bestScore || compareScores(sc, bestScore) > 0) { bestScore = sc; winners = [id]; }
-        else if (compareScores(sc, bestScore) === 0) winners.push(id);
-      }
-      const share = Math.floor(pot.amount / winners.length);
-      let remainder = pot.amount - share * winners.length;
-      for (const wid of winners) {
-        const extra = remainder > 0 ? 1 : 0;
-        if (remainder > 0) remainder--;
-        payouts[wid] = (payouts[wid] || 0) + share + extra;
-      }
-      potResults.push({
-        amount: pot.amount,
-        winners: winners.map(id => state.players.find(p => p.id === id).name),
-        winnersIds: winners
-      });
-    }
-
-    for (const [id, amount] of Object.entries(payouts)) {
-      const p = state.players.find(pl => pl.id === id || pl.id === Number(id));
-      if (p) p.stack += amount;
-    }
-
-    let topWinnerId = null; let topAmount = -1;
-    for (const [id, amount] of Object.entries(payouts)) {
-      if (amount > topAmount) { topAmount = amount; topWinnerId = id; }
-    }
-
-    state.showdownResults = {
-      scores: Object.fromEntries([...scores.entries()].map(([id, sc]) =>
-        [id, sc ? { category: sc.category, name: sc.name, ranks: sc.ranks } : null])),
-      pots: potResults, payouts, topWinnerId
-    };
-    state.handOver = true;
-    return state.showdownResults;
-  }
-
-  function awardToLastStanding(state) {
-    const alive = state.players.filter(p => !p.folded && !p.eliminated);
-    if (alive.length !== 1) return null;
-    const winner = alive[0];
-    winner.stack += state.pot;
-    state.showdownResults = {
-      scores: {}, pots: [{ amount: state.pot, winners: [winner.name], winnersIds: [winner.id] }],
-      payouts: { [winner.id]: state.pot }, topWinnerId: winner.id, uncontested: true
-    };
-    state.handOver = true;
-    return state.showdownResults;
-  }
-
-  function startHand(state) {
-    state.board = []; state.pot = 0; state.currentBet = 0; state.minRaise = 0;
-    state.actionLog = []; state.handOver = false; state.showdownResults = null;
-    state.finalStreet = null;
-
-    for (const p of state.players) {
-      p.folded = p.eliminated; p.allIn = false;
-      p.committedThisStreet = 0; p.committedTotal = 0;
-      p.hasActedThisStreet = false; p.lastAction = null; p.holeCards = [];
-      p.acted = false; p.blindPaid = 0; p.revealed = false;
-      p.inHand = !p.eliminated;
-    }
-
-    const n = state.players.length;
-    let next = (state.buttonIndex + 1) % n;
-    let guard = 0;
-    while (state.players[next].eliminated && guard < n) { next = (next + 1) % n; guard++; }
-    state.buttonIndex = next;
-
-    state.handNumber += 1;
-    state.street = 'preflop';
-    state.blinds = getBlindLevel(state.levelIndex);
-
-    assignPositions(state);
-    dealHoleCards(state);
-    postBlinds(state);
-
-    const order = preflopOrder(state);
-    let firstIdx = -1;
-    for (const idx of order) if (canAct(state.players[idx])) { firstIdx = idx; break; }
-    state.actingIndex = firstIdx >= 0 ? firstIdx : 0;
-    return state;
-  }
-
-  function advanceStreet(state) {
-    const alive = state.players.filter(p => !p.folded && !p.eliminated);
-    if (alive.length === 1) { awardToLastStanding(state); return { done: true, results: state.showdownResults }; }
-
-    const idx = STREETS.indexOf(state.street);
-    if (idx < 0 || idx >= STREETS.length - 1) { showdown(state); return { done: true, results: state.showdownResults }; }
-
-    const nextStreet = STREETS[idx + 1];
-    const canContinue = startStreet(state, nextStreet);
-
-    if (!canContinue) {
-      while (STREETS.indexOf(state.street) < STREETS.length - 1) {
-        const nIdx = STREETS.indexOf(state.street) + 1;
-        startStreet(state, STREETS[nIdx]);
-      }
-      showdown(state);
-      return { done: true, results: state.showdownResults };
-    }
-    return { done: false, street: state.street };
-  }
-
-  function endBettingRound(state) { return advanceStreet(state); }
-
-  return {
-    SUITS, RANKS, RANK_VALUE, HAND_CATEGORIES,
-    BLIND_LEVELS, STARTING_STACK, SEATS, STREETS, POSITION_LABELS,
-    cryptoRandomInt, createDeck, shuffle,
-    evaluateHand, evaluate5, compareScores,
-    buildSidePots, getBlindLevel, createInitialState,
-    dealHoleCards, burnCard, dealBoard, assignPositions,
-    preflopOrder, postflopOrder, postBlinds,
-    canAct, isBettingRoundComplete, applyAction, nextActor,
-    resetStreetState, startStreet,
-    startHand, advanceStreet, endBettingRound,
-    showdown, awardToLastStanding, finalizeHand
-  };
-
 })();
 </script>
 </body>
