@@ -1999,37 +1999,20 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
 }
 #tap-close.active { display: block; }
 
+/* ============================================================
+   СТАРТОВЫЙ ЭКРАН — только затемнение + кнопка «Начать игру»
+   ============================================================ */
 #start-overlay {
   position: absolute; inset: 0;
-  background: #000000;
+  background: rgba(0,0,0,.78);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   display: flex; justify-content: center; align-items: center;
   z-index: 200;
   padding: 20px;
 }
 #start-overlay.hidden { display: none; }
 
-.start-card {
-  text-align: center;
-  padding: clamp(28px, 5vmin, 44px) clamp(24px, 5vmin, 52px);
-  background: linear-gradient(180deg, #1a1a1a, #0d0d0d);
-  border: 2px solid #3a3530;
-  border-radius: 20px;
-  box-shadow: 0 20px 60px rgba(0,0,0,.9), 0 0 80px rgba(255,203,43,.08);
-  max-width: 90vw;
-}
-.start-card h1 {
-  color: var(--gold);
-  font-size: clamp(20px, 3vmin, 28px);
-  margin-bottom: 12px;
-  letter-spacing: 1.5px;
-  font-weight: 900;
-}
-.start-card p {
-  color: var(--muted);
-  margin-bottom: 28px;
-  font-size: clamp(12px, 1.8vmin, 15px);
-  line-height: 1.5;
-}
 #btn-start {
   padding: clamp(14px, 2vmin, 18px) clamp(36px, 5vmin, 56px);
   border: none; border-radius: 12px;
@@ -2040,10 +2023,13 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
   box-shadow: 0 3px 0 #8a6508, inset 0 1px 0 rgba(255,255,255,.35);
   touch-action: manipulation; min-height: 52px;
   cursor: pointer;
+  font-family: inherit;
 }
 #btn-start:active { transform: translateY(2px); box-shadow: 0 1px 0 #8a6508; }
 
-/* Exit confirmation modal — стиль как у окошка входа */
+/* ============================================================
+   ЭКРАН ВЫХОДА — только затемнение + кнопка «Выйти из игры»
+   ============================================================ */
 #exit-confirm-overlay {
   position: absolute; inset: 0;
   z-index: 500;
@@ -2057,58 +2043,22 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
 }
 #exit-confirm-overlay.visible { display: flex; animation: tgFadeIn .18s ease; }
 
-.exit-confirm-box {
-  position: relative;
-  width: 100%;
-  max-width: 380px;
-  background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
-  border: 2px solid #3a3530;
-  border-radius: 20px;
-  padding: clamp(28px, 5vmin, 44px) clamp(24px, 5vmin, 52px);
-  box-shadow: 0 20px 60px rgba(0,0,0,.9), 0 0 80px rgba(255,203,43,.08);
-  text-align: center;
-  animation: tgSlideUp .22s cubic-bezier(.22,.61,.36,1);
-}
-
-.exit-confirm-title {
-  color: var(--gold);
-  font-size: clamp(20px, 3vmin, 28px);
-  font-weight: 900;
-  letter-spacing: 1.5px;
-  line-height: 1.25;
-  margin-bottom: 12px;
-}
-
-.exit-confirm-text {
-  color: var(--muted);
-  font-size: clamp(12px, 1.8vmin, 15px);
-  line-height: 1.5;
-  margin-bottom: 28px;
-}
-
-.exit-confirm-actions {
-  display: flex;
-  gap: clamp(8px, 1.6vmin, 12px);
-}
-.exit-confirm-actions button {
-  flex: 1;
-  padding: clamp(14px, 2vmin, 18px) clamp(8px, 1.6vmin, 12px);
-  border: none;
-  border-radius: 12px;
+#exit-confirm-yes {
+  padding: clamp(14px, 2vmin, 18px) clamp(36px, 5vmin, 56px);
+  border: none; border-radius: 12px;
   background: linear-gradient(180deg, #ffcb2b, #e0a800);
   color: #1a1a1a;
   font-family: inherit;
   font-weight: 900;
-  font-size: clamp(14px, 2vmin, 17px);
+  font-size: clamp(15px, 2vmin, 19px);
   letter-spacing: 1.5px;
   text-transform: uppercase;
   box-shadow: 0 3px 0 #8a6508, inset 0 1px 0 rgba(255,255,255,.35);
   touch-action: manipulation;
   min-height: 52px;
-  transition: transform .08s ease, filter .08s ease;
   cursor: pointer;
 }
-.exit-confirm-actions button:active {
+#exit-confirm-yes:active {
   transform: translateY(2px);
   filter: brightness(1.1);
   box-shadow: 0 1px 0 #8a6508, inset 0 1px 0 rgba(255,255,255,.35);
@@ -2514,15 +2464,8 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
     </div>
   </div>
 
-  <div id="exit-confirm-overlay" role="dialog" aria-modal="true" aria-labelledby="exit-confirm-title-el">
-    <div class="exit-confirm-box">
-      <div class="exit-confirm-title" id="exit-confirm-title-el">Вы хотите выйти из игры?</div>
-      <div class="exit-confirm-text">Если вы выйдете из игры, приложение закроется и вы вернётесь на главную страницу.</div>
-      <div class="exit-confirm-actions">
-        <button id="exit-confirm-yes" type="button">Да</button>
-        <button id="exit-confirm-no" type="button">Нет</button>
-      </div>
-    </div>
+  <div id="exit-confirm-overlay">
+    <button id="exit-confirm-yes" type="button">Выйти из игры</button>
   </div>
 
   <div id="final-overlay">
@@ -2531,11 +2474,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
   </div>
 
   <div id="start-overlay">
-    <div class="start-card">
-      <h1>Prana Poker</h1>
-      <p>Тренажёр логики и интуиции за покерным столом.</p>
-      <button id="btn-start">Начать игру</button>
-    </div>
+    <button id="btn-start">Начать игру</button>
   </div>
 
   <div id="top-dock">
@@ -4465,7 +4404,6 @@ const UI = (() => {
     el.btnStart          = document.getElementById('btn-start');
     el.exitConfirmOverlay = document.getElementById('exit-confirm-overlay');
     el.exitConfirmYes     = document.getElementById('exit-confirm-yes');
-    el.exitConfirmNo      = document.getElementById('exit-confirm-no');
 
     applyCardStyle();
     applySettingsToUI();
@@ -5792,8 +5730,7 @@ const UI = (() => {
       handSnapshot: null,
       pausedByWindow: false
     },
-    appStarted: false,
-    pendingLandingNavigation: false
+    appStarted: false
   };
 
   const el = {};
@@ -5865,7 +5802,6 @@ const UI = (() => {
     el.supportModalContent = document.getElementById('support-modal-content');
     el.exitConfirmOverlay = document.getElementById('exit-confirm-overlay');
     el.exitConfirmYes     = document.getElementById('exit-confirm-yes');
-    el.exitConfirmNo      = document.getElementById('exit-confirm-no');
     el.boardCards     = document.getElementById('board-cards');
     el.boardCardsWrap = document.getElementById('board-cards-wrap');
     el.infoBlindsRow  = document.getElementById('info-blinds-row');
@@ -5983,7 +5919,6 @@ const UI = (() => {
   function doExitToLanding() {
     hideExitConfirm();
     session.exitConfirmPaused = false;
-    session.pendingLandingNavigation = true;
     resetAppStateForExit();
     if (typeof window.__ppShowLanding === 'function') window.__ppShowLanding();
   }
@@ -6391,23 +6326,29 @@ const UI = (() => {
       el.exitConfirmYes.addEventListener('click', onYes);
       el.exitConfirmYes.addEventListener('touchend', onYes, { passive: false });
     }
-    if (el.exitConfirmNo) {
-      let lastNoTs = 0;
-      const onNo = (e) => {
-        if (e.cancelable) e.preventDefault();
-        e.stopPropagation();
-        const now = Date.now();
-        if (now - lastNoTs < 350) return;
-        lastNoTs = now;
-        cancelExitToLanding();
-      };
-      el.exitConfirmNo.addEventListener('click', onNo);
-      el.exitConfirmNo.addEventListener('touchend', onNo, { passive: false });
-    }
+
     if (el.exitConfirmOverlay) {
-      el.exitConfirmOverlay.addEventListener('click', (e) => {
-        if (e.target === el.exitConfirmOverlay) cancelExitToLanding();
-      });
+      const backdrop = (e) => {
+        if (e.target === el.exitConfirmOverlay) {
+          if (e.cancelable) e.preventDefault();
+          e.stopPropagation();
+          cancelExitToLanding();
+        }
+      };
+      el.exitConfirmOverlay.addEventListener('click', backdrop);
+      el.exitConfirmOverlay.addEventListener('touchend', backdrop, { passive: false });
+    }
+
+    if (el.startOverlay) {
+      const backdropStart = (e) => {
+        if (e.target === el.startOverlay) {
+          if (e.cancelable) e.preventDefault();
+          e.stopPropagation();
+          if (typeof window.__ppShowLanding === 'function') window.__ppShowLanding();
+        }
+      };
+      el.startOverlay.addEventListener('click', backdropStart);
+      el.startOverlay.addEventListener('touchend', backdropStart, { passive: false });
     }
 
     let startX = 0, startY = 0, tracking = false;
