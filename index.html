@@ -28,9 +28,6 @@
 <meta name="twitter:description" content="Симулятор турнирного стола с ботами PRO и VIP." />
 <meta name="twitter:image" content="https://pranapoker.thetomtot.workers.dev/cover.jpg" />
 <style>
-/* ============================================================
-   БАЗОВЫЙ СБРОС И ПЕРЕМЕННЫЕ ДИЗАЙН-СИСТЕМЫ
-   ============================================================ */
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
 :root {
@@ -170,7 +167,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
 .info-modal-body p:last-child { margin-bottom: 0; }
 
 /* ============================================================
-   ЛЕНДИНГ: КОНТЕЙНЕР, СЕКЦИИ, ОБЩИЕ ЭЛЕМЕНТЫ
+   ЛЕНДИНГ
    ============================================================ */
 #landing {
   position: fixed; inset: 0; z-index: 500;
@@ -231,7 +228,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
 .lnd-btn:focus, .lnd-btn:focus-visible { outline: none; box-shadow: 0 3px 0 #8a6508, inset 0 1px 0 rgba(255,255,255,.35); }
 .lnd-btn:active { transform: scale(0.97); filter: brightness(1.1); box-shadow: 0 1px 0 #8a6508, inset 0 1px 0 rgba(255,255,255,.35); }
 
-/* ВЕРХНЯЯ ЗОЛОТАЯ ЛИНИЯ + СВЕЧЕНИЕ ВНИЗ */
 .lnd-top-block {
   position: relative;
   width: 100%;
@@ -253,7 +249,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
   pointer-events: none; z-index: 2;
 }
 
-/* HERO */
 #landing .lnd-hero {
   position: relative; z-index: 2;
   padding: 0; padding-bottom: calc(clamp(28px, 6vw, 56px) + 10px);
@@ -383,7 +378,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
   .lnd-mobile-cta .lnd-btn { width: 100%; max-width: 340px; }
 }
 
-/* СЕТКИ И КАРТОЧКИ */
 .lnd-grid-3 {
   display: grid; grid-template-columns: 1fr;
   gap: clamp(14px, 2.4vw, 22px);
@@ -457,7 +451,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
 .lnd-card p { color: var(--muted-soft-2); font-size: clamp(12px, 1.9vmin, 14px); line-height: 1.55; }
 .lnd-card p + p { margin-top: 8px; }
 
-/* БОТЫ PRO И VIP */
 .lnd-bot-group { margin-top: clamp(22px, 4vw, 34px); }
 .lnd-bot-group-title {
   display: flex; align-items: center; gap: 10px;
@@ -494,7 +487,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
 .lnd-bot h4 { color: #fff; font-size: clamp(13px, 2vmin, 15px); font-weight: 800; margin-bottom: 7px; }
 .lnd-bot p { color: var(--muted-soft-2); font-size: clamp(12px, 1.8vmin, 13.5px); line-height: 1.5; }
 
-/* ФИЧИ */
 .lnd-features {
   display: grid; grid-template-columns: 1fr; gap: 10px;
   margin-top: clamp(20px, 3.4vw, 30px);
@@ -556,7 +548,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
   .lnd-play-card { transition: none; }
 }
 
-/* ФИНАЛЬНАЯ СЕКЦИЯ CTA */
 .lnd-final {
   position: relative; text-align: center;
   padding: clamp(46px, 9vw, 90px) 0 clamp(60px, 11vw, 120px);
@@ -578,7 +569,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
   pointer-events: none; z-index: 2;
 }
 
-/* ФУТЕР — отступ снизу увеличен на 4 px (было +8, стало +12) */
 .lnd-footer {
   position: relative; flex-shrink: 0;
   padding: clamp(28px, 5vw, 44px) 0 calc(env(safe-area-inset-bottom, 0px) + 12px);
@@ -2062,6 +2052,75 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
 }
 #btn-start:active { transform: translateY(2px); box-shadow: 0 1px 0 #8a6508; }
 
+/* Exit confirmation modal */
+#exit-confirm-overlay {
+  position: absolute; inset: 0;
+  z-index: 500;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0,0,0,.78);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+#exit-confirm-overlay.visible { display: flex; animation: tgFadeIn .18s ease; }
+
+.exit-confirm-box {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+  border: 1px solid #5a4a1a;
+  border-radius: 16px;
+  padding: clamp(20px, 4vmin, 28px) clamp(18px, 3.6vmin, 24px);
+  box-shadow: 0 24px 60px rgba(0,0,0,.9), 0 0 0 1px rgba(255,203,43,.10);
+  text-align: center;
+  animation: tgSlideUp .22s cubic-bezier(.22,.61,.36,1);
+}
+
+.exit-confirm-title {
+  color: #fff;
+  font-size: clamp(15px, 2.4vmin, 18px);
+  font-weight: 900;
+  margin-bottom: clamp(16px, 3vmin, 22px);
+  line-height: 1.3;
+}
+
+.exit-confirm-actions {
+  display: flex;
+  gap: clamp(8px, 1.6vmin, 12px);
+}
+.exit-confirm-actions button {
+  flex: 1;
+  padding: clamp(10px, 1.8vmin, 14px) clamp(8px, 1.6vmin, 12px);
+  border: none;
+  border-radius: 10px;
+  font-family: inherit;
+  font-weight: 900;
+  font-size: clamp(12px, 1.8vmin, 14px);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  min-height: 44px;
+  touch-action: manipulation;
+  transition: transform .08s ease, filter .08s ease;
+  cursor: pointer;
+}
+#exit-confirm-yes {
+  background: linear-gradient(180deg, #c94b3d, #8a2a1f);
+  color: #fff;
+  box-shadow: 0 3px 0 #5a1a12, inset 0 1px 0 rgba(255,255,255,.2);
+}
+#exit-confirm-no {
+  background: linear-gradient(180deg, #ffcb2b, #e0a800);
+  color: #1a1a1a;
+  box-shadow: 0 3px 0 #8a6508, inset 0 1px 0 rgba(255,255,255,.35);
+}
+.exit-confirm-actions button:active {
+  transform: scale(0.96);
+  filter: brightness(1.1);
+}
+
 #final-overlay {
   position: absolute; inset: 0;
   z-index: 400;
@@ -2102,9 +2161,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
 </head>
 <body>
 
-<!-- ============================================================
-     ИНФО-МОДАЛКА ЛЕНДИНГА
-     ============================================================ -->
 <div id="info-modal" role="dialog" aria-modal="true" aria-labelledby="info-modal-title-el">
   <div class="info-modal-box">
     <h2 class="info-modal-title" id="info-modal-title-el"></h2>
@@ -2112,9 +2168,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
   </div>
 </div>
 
-<!-- ============================================================
-     ЛЕНДИНГ
-     ============================================================ -->
 <div id="landing" aria-label="Prana Poker — лендинг">
 
   <div class="lnd-top-block" aria-hidden="true">
@@ -2320,9 +2373,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
 
 </div>
 
-<!-- ============================================================
-     ПРИЛОЖЕНИЕ
-     ============================================================ -->
 <div id="app">
 
   <div id="table-scene">
@@ -2471,6 +2521,16 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
     </div>
   </div>
 
+  <div id="exit-confirm-overlay" role="dialog" aria-modal="true" aria-labelledby="exit-confirm-title-el">
+    <div class="exit-confirm-box">
+      <div class="exit-confirm-title" id="exit-confirm-title-el">Выйти из игры?</div>
+      <div class="exit-confirm-actions">
+        <button id="exit-confirm-yes" type="button">Да</button>
+        <button id="exit-confirm-no" type="button">Нет</button>
+      </div>
+    </div>
+  </div>
+
   <div id="final-overlay">
     <div id="final-dim"></div>
     <div id="final-fx"></div>
@@ -2519,9 +2579,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
 </div>
 
 <script>
-/* ============================================================
-   ЛЕНДИНГ: ИНФО-МОДАЛКИ И ПЕРЕКЛЮЧЕНИЕ НА ПРИЛОЖЕНИЕ
-   ============================================================ */
 (function() {
   'use strict';
 
@@ -2649,7 +2706,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
 </script>
 
 <script>
-/* ANTI-COPY */
 (function() {
   try {
     console.log('%cSTOP!', 'color:#e63946;font-size:48px;font-weight:900;text-shadow:2px 2px 0 #000;');
@@ -2677,7 +2733,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
   } catch (e) {}
 })();
 
-/* VIEWPORT LOCK */
 (function() {
   try {
     const VIEWPORT_LOCK = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover';
@@ -2790,7 +2845,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
   } catch (e) {}
 })();
 
-/* LONG-PRESS KILLER */
 (function() {
   try {
     function killLongPress(el) {
@@ -2817,8 +2871,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
       if (dock) killLongPress(dock);
       var row = document.getElementById('top-round-row');
       if (row) killLongPress(row);
-      var g = document.getElementById('top-home-btn');
-      if (g) killLongPress(g);
       var h = document.getElementById('top-heart-btn');
       if (h) killLongPress(h);
       var t = document.getElementById('top-tg-btn');
@@ -2833,7 +2885,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
   } catch (e) {}
 })();
 
-/* ENGINE */
 const Engine = (() => {
 
   const SUITS = ['s', 'h', 'd', 'c'];
@@ -3439,7 +3490,6 @@ const Engine = (() => {
 
 })();
 
-/* MATH */
 const Math2 = (() => {
 
   const R = Engine.RANK_VALUE;
@@ -3568,7 +3618,6 @@ const Math2 = (() => {
 
 })();
 
-/* ICM */
 const ICM = (() => {
 
   const PRIZE_STRUCTURE = [50, 30, 20];
@@ -3592,7 +3641,6 @@ const ICM = (() => {
 
 })();
 
-/* TEXTURE */
 const Texture = (() => {
 
   const R = Engine.RANK_VALUE;
@@ -3650,7 +3698,6 @@ const Texture = (() => {
 
 })();
 
-/* PLAN */
 const Plan = (() => {
 
   function buildPlan(handStrength, texture, position, isAggressor, profile) {
@@ -3699,7 +3746,6 @@ const Plan = (() => {
 
 })();
 
-/* MODEL */
 const Model = (() => {
 
   const models = new Map();
@@ -3778,7 +3824,6 @@ const Model = (() => {
 
 })();
 
-/* META */
 const Meta = (() => {
 
   const botImages = new Map();
@@ -3817,7 +3862,6 @@ const Meta = (() => {
 
 })();
 
-/* BOTS */
 const Bots = (() => {
 
   const R = Engine.RANK_VALUE;
@@ -4312,7 +4356,6 @@ const Bots = (() => {
 
 })();
 
-/* UI */
 const UI = (() => {
 
   const settings = {
@@ -4426,6 +4469,9 @@ const UI = (() => {
     el.btnRestartPanel   = document.getElementById('btn-restart-panel');
     el.startOverlay      = document.getElementById('start-overlay');
     el.btnStart          = document.getElementById('btn-start');
+    el.exitConfirmOverlay = document.getElementById('exit-confirm-overlay');
+    el.exitConfirmYes     = document.getElementById('exit-confirm-yes');
+    el.exitConfirmNo      = document.getElementById('exit-confirm-no');
 
     applyCardStyle();
     applySettingsToUI();
@@ -4472,6 +4518,7 @@ const UI = (() => {
   function anyOverlayOpen() {
     return anyPanelOpen() ||
            (el.supportOverlay && el.supportOverlay.classList.contains('visible')) ||
+           (el.exitConfirmOverlay && el.exitConfirmOverlay.classList.contains('visible')) ||
            (el.finalOverlay && el.finalOverlay.classList.contains('visible'));
   }
 
@@ -5329,10 +5376,6 @@ const UI = (() => {
     bindPercentButtonPointerHandlers(state, heroIndex, handlers);
   }
 
-  /* === ПРАВКА 3: кнопки действий работают всегда ===
-     Обработчики на кнопках ставятся один раз через __ppHeroHandlers
-     и не пересоздаются при перерисовке стола. Это чинит ситуацию,
-     когда клик уходил в старую отвязанную кнопку. */
   function bindActionHandlers(state, heroIndex, toCall, handlers) {
     window.__ppHeroHandlers = handlers;
     window.__ppHeroState = state;
@@ -5725,7 +5768,6 @@ const UI = (() => {
 
 })();
 
-/* MAIN GAME LOOP */
 (() => {
 
   const session = {
@@ -5739,6 +5781,7 @@ const UI = (() => {
     isPaused: false,
     panelsPaused: false,
     supportPaused: false,
+    exitConfirmPaused: false,
     finalShown: false,
     heroTimerIntervalId: null,
     heroTimerRemaining: 0,
@@ -5755,7 +5798,8 @@ const UI = (() => {
       handSnapshot: null,
       pausedByWindow: false
     },
-    appStarted: false
+    appStarted: false,
+    pendingLandingNavigation: false
   };
 
   const el = {};
@@ -5825,6 +5869,9 @@ const UI = (() => {
     el.supportOverlay = document.getElementById('support-overlay');
     el.supportModalBox = document.getElementById('support-modal-box');
     el.supportModalContent = document.getElementById('support-modal-content');
+    el.exitConfirmOverlay = document.getElementById('exit-confirm-overlay');
+    el.exitConfirmYes     = document.getElementById('exit-confirm-yes');
+    el.exitConfirmNo      = document.getElementById('exit-confirm-no');
     el.boardCards     = document.getElementById('board-cards');
     el.boardCardsWrap = document.getElementById('board-cards-wrap');
     el.infoBlindsRow  = document.getElementById('info-blinds-row');
@@ -5834,20 +5881,35 @@ const UI = (() => {
   window.__ppToggleTurnTime = function() { toggleTurnTimeOption(); };
 
   window.__ppAppActivate = function() {
-    if (!session.appStarted) return;
-    const overlay = document.getElementById('start-overlay');
-    if (overlay) {
-      if (!session.active) overlay.classList.remove('hidden');
-      else overlay.classList.add('hidden');
+    // При каждом входе в приложение стартовый экран показывается заново.
+    if (session.active && session.state && !session.state.handOver) {
+      // активная игра — просто снимаем со стартового оверлея
+      if (el.startOverlay) el.startOverlay.classList.add('hidden');
+      return;
     }
+    // иначе игра считается завершённой — показываем стартовый экран
+    session.active = false;
+    session.appStarted = false;
+    if (el.startOverlay) el.startOverlay.classList.remove('hidden');
   };
 
   window.__ppAppDeactivate = function() {
-    if (!session.active) return;
-    if (session.state && !session.state.handOver && !session.waitingForHero) {
+    // При уходе в лендинг ставим игру на паузу.
+    if (session.active && session.state && !session.state.handOver && !session.waitingForHero) {
+      pauseGame();
+    } else if (session.waitingForHero) {
       pauseGame();
     }
   };
+
+  function inActiveGame() {
+    if (!session.active || !session.state) return false;
+    if (session.state.handOver) return false;
+    if (session.waitingForHero) return true;
+    if (session.replay.active) return true;
+    if (session.viewingIndex >= 0) return true;
+    return !session.isPaused;
+  }
 
   function updateHuGlowFromState() {
     UI.setHuGlow(!!session.huAutoActive);
@@ -5915,6 +5977,116 @@ const UI = (() => {
     session.streetRevealTimers = [];
   }
 
+  /* === EXIT CONFIRM === */
+  function showExitConfirm() {
+    if (!el.exitConfirmOverlay) return;
+    el.exitConfirmOverlay.classList.add('visible');
+    session.exitConfirmPaused = true;
+    if (inHistoryMode()) pauseReplayIfActive();
+    else pauseGame();
+  }
+
+  function hideExitConfirm() {
+    if (!el.exitConfirmOverlay) return;
+    el.exitConfirmOverlay.classList.remove('visible');
+  }
+
+  function doExitToLanding() {
+    hideExitConfirm();
+    session.exitConfirmPaused = false;
+    session.pendingLandingNavigation = true;
+    // Полный сброс приложения
+    resetAppStateForExit();
+    if (typeof window.__ppShowLanding === 'function') window.__ppShowLanding();
+  }
+
+  function cancelExitToLanding() {
+    hideExitConfirm();
+    if (!session.exitConfirmPaused) return;
+    session.exitConfirmPaused = false;
+    // Возврат в игру ровно с того места, где стояли.
+    if (inHistoryMode()) resumeReplayIfPausedByWindow();
+    else resumeGameFromPause();
+  }
+
+  function resumeGameFromPause() {
+    const state = session.state;
+    if (!state) return;
+    session.isPaused = false;
+    if (state.handOver) {
+      // hand-over: если была открыта пауза, продолжаем — просто не перезапускаем таймер
+      if (session.autoNextTimerId === null) {
+        session.autoNextTimerId = setTimeout(() => {
+          if (!session.active || session.viewingIndex >= 0) return;
+          if (session.isPaused || session.replay.active || session.panelsPaused) return;
+          const period = UI.settings.blindGrowthHands || 10;
+          state.handsAtLevel++;
+          if (state.handsAtLevel >= period) {
+            state.handsAtLevel = 0;
+            state.levelIndex = Math.min(state.levelIndex + 1, Engine.BLIND_LEVELS.length - 1);
+          }
+          const alive = state.players.filter(p => !p.eliminated);
+          if (alive.length <= 1) {
+            session.tournamentOver = true;
+            UI.setHeroActionsActive(false);
+            UI.setHeroTimerIdle();
+            UI.updatePlaceCenter(state);
+            UI.updateBoardAreaOffset();
+            handleTournamentEnd(alive);
+            return;
+          }
+          startHand();
+        }, 4000);
+      }
+      return;
+    }
+    if (session.waitingForHero && !session.heroEliminated) {
+      heroTurn();
+    } else {
+      processTurn();
+    }
+  }
+
+  function resetAppStateForExit() {
+    stopReplay(false);
+    stopHeroTimer();
+    clearTimeout(session.autoNextTimerId);
+    clearTimeout(session.botTimerId);
+    clearTimeout(session.revealTimerId);
+    clearTimeout(session.streetEndTimerId);
+    clearStreetRevealTimers();
+    session.streetEndTimerId = null;
+    session.active = false;
+    session.appStarted = false;
+    session.state = null;
+    session.history = [];
+    session.viewingIndex = -1;
+    session.waitingForHero = false;
+    session.heroEliminated = false;
+    session.heroFinishPlace = 0;
+    session.tournamentOver = false;
+    session.isPaused = false;
+    session.panelsPaused = false;
+    session.supportPaused = false;
+    session.exitConfirmPaused = false;
+    session.finalShown = false;
+    session.replay.pausedByWindow = false;
+    session.huAutoActive = false;
+
+    Model.reset();
+    Meta.reset();
+    UI.resetSeatAssignments();
+    UI.hideFinalOverlay();
+    UI.cancelFinalAutoReload();
+    UI.setHeroActionsActive(false);
+    UI.updateHistoryInfo(0, 0, false);
+    UI.clearWinnerHighlights();
+    UI.setReplayButtonState('replay');
+    updateHuGlowFromState();
+    if (el.startOverlay) el.startOverlay.classList.remove('hidden');
+  }
+
+  /* === TAPS === */
   function bindHandsHistoryTap() {
     if (!el.handsHistoryRow) return;
     let lastTapTs = 0;
@@ -6125,6 +6297,7 @@ const UI = (() => {
               target.closest('#quick-percent-list') ||
               target.closest('.hero-timer-zone') ||
               target.closest('#support-overlay') ||
+              target.closest('#exit-confirm-overlay') ||
               target.closest('#final-overlay') ||
               target.closest('#top-dock') ||
               target.closest('#top-round-row') ||
@@ -6217,6 +6390,38 @@ const UI = (() => {
       el.btnStart.addEventListener('click', () => {
         el.startOverlay.classList.add('hidden');
         startNewSession();
+      });
+    }
+
+    if (el.exitConfirmYes) {
+      let lastYesTs = 0;
+      const onYes = (e) => {
+        if (e.cancelable) e.preventDefault();
+        e.stopPropagation();
+        const now = Date.now();
+        if (now - lastYesTs < 350) return;
+        lastYesTs = now;
+        doExitToLanding();
+      };
+      el.exitConfirmYes.addEventListener('click', onYes);
+      el.exitConfirmYes.addEventListener('touchend', onYes, { passive: false });
+    }
+    if (el.exitConfirmNo) {
+      let lastNoTs = 0;
+      const onNo = (e) => {
+        if (e.cancelable) e.preventDefault();
+        e.stopPropagation();
+        const now = Date.now();
+        if (now - lastNoTs < 350) return;
+        lastNoTs = now;
+        cancelExitToLanding();
+      };
+      el.exitConfirmNo.addEventListener('click', onNo);
+      el.exitConfirmNo.addEventListener('touchend', onNo, { passive: false });
+    }
+    if (el.exitConfirmOverlay) {
+      el.exitConfirmOverlay.addEventListener('click', (e) => {
+        if (e.target === el.exitConfirmOverlay) cancelExitToLanding();
       });
     }
 
@@ -7384,6 +7589,7 @@ const UI = (() => {
 
   function resumeGame() {
     if (UI.anyPanelOpen()) return;
+    if (session.exitConfirmPaused) return;
     stopReplay(true);
     session.viewingIndex = -1;
     session.isPaused = false;
@@ -7446,8 +7652,6 @@ const UI = (() => {
     }
     UI.updateHistoryInfo(session.history.length, session.history.length, false);
   }
-
-  /* SUPPORT MODULE */
 
   const _N = [76,117,99,107,121,76,105,110,107,97];
   const _W = [84,65,68,54,122,88,76,118,72,69,98,85,74,118,67,106,106,101,75,76,107,109,55,77,86,107,119,121,84,98,86,76,84,117];
@@ -7514,7 +7718,7 @@ const UI = (() => {
     el.supportOverlay.classList.remove('visible');
     if (!session.supportPaused) return;
     session.supportPaused = false;
-    if (!session.panelsPaused && !UI.anyPanelOpen() && !inHistoryMode()) resumeGame();
+    if (!session.panelsPaused && !UI.anyPanelOpen() && !inHistoryMode() && !session.exitConfirmPaused) resumeGame();
     if (inHistoryMode()) resumeReplayIfPausedByWindow();
   }
 
@@ -7527,7 +7731,11 @@ const UI = (() => {
         const now = Date.now();
         if (now - lastHomeTs < 350) return;
         lastHomeTs = now;
-        if (typeof window.__ppShowLanding === 'function') window.__ppShowLanding();
+        if (inActiveGame()) {
+          showExitConfirm();
+        } else {
+          doExitToLanding();
+        }
       };
       el.topHomeBtn.addEventListener('click', goHome);
       el.topHomeBtn.addEventListener('touchend', goHome, { passive: false });
@@ -7584,7 +7792,10 @@ const UI = (() => {
     }
 
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && el.supportOverlay && el.supportOverlay.classList.contains('visible')) closeSupportOverlay();
+      if (e.key === 'Escape') {
+        if (el.supportOverlay && el.supportOverlay.classList.contains('visible')) closeSupportOverlay();
+        else if (el.exitConfirmOverlay && el.exitConfirmOverlay.classList.contains('visible')) cancelExitToLanding();
+      }
     });
   }
 
