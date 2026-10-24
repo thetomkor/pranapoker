@@ -43,21 +43,29 @@
 
 :root {
   --bg: #000000;
+  --bg-bottom: #000000;
   --gold: #ffcb2b;
   --gold-2: #e0a800;
   --text: #e8eef5;
   --muted: #8a8a8a;
+  --muted-soft: #9a9a9a;
   --muted-soft-2: #a8a8a8;
+  --accent: #3fa9f5;
+  --danger: #d94f3d;
+  --ok: #2fb571;
+  --allin: #e63946;
+  --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --pro-color: #4a3a68;
   --vip-color: #324a6e;
   --ph-bg: radial-gradient(circle at 50% 40%, #1f1a0e 0%, #0f0d08 100%);
   --ph-heart: #b8924a;
+  --ph-heart-bright: #c69a52;
 }
 
 html, body {
   height: 100%;
-  background: var(--bg);
+  background: var(--bg-bottom);
   color: var(--text);
   font-family: "Inter", "Segoe UI", system-ui, sans-serif;
   font-size: 14px;
@@ -93,7 +101,7 @@ html {
   -moz-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  background: var(--bg);
+  background: var(--bg-bottom);
   color-scheme: dark;
 }
 
@@ -102,7 +110,7 @@ body {
   -moz-text-size-adjust: 100%;
   text-size-adjust: 100%;
   -ms-touch-action: manipulation;
-  background: var(--bg);
+  background: var(--bg-bottom);
   color-scheme: dark;
 }
 
@@ -112,6 +120,7 @@ button:disabled, button.disabled { cursor: default; }
 /* ============================================================
    ЗАГЛУШКА КАРТИНОК (SVG-СЕРДЦЕ)
    Используется, когда картинка не загрузилась или её нет.
+   НЕ ПУТАТЬ с кнопкой-сердцем — это разные вещи.
    ============================================================ */
 .ph-fallback {
   position: absolute; inset: 0;
@@ -123,9 +132,11 @@ button:disabled, button.disabled { cursor: default; }
   width: 26px; height: 26px; display: block;
   filter: drop-shadow(0 0 6px rgba(184,146,74,.75)) drop-shadow(0 0 14px rgba(184,146,74,.45));
 }
+.ph-fallback.lg .ph-heart-svg { width: 34px; height: 34px; }
+.ph-fallback.sm .ph-heart-svg { width: 20px; height: 20px; }
 
 /* ============================================================
-   ИНФО-МОДАЛКА (тапзоны «Логика», «Настройки», «Поддержка» и т.д.)
+   ИНФО-МОДАЛКА (тапзоны «Логика», «Настройки» и т.д.)
    ============================================================ */
 #info-modal {
   position: fixed; inset: 0; z-index: 950;
@@ -164,6 +175,161 @@ button:disabled, button.disabled { cursor: default; }
 }
 .info-modal-body p { margin: 0 0 14px; }
 .info-modal-body p:last-child { margin-bottom: 0; }
+
+.info-modal-box.info-modal-box--support {
+  max-width: 380px;
+  padding: clamp(20px, 4vmin, 28px) clamp(18px, 3.6vmin, 26px) clamp(20px, 4vmin, 28px);
+}
+.info-modal-box--support .info-modal-title {
+  color: var(--gold);
+  font-size: clamp(13px, 1.8vmin, 15px);
+  text-transform: uppercase; letter-spacing: 1px; text-align: center;
+  font-weight: 900; margin-bottom: clamp(16px, 2.4vmin, 18px);
+}
+
+/* ============================================================
+   КАРТОЧКИ ПОДДЕРЖКИ (GGPoker + USDT)
+   Вертикальный стек с перелистыванием свайпом.
+   ============================================================ */
+.support-card-stack {
+  position: relative; width: 100%;
+  aspect-ratio: 1.586 / 1; padding-bottom: 8px;
+  box-sizing: content-box;
+  margin-bottom: clamp(16px, 2.4vmin, 18px);
+  touch-action: none; user-select: none; -webkit-user-select: none;
+  overflow: visible;
+}
+.support-card {
+  position: absolute; left: 0; right: 0; top: 0;
+  width: 100%; aspect-ratio: 1.586 / 1;
+  border-radius: clamp(10px, 1.8vmin, 14px); overflow: hidden;
+  padding: clamp(12px, 2.2vmin, 18px);
+  display: flex; flex-direction: column; justify-content: space-between;
+  color: #ffffff;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  will-change: transform;
+  transition: transform .38s cubic-bezier(.22,.61,.36,1);
+}
+.support-card-stack.dragging .support-card { transition: none; }
+
+.support-card.support-card-violet {
+  background: linear-gradient(135deg, #3d3548 0%, #4a3f57 45%, #5b4e6b 100%);
+  box-shadow: 0 12px 22px -8px rgba(0,0,0,.55), 0 6px 10px -4px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.2);
+}
+.support-card.support-card-gold {
+  background: linear-gradient(135deg, #4a3a10 0%, #6b5418 45%, #8a6f24 100%);
+  box-shadow: 0 12px 22px -8px rgba(0,0,0,.55), 0 6px 10px -4px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.2);
+}
+.support-card::before {
+  content: ""; position: absolute; top: -30%; right: -10%;
+  width: 65%; height: 160%;
+  background: rgba(255,255,255,0.08);
+  transform: rotate(22deg); pointer-events: none;
+}
+.support-card::after {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at 20% 15%, rgba(255,255,255,0.18) 0%, transparent 45%);
+  pointer-events: none; border-radius: inherit;
+}
+
+.support-card-top { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: flex-start; }
+.support-card-bank.support-card-gg-wrap { transform: translateY(-3px); }
+.support-card-bank {
+  font-size: clamp(11px, 1.55vmin, 12.5px); font-weight: 800;
+  letter-spacing: 1.2px; text-transform: uppercase; opacity: 0.9;
+}
+.support-card-club-top {
+  font-size: clamp(13px, 1.9vmin, 17px); font-weight: 900;
+  letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.95;
+  text-align: right; line-height: 1.2; text-shadow: 0 1px 2px rgba(0,0,0,.35);
+}
+.support-card-chip {
+  position: absolute; top: clamp(30px, 4.7vmin, 40px); left: clamp(12px, 2.2vmin, 18px);
+  width: clamp(27px, 4.1vmin, 35px); height: clamp(21px, 3.1vmin, 27px);
+  border-radius: 4px;
+  background: linear-gradient(135deg, #e8d9a0 0%, #c9b46a 50%, #a89040 100%);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.25);
+  z-index: 2;
+}
+.support-card-chip::before {
+  content: ""; position: absolute;
+  top: 20%; left: 10%; right: 10%; bottom: 20%;
+  border: 1px solid rgba(0,0,0,.25); border-radius: 2px;
+}
+.support-copy-text {
+  position: relative; display: inline-block; padding-right: 14px;
+  cursor: pointer; user-select: none; -webkit-user-select: none; -webkit-user-drag: none;
+}
+.support-copy-text:active { color: var(--gold); }
+.support-copy-icon {
+  position: absolute; right: 0; top: 0; width: 7px; height: 7px; pointer-events: none;
+}
+.support-copy-icon::before, .support-copy-icon::after {
+  content: ""; position: absolute;
+  border: 1px solid #ffffff; border-radius: 1px; background: #8a8a8a;
+}
+.support-copy-icon::before { width: 5px; height: 5px; left: 2px; top: 0; z-index: 1; }
+.support-copy-icon::after  { width: 5px; height: 5px; left: 0; top: 2px; z-index: 2; }
+
+.support-card-usdt-line {
+  position: relative; z-index: 2; margin-top: auto;
+  margin-bottom: clamp(6px, 1.2vmin, 10px);
+  text-align: left; white-space: nowrap;
+  font-size: clamp(11px, 1.9vmin, 13px); font-weight: 700;
+  letter-spacing: 0.2px; text-shadow: 0 1px 2px rgba(0,0,0,.4);
+  display: block; width: 100%;
+}
+.support-card-bottom-line {
+  position: relative; z-index: 2; white-space: nowrap;
+  font-size: clamp(12px, 1.85vmin, 14.5px); font-weight: 700; letter-spacing: 1px;
+}
+.support-card-bottom {
+  position: relative; z-index: 2; display: flex; justify-content: space-between;
+  align-items: flex-end; gap: 8px;
+}
+.support-card-copied {
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(20, 18, 16, 0.95); color: var(--gold);
+  font-weight: 800; font-size: clamp(14px, 1.85vmin, 16.5px);
+  padding: 10px 20px; border-radius: 10px;
+  border: 1px solid #8a6508; box-shadow: 0 4px 12px rgba(0,0,0,.8);
+  opacity: 0; pointer-events: none; transition: opacity .18s ease;
+  z-index: 5; white-space: nowrap;
+}
+.support-card-copied.visible { opacity: 1; }
+.support-card-gg { font-size: calc(clamp(11px, 1.55vmin, 12.5px) + 3px); }
+.support-card-name-label {
+  font-size: clamp(12px, 1.85vmin, 14.5px); font-weight: 700;
+  letter-spacing: 1px; text-transform: none;
+  display: inline-block; vertical-align: bottom; line-height: 1;
+}
+.support-card-name-value {
+  font-size: calc(clamp(12px, 1.85vmin, 14.5px) + 2px); font-weight: 800;
+  letter-spacing: 1px; text-shadow: 0 1px 2px rgba(0,0,0,.55);
+  display: inline-block; vertical-align: bottom; line-height: 1;
+}
+.support-card-nickname-row {
+  position: relative; z-index: 2; margin-top: auto;
+  margin-bottom: clamp(6px, 1.2vmin, 10px);
+  text-align: left; white-space: nowrap; font-weight: 700;
+  letter-spacing: 0.2px; display: block; width: 100%; line-height: 1;
+}
+.support-thanks {
+  text-align: center; color: var(--muted-soft-2);
+  font-size: clamp(13px, 1.85vmin, 14.5px); line-height: 1.5; letter-spacing: .3px;
+}
+
+@media (min-width: 641px) {
+  .support-card-bank { font-size: clamp(10px, 1.4vmin, 11.5px); }
+  .support-card-club-top { font-size: clamp(12px, 1.75vmin, 16px); }
+  .support-card-usdt-line { font-size: clamp(10px, 1.75vmin, 12px); }
+  .support-card-bottom-line { font-size: clamp(11px, 1.7vmin, 13.5px); }
+  .support-card-copied { font-size: clamp(13px, 1.7vmin, 15.5px); }
+  .support-card-gg { font-size: clamp(10px, 1.4vmin, 11.5px); }
+  .support-card-name-label { font-size: clamp(11px, 1.7vmin, 13.5px); }
+  .support-card-name-value { font-size: clamp(11px, 1.7vmin, 13.5px); }
+}
 
 /* ============================================================
    ЛЕНДИНГ: КОНТЕЙНЕР, СЕКЦИИ, ОБЩИЕ ЭЛЕМЕНТЫ
@@ -231,7 +397,6 @@ button:disabled, button.disabled { cursor: default; }
    ВЕРХНЯЯ ЗОЛОТАЯ ЛИНИЯ + СВЕЧЕНИЕ ВНИЗ
    Точно как в финальной секции «Готов тренировать…»:
    сначала линия, от неё вниз золотое свечение. Всё в потоке.
-   Линия и свечение сделаны ярче (как было до чистки).
    ============================================================ */
 .lnd-top-block {
   position: relative;
@@ -243,14 +408,14 @@ button:disabled, button.disabled { cursor: default; }
   position: absolute; top: 0; left: 50%;
   width: 90vmin; height: 90vmin;
   transform: translate(-50%, -50%);
-  background: radial-gradient(circle, rgba(255,203,43,.14) 0%, rgba(255,203,43,.06) 35%, transparent 70%);
+  background: radial-gradient(circle, rgba(255,203,43,.10) 0%, transparent 60%);
   pointer-events: none; z-index: 0; clip-path: inset(50% 0 0 0);
 }
 .lnd-top-block .lnd-top-rule {
   position: relative;
   left: 0; right: 0;
   height: 1px;
-  background: linear-gradient(to right, transparent 0%, rgba(255,203,43,.32) 18%, rgba(255,203,43,.32) 82%, transparent 100%);
+  background: linear-gradient(to right, transparent 0%, rgba(255,203,43,.12) 18%, rgba(255,203,43,.12) 82%, transparent 100%);
   pointer-events: none; z-index: 2;
 }
 
@@ -261,6 +426,18 @@ button:disabled, button.disabled { cursor: default; }
   position: relative; z-index: 2;
   padding: 0; padding-bottom: calc(clamp(28px, 6vw, 56px) + 10px);
   overflow: visible;
+}
+#landing .lnd-hero::before {
+  content: ""; position: absolute; top: 0; left: 50%;
+  width: 90vmin; height: 90vmin; transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255,203,43,.10) 0%, transparent 60%);
+  pointer-events: none; z-index: 0; clip-path: inset(50% 0 0 0);
+}
+#landing .lnd-hero::after {
+  content: ""; position: absolute; bottom: -30%; left: -30%;
+  width: 70vmin; height: 70vmin;
+  background: radial-gradient(circle, rgba(255,203,43,.05) 0%, transparent 65%);
+  pointer-events: none; z-index: 0;
 }
 
 /* Название проекта — отдельный блок в самом верху, во всю ширину, по центру.
@@ -408,6 +585,7 @@ button:disabled, button.disabled { cursor: default; }
   position: relative; overflow: hidden;
   transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
 }
+.lnd-card:not(.tappable):hover { border-color: #2a2520; box-shadow: none; transform: none; }
 @media (hover: hover) {
   .lnd-card.tappable:hover {
     border-color: #4a3f18;
@@ -427,7 +605,7 @@ button:disabled, button.disabled { cursor: default; }
 /* Нажатие на мобильном — точно как ховер на десктопе:
    золотая рамка #4a3f18 и мягкое золотое свечение вокруг.
    Управляется через JS-класс .is-pressed, чтобы срабатывало надёжно
-   на всех тач-устройствах. */
+   на всех тач-устройствах (не только через :active). */
 .lnd-card.tappable.is-pressed {
   border-color: #4a3f18;
   box-shadow: 0 0 0 1px rgba(255,203,43,.10), 0 18px 40px rgba(0,0,0,.5);
@@ -883,10 +1061,11 @@ button:disabled, button.disabled { cursor: default; }
     var t = e.target;
     if (t && t.tagName === 'IMG') handleImg(t);
   }, true);
+  window.PP_HEART_SVG = HEART_SVG;
 })();
 
 /* ============================================================
-   ИНФО-МОДАЛКИ (тапзоны «Логика», «Настройки», «Поддержка» и т.д.)
+   ИНФО-МОДАЛКИ И МОДАЛКА «ПОДДЕРЖАТЬ АВТОРА»
    ============================================================ */
 (function() {
   'use strict';
@@ -895,6 +1074,7 @@ button:disabled, button.disabled { cursor: default; }
   var infoBody = document.getElementById('info-modal-body');
   var infoBox = infoModal ? infoModal.querySelector('.info-modal-box') : null;
   if (!infoModal || !infoBox) return;
+  var isSupportOpen = false;
 
   /* Тексты инфо-модалок (русские) */
   var I18N = {
@@ -909,42 +1089,82 @@ button:disabled, button.disabled { cursor: default; }
     'modal.control.title': 'Управление',
     'modal.control.body': 'Всё управление — под большой палец. Свайпы вверх и вниз открывают и закрывают настройки, не отрываясь от игры. Тренировка на телефоне — удобнее большого экрана.\n\nСлайдер ставки регулируется одним движением — точный размер бета без ручного ввода цифр. Тапы по стеку, картам и таймеру срабатывают мгновенно, без двойных кликов.\n\nНажатие на кнопках захватывает слайдер, а движение вверх или вниз задаёт сумму ставки. Долгое нажатие на картах героя скрывает их для тренировки интуиции.',
     'modal.support.title': 'Поддержка',
-    'modal.support.body': 'Prana Poker — некоммерческий проект. Без подписок, без рекламы, без платы за доступ. Проект существует исключительно на средства от вашей поддержки.\n\nКонтакты в Telegram — основной канал связи. Через него можно задать вопрос, предложить идею, сообщить об ошибке или просто поделиться впечатлениями от тренировки.'
+    'modal.support.body': 'Prana Poker — некоммерческий проект. Без подписок, без рекламы, без платы за доступ. Проект существует исключительно на средства от вашей поддержки.\n\nАдреса для переводов: GGPoker (перевод через покер-рум), USDT TRC20 (криптовалюта в сети Tron), VISA (карта для переводов в долларах и других валютах) или запрос в Telegram.\n\nКонтакты в Telegram — основной канал связи. Через него можно задать вопрос, предложить идею, сообщить об ошибке или просто поделиться впечатлениями от тренировки.',
+    'modal.supportAuthor.title': 'ПОДДЕРЖИ АВТОРА',
+    'modal.supportThanks': 'Благодарю за поддержку',
+    'modal.copiedText': 'Скопировано'
   };
 
-  /* Открытие модалки: инфо */
-  function openInfo(titleKey, bodyKey) {
-    infoTitle.classList.add('title-normal-case');
-    infoTitle.textContent = I18N[titleKey] || titleKey || '';
-    var bodyText = I18N[bodyKey] || '';
-    var paragraphs = String(bodyText).split('\n\n');
-    var html = '';
-    for (var i = 0; i < paragraphs.length; i++) {
-      var p = paragraphs[i].trim();
-      if (!p) continue;
-      html += '<p>' + p.replace(/\n/g, '<br>') + '</p>';
+  var NICK = 'LuckyLinka';
+  var WALLET = 'TAD6zXLvHEbUJvCjjeKLkm7MVkwyTbVLTu';
+
+  /* HTML для карточек поддержки (GGPoker + USDT) */
+  function buildSupportHtml() {
+    return '<div class="support-card-stack" id="support-card-stack">' +
+      '<div class="support-card support-card-gold" data-card="gold">' +
+        '<div class="support-card-top"><div class="support-card-bank support-card-gg-wrap" translate="no"><span class="support-card-gg">GG</span>POKER</div><div class="support-card-club-top" translate="no">Transfer</div></div>' +
+        '<div class="support-card-chip"></div>' +
+        '<div class="support-card-nickname-row" translate="no"><span class="support-card-name-label">Nickname:</span> <span class="support-copy-text support-card-name-value" data-copy-value="' + NICK + '">' + NICK + '<span class="support-copy-icon"></span></span></div>' +
+        '<div class="support-card-bottom"><div class="support-card-bottom-line" translate="no">Balance: $</div></div>' +
+        '<div class="support-card-copied" data-i18n="modal.copiedText">Скопировано</div>' +
+      '</div>' +
+      '<div class="support-card support-card-violet" data-card="violet">' +
+        '<div class="support-card-top"><div class="support-card-bank" translate="no">Cryptocurrency</div><div class="support-card-club-top" translate="no">Tether</div></div>' +
+        '<div class="support-card-chip"></div>' +
+        '<div class="support-card-usdt-line" translate="no"><span class="support-copy-text" data-copy-value="' + WALLET + '">' + WALLET + '<span class="support-copy-icon"></span></span></div>' +
+        '<div class="support-card-bottom"><div class="support-card-bottom-line" translate="no">USDT Tether → TRON (TRC20)</div></div>' +
+        '<div class="support-card-copied" data-i18n="modal.copiedText">Скопировано</div>' +
+      '</div></div>' +
+      '<div class="support-thanks" data-i18n="modal.supportThanks">Благодарю за поддержку</div>';
+  }
+
+  /* Открытие модалки: инфо или поддержка */
+  function openInfo(titleKey, bodyKey, isSupport) {
+    if (isSupport) {
+      isSupportOpen = true;
+      infoTitle.textContent = I18N['modal.supportAuthor.title'];
+      infoTitle.classList.remove('title-normal-case');
+      infoBox.classList.add('info-modal-box--support');
+      infoBody.innerHTML = buildSupportHtml();
+      initSupportCards();
+    } else {
+      isSupportOpen = false;
+      infoTitle.classList.add('title-normal-case');
+      infoBox.classList.remove('info-modal-box--support');
+      infoTitle.textContent = I18N[titleKey] || titleKey || '';
+      var bodyText = I18N[bodyKey] || '';
+      var paragraphs = String(bodyText).split('\n\n');
+      var html = '';
+      for (var i = 0; i < paragraphs.length; i++) {
+        var p = paragraphs[i].trim();
+        if (!p) continue;
+        html += '<p>' + p.replace(/\n/g, '<br>') + '</p>';
+      }
+      infoBody.innerHTML = html || '<p></p>';
     }
-    infoBody.innerHTML = html || '<p></p>';
     infoModal.classList.add('open');
     document.body.style.overflow = 'hidden';
   }
   function closeInfo() {
     infoModal.classList.remove('open');
     document.body.style.overflow = '';
+    isSupportOpen = false;
   }
 
   infoModal.addEventListener('click', function(e) {
+    if (isSupportOpen) { if (e.target === infoModal) closeInfo(); return; }
     closeInfo();
   });
+  infoBox.addEventListener('click', function(e) { if (isSupportOpen) e.stopPropagation(); });
   document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && infoModal.classList.contains('open')) closeInfo(); });
 
-  /* Привязка тапзон (карточки «Логика», «Настройки», «Поддержка» и т.д.) */
+  /* Привязка тапзон (карточки «Логика», «Настройки» и т.д.) */
   var tappables = document.querySelectorAll('.lnd-card.tappable');
   for (var i = 0; i < tappables.length; i++) {
     (function(card) {
       card.addEventListener('click', function(e) {
         e.preventDefault(); e.stopPropagation();
-        openInfo(card.getAttribute('data-info-title-key') || '', card.getAttribute('data-info-body-key') || '');
+        openInfo(card.getAttribute('data-info-title-key') || '', card.getAttribute('data-info-body-key') || '', false);
       });
     })(tappables[i]);
   }
@@ -971,6 +1191,150 @@ button:disabled, button.disabled { cursor: default; }
         }, { passive: true });
       })(tappables[j]);
     }
+  }
+
+  /* Стек банковских карточек: свайп вверх для перелистывания */
+  function initSupportCards() {
+    var stack = document.getElementById('support-card-stack');
+    if (!stack) return;
+    var OFFSET = 8, LIFT = 8, SWIPE_THRESHOLD = 8;
+    var gold = stack.querySelector('.support-card-gold');
+    var violet = stack.querySelector('.support-card-violet');
+    if (!gold || !violet) return;
+    var cards = { gold: gold, violet: violet };
+    var order = ['gold', 'violet'];
+    var startY = 0, dragging = false, currentLift = 0, isAnimating = false;
+    function topKey() { return order[0]; }
+    function zFor(pos) { return 2 - pos; }
+    function yFor(pos) { return OFFSET * pos; }
+    function applyPositions(animated) {
+      for (var i = 0; i < order.length; i++) {
+        var node = cards[order[i]];
+        if (!node) continue;
+        node.style.transition = animated ? 'transform .38s cubic-bezier(.22,.61,.36,1)' : 'none';
+        node.style.transform = 'translateY(' + yFor(i) + 'px)';
+        node.style.zIndex = String(zFor(i));
+      }
+      if (!animated) requestAnimationFrame(function() {
+        for (var j = 0; j < order.length; j++) { var nd = cards[order[j]]; if (nd) nd.style.transition = ''; }
+      });
+    }
+    function beginDragLift() { var n = cards[topKey()]; if (!n) return; n.style.transition = 'none'; n.style.transform = 'translateY(' + (-currentLift) + 'px)'; }
+    function snapBackTop() { var n = cards[topKey()]; if (!n) return; n.style.transition = 'transform .26s cubic-bezier(.22,.61,.36,1)'; n.style.transform = 'translateY(' + yFor(0) + 'px)'; }
+    function rotateOnce() {
+      if (isAnimating) return; isAnimating = true;
+      var top = cards[order[0]], second = cards[order[1]];
+      var newOrder = [order[1], order[0]];
+      top.style.transition = 'transform .38s cubic-bezier(.22,.61,.36,1)';
+      second.style.transition = 'transform .38s cubic-bezier(.22,.61,.36,1)';
+      top.style.transform = 'translateY(' + OFFSET + 'px)';
+      second.style.transform = 'translateY(0px)';
+      top.style.zIndex = '1'; second.style.zIndex = '2';
+      order = newOrder;
+      setTimeout(function() {
+        for (var j = 0; j < order.length; j++) { var nd = cards[order[j]]; if (nd) nd.style.transition = ''; }
+        applyPositions(false); isAnimating = false;
+      }, 390);
+      currentLift = 0;
+    }
+    function isTopCard(el) { return el === cards[order[0]]; }
+    var lastCopyTs = 0, COPY_COOLDOWN = 400;
+    stack.addEventListener('click', function(e) {
+      var copyEl = e.target.closest('.support-copy-text');
+      if (!copyEl) return;
+      var card = copyEl.closest('.support-card');
+      if (!card || !isTopCard(card)) return;
+      var now = Date.now();
+      if (now - lastCopyTs < COPY_COOLDOWN) return;
+      lastCopyTs = now;
+      copySupportText(copyEl.getAttribute('data-copy-value') || '', card);
+    });
+    function showCopied(cardEl) {
+      if (!cardEl) return;
+      var hint = cardEl.querySelector('.support-card-copied');
+      if (!hint) return;
+      hint.classList.add('visible');
+      clearTimeout(hint._timer);
+      hint._timer = setTimeout(function() { hint.classList.remove('visible'); }, 1200);
+    }
+    function copySupportText(text, cardEl) {
+      if (!text || !cardEl) return;
+      var ok = false;
+      try {
+        var ta = document.createElement('textarea');
+        ta.value = text; ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed'; ta.style.top = '-1000px'; ta.style.left = '-1000px'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.focus(); ta.select(); ta.setSelectionRange(0, ta.value.length);
+        ok = document.execCommand && document.execCommand('copy');
+        document.body.removeChild(ta);
+      } catch (err) { ok = false; }
+      if (ok) { showCopied(cardEl); return; }
+      try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function() { showCopied(cardEl); }).catch(function() {}); } catch (e) {}
+    }
+    stack.addEventListener('touchstart', function(e) {
+      if (isAnimating || e.touches.length !== 1) return;
+      startY = e.touches[0].clientY; dragging = false; currentLift = 0;
+      stack.classList.add('dragging');
+      var n = cards[topKey()]; if (n) n.style.transition = 'none';
+    }, { passive: true });
+    stack.addEventListener('touchmove', function(e) {
+      if (isAnimating || e.touches.length !== 1) return;
+      var dy = startY - e.touches[0].clientY;
+      if (!dragging) { if (dy < -3 || dy > 3) dragging = true; else return; }
+      currentLift = dy > 0 ? Math.max(0, Math.min(LIFT, dy)) : 0;
+      beginDragLift(); e.preventDefault();
+    }, { passive: false });
+    stack.addEventListener('touchend', function() {
+      if (isAnimating) return;
+      stack.classList.remove('dragging');
+      var was = dragging; dragging = false;
+      if (!was) return;
+      if (currentLift >= SWIPE_THRESHOLD) rotateOnce();
+      else { snapBackTop(); currentLift = 0; setTimeout(function() { var n = cards[topKey()]; if (n) n.style.transition = ''; }, 280); }
+    }, { passive: false });
+    stack.addEventListener('touchcancel', function() {
+      if (isAnimating) return;
+      stack.classList.remove('dragging'); dragging = false;
+      snapBackTop(); currentLift = 0;
+      setTimeout(function() { var n = cards[topKey()]; if (n) n.style.transition = ''; }, 280);
+    }, { passive: true });
+    var mouseDown = false, mouseStartY = 0, mouseDragging = false;
+    stack.addEventListener('mousedown', function(e) {
+      if (isAnimating || e.button !== 0) return;
+      mouseDown = true; mouseStartY = e.clientY; mouseDragging = false; currentLift = 0;
+      stack.classList.add('dragging');
+      var n = cards[topKey()]; if (n) n.style.transition = 'none';
+      e.preventDefault();
+    });
+    stack.addEventListener('mousemove', function(e) {
+      if (!mouseDown || isAnimating) return;
+      var dy = mouseStartY - e.clientY;
+      if (!mouseDragging) { if (Math.abs(dy) < 3) return; mouseDragging = true; }
+      currentLift = dy > 0 ? Math.max(0, Math.min(LIFT, dy)) : 0;
+      beginDragLift();
+    });
+    stack.addEventListener('mouseup', function() {
+      if (!mouseDown) return;
+      mouseDown = false; stack.classList.remove('dragging');
+      if (isAnimating) return;
+      if (!mouseDragging) { var n = cards[topKey()]; if (n) n.style.transition = ''; return; }
+      mouseDragging = false;
+      if (currentLift >= SWIPE_THRESHOLD) rotateOnce();
+      else { snapBackTop(); currentLift = 0; setTimeout(function() { var n = cards[topKey()]; if (n) n.style.transition = ''; }, 280); }
+    });
+    stack.addEventListener('mouseleave', function() {
+      if (!mouseDown) return;
+      mouseDown = false; stack.classList.remove('dragging');
+      if (!mouseDragging) { var n = cards[topKey()]; if (n) n.style.transition = ''; return; }
+      mouseDragging = false; snapBackTop(); currentLift = 0;
+      setTimeout(function() { var n = cards[topKey()]; if (n) n.style.transition = ''; }, 280);
+    });
+    stack.addEventListener('dblclick', function(e) {
+      if (isAnimating) return;
+      e.preventDefault(); e.stopPropagation();
+      rotateOnce();
+    });
+    applyPositions(false);
   }
 })();
 </script>
