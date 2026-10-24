@@ -137,12 +137,14 @@ button:disabled, button.disabled { cursor: default; }
 
 /* ============================================================
    ИНФО-МОДАЛКА (тапзоны «Логика», «Настройки» и т.д.)
+   ВАЖНО: убираем backdrop-filter (источник «полосы посередине»
+   и полупрозрачных областей поверх страницы на мобильных).
+   Оставляем только обычное затемнение фона.
    ============================================================ */
 #info-modal {
   position: fixed; inset: 0; z-index: 950;
   display: none; align-items: center; justify-content: center;
   padding: 20px; background: rgba(0,0,0,.82);
-  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
 }
 #info-modal.open { display: flex; animation: tgFadeIn .2s ease; }
 @keyframes tgFadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -772,9 +774,6 @@ button:disabled, button.disabled { cursor: default; }
 
 /* ============================================================
    ФУТЕР
-   Убираем большой нижний отступ у дисклеймера — оставляем только
-   безопасную зону под системную панель мобильного, чтобы текст
-   не висел далеко от нижнего края окна браузера.
    ============================================================ */
 .lnd-footer {
   position: relative; flex-shrink: 0;
@@ -1171,9 +1170,7 @@ button:disabled, button.disabled { cursor: default; }
 
   /* Подсветка тапзон на мобильном при нажатии — надёжно через JS-класс.
      При touchstart добавляем .is-pressed, при touchend/touchcancel и
-     уходе пальца с карточки — снимаем. Так подсветка реально видна
-     при касании, а не только в момент :active, который на тач-устройствах
-     часто сбрасывается мгновенно. */
+     уходе пальца с карточки — снимаем. */
   if (tappables && tappables.length) {
     for (var j = 0; j < tappables.length; j++) {
       (function(card) {
@@ -1216,7 +1213,7 @@ button:disabled, button.disabled { cursor: default; }
         node.style.zIndex = String(zFor(i));
       }
       if (!animated) requestAnimationFrame(function() {
-        for (var j = 0; j < order.length; j++) { var nd = cards[order[j]]; if (nd) nd.style.transition = ''; }
+        for (var j2 = 0; j2 < order.length; j2++) { var nd = cards[order[j2]]; if (nd) nd.style.transition = ''; }
       });
     }
     function beginDragLift() { var n = cards[topKey()]; if (!n) return; n.style.transition = 'none'; n.style.transform = 'translateY(' + (-currentLift) + 'px)'; }
@@ -1232,7 +1229,7 @@ button:disabled, button.disabled { cursor: default; }
       top.style.zIndex = '1'; second.style.zIndex = '2';
       order = newOrder;
       setTimeout(function() {
-        for (var j = 0; j < order.length; j++) { var nd = cards[order[j]]; if (nd) nd.style.transition = ''; }
+        for (var j2 = 0; j2 < order.length; j2++) { var nd = cards[order[j2]]; if (nd) nd.style.transition = ''; }
         applyPositions(false); isAnimating = false;
       }, 390);
       currentLift = 0;
