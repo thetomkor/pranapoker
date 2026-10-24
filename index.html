@@ -110,21 +110,6 @@ button { cursor: pointer; }
 button:disabled, button.disabled { cursor: default; }
 
 /* ============================================================
-   ЗАГЛУШКА КАРТИНОК (SVG-СЕРДЦЕ)
-   Используется, когда картинка не загрузилась или её нет.
-   ============================================================ */
-.ph-fallback {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--ph-heart); background: var(--ph-bg);
-  pointer-events: none; user-select: none; opacity: .75;
-}
-.ph-fallback .ph-heart-svg {
-  width: 26px; height: 26px; display: block;
-  filter: drop-shadow(0 0 6px rgba(184,146,74,.75)) drop-shadow(0 0 14px rgba(184,146,74,.45));
-}
-
-/* ============================================================
    ИНФО-МОДАЛКА (тапзоны «Логика», «Настройки», «Поддержка» и т.д.)
    ============================================================ */
 #info-modal {
@@ -539,7 +524,8 @@ button:disabled, button.disabled { cursor: default; }
 .lnd-feature span { color: var(--muted-soft-2); font-size: clamp(12px, 1.9vmin, 14px); line-height: 1.5; }
 .lnd-feature span b { color: var(--text); font-weight: 700; }
 
-.lnd-bot-cta { display: flex; justify-content: center; margin-top: clamp(22px, 4vw, 34px); }
+/* Кнопка под ботами — отступ снизу-вверх удвоен (было 22px–34px). */
+.lnd-bot-cta { display: flex; justify-content: center; margin-top: clamp(44px, 8vw, 68px); }
 .lnd-bot-cta .lnd-btn { min-width: 240px; }
 @media (max-width: 640px) { .lnd-bot-cta .lnd-btn { width: auto; min-width: 0; } }
 
@@ -795,7 +781,8 @@ button:disabled, button.disabled { cursor: default; }
         <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg></div>
         <div class="txt">Приложение оптимизировано под мобильные устройства. Управление одной рукой, безопасные отступы под вырез экрана и системную панель, свайпы открывают панели, тапы и удержания по стеку и картам, крупные зоны нажатия. Бесплатно, без регистрации и установки — работает прямо в браузере.</div>
       </div>
-      <div style="margin-top:26px; text-align:center;"><a class="lnd-btn" href="/app.html" aria-label="Начать тренировку">Начать тренировку</a></div>
+      <!-- Кнопка под заметкой «Приложение оптимизировано…» — отступ удвоен (было 26px). -->
+      <div style="margin-top:52px; text-align:center;"><a class="lnd-btn" href="/app.html" aria-label="Начать тренировку">Начать тренировку</a></div>
     </div>
   </section>
 
@@ -869,32 +856,6 @@ button:disabled, button.disabled { cursor: default; }
 </div>
 
 <script>
-/* ============================================================
-   ОБРАБОТКА ОШИБОК КАРТИНОК: ЗАМЕНА НА SVG-СЕРДЦЕ
-   Если картинка не загрузилась — вставляем заглушку.
-   ============================================================ */
-(function() {
-  var HEART_SVG = '<svg class="ph-heart-svg" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 28.5C16 28.5 3.5 20.4 3.5 11.9C3.5 7.5 6.9 4.1 11 4.1C13.2 4.1 15.1 5.1 16 6.6C16.9 5.1 18.8 4.1 21 4.1C25.1 4.1 28.5 7.5 28.5 11.9C28.5 20.4 16 28.5 16 28.5Z"/></svg>';
-  function makeFallback() {
-    var el = document.createElement('div');
-    el.className = 'ph-fallback';
-    el.setAttribute('aria-hidden', 'true');
-    el.innerHTML = HEART_SVG;
-    return el;
-  }
-  function handleImg(img) {
-    if (!img || img.dataset.phDone === '1') return;
-    img.dataset.phDone = '1';
-    var parent = img.parentNode;
-    if (!parent) return;
-    while (parent.firstChild) parent.removeChild(parent.firstChild);
-    parent.appendChild(makeFallback());
-  }
-  document.addEventListener('error', function(e) {
-    var t = e.target;
-    if (t && t.tagName === 'IMG') handleImg(t);
-  }, true);
-})();
 
 /* ============================================================
    ИНФО-МОДАЛКИ (тапзоны «Логика», «Настройки», «Поддержка» и т.д.)
