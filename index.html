@@ -326,7 +326,7 @@ button:disabled, button.disabled { cursor: default; }
   .support-card-usdt-line { font-size: clamp(10px, 1.75vmin, 12px); }
   .support-card-bottom-line { font-size: clamp(11px, 1.7vmin, 13.5px); }
   .support-card-copied { font-size: clamp(13px, 1.7vmin, 15.5px); }
-  .support-card-gg { font-size: calc(clamp(10px, 1.4vmin, 11.5px) + 3px); }
+  .support-card-gg { font-size: clamp(10px, 1.4vmin, 11.5px); }
   .support-card-name-label { font-size: clamp(11px, 1.7vmin, 13.5px); }
   .support-card-name-value { font-size: clamp(11px, 1.7vmin, 13.5px); }
 }
@@ -601,17 +601,19 @@ button:disabled, button.disabled { cursor: default; }
   -webkit-user-select: none; user-select: none; outline: none;
 }
 .lnd-card.tappable:focus, .lnd-card.tappable:focus-visible { outline: none; }
+
 /* Нажатие на мобильном — точно как ховер на десктопе:
-   золотая рамка #4a3f18 и мягкое золотое свечение вокруг. */
-@media (hover: none) {
-  .lnd-card.tappable:active {
-    border-color: #4a3f18;
-    box-shadow: 0 0 0 1px rgba(255,203,43,.10), 0 18px 40px rgba(0,0,0,.5);
-    background: linear-gradient(180deg, #131313 0%, #0a0a0a 100%);
-    transform: none;
-  }
-  .lnd-card.tappable:active .lnd-card-tap-icon { opacity: .55; }
+   золотая рамка #4a3f18 и мягкое золотое свечение вокруг.
+   Управляется через JS-класс .is-pressed, чтобы срабатывало надёжно
+   на всех тач-устройствах (не только через :active). */
+.lnd-card.tappable.is-pressed {
+  border-color: #4a3f18;
+  box-shadow: 0 0 0 1px rgba(255,203,43,.10), 0 18px 40px rgba(0,0,0,.5);
+  background: linear-gradient(180deg, #131313 0%, #0a0a0a 100%);
+  transform: none;
 }
+.lnd-card.tappable.is-pressed .lnd-card-tap-icon { opacity: .55; }
+
 .lnd-card-tap-icon {
   position: absolute; right: 10px; bottom: 10px;
   width: 16px; height: 16px; opacity: .25; color: var(--gold);
@@ -1165,6 +1167,30 @@ button:disabled, button.disabled { cursor: default; }
         openInfo(card.getAttribute('data-info-title-key') || '', card.getAttribute('data-info-body-key') || '', false);
       });
     })(tappables[i]);
+  }
+
+  /* Подсветка тапзон на мобильном при нажатии — надёжно через JS-класс.
+     При touchstart добавляем .is-pressed, при touchend/touchcancel и
+     уходе пальца с карточки — снимаем. Так подсветка реально видна
+     при касании, а не только в момент :active, который на тач-устройствах
+     часто сбрасывается мгновенно. */
+  if (tappables && tappables.length) {
+    for (var j = 0; j < tappables.length; j++) {
+      (function(card) {
+        function press() { card.classList.add('is-pressed'); }
+        function release() { card.classList.remove('is-pressed'); }
+        card.addEventListener('touchstart', press, { passive: true });
+        card.addEventListener('touchend', release, { passive: true });
+        card.addEventListener('touchcancel', release, { passive: true });
+        card.addEventListener('touchmove', function(ev) {
+          if (!ev.touches || !ev.touches.length) { release(); return; }
+          var t = ev.touches[0];
+          var r = card.getBoundingClientRect();
+          var inside = t.clientX >= r.left && t.clientX <= r.right && t.clientY >= r.top && t.clientY <= r.bottom;
+          if (!inside) release();
+        }, { passive: true });
+      })(tappables[j]);
+    }
   }
 
   /* Стек банковских карточек: свайп вверх для перелистывания */
