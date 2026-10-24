@@ -125,9 +125,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
   #landing * { scrollbar-width: none; -ms-overflow-style: none; }
 }
 
-/* ============================================================
-   ИНФО-МОДАЛКА
-   ============================================================ */
 #info-modal {
   position: fixed; inset: 0; z-index: 950;
   display: none; align-items: center; justify-content: center;
@@ -166,9 +163,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
 .info-modal-body p { margin: 0 0 14px; }
 .info-modal-body p:last-child { margin-bottom: 0; }
 
-/* ============================================================
-   ЛЕНДИНГ
-   ============================================================ */
 #landing {
   position: fixed; inset: 0; z-index: 500;
   background: var(--bg); color: var(--text);
@@ -590,9 +584,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
 .lnd-footer .copy { color: #555; }
 .lnd-footer .disclaimer { max-width: 58ch; color: var(--muted); }
 
-/* ============================================================
-   ПРИЛОЖЕНИЕ
-   ============================================================ */
 #app {
   position: fixed;
   top: 0;
@@ -2052,7 +2043,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
 }
 #btn-start:active { transform: translateY(2px); box-shadow: 0 1px 0 #8a6508; }
 
-/* Exit confirmation modal */
+/* Exit confirmation modal — стиль как у окошка входа */
 #exit-confirm-overlay {
   position: absolute; inset: 0;
   z-index: 500;
@@ -2069,22 +2060,30 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
 .exit-confirm-box {
   position: relative;
   width: 100%;
-  max-width: 340px;
-  background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
-  border: 1px solid #5a4a1a;
-  border-radius: 16px;
-  padding: clamp(20px, 4vmin, 28px) clamp(18px, 3.6vmin, 24px);
-  box-shadow: 0 24px 60px rgba(0,0,0,.9), 0 0 0 1px rgba(255,203,43,.10);
+  max-width: 380px;
+  background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
+  border: 2px solid #3a3530;
+  border-radius: 20px;
+  padding: clamp(28px, 5vmin, 44px) clamp(24px, 5vmin, 52px);
+  box-shadow: 0 20px 60px rgba(0,0,0,.9), 0 0 80px rgba(255,203,43,.08);
   text-align: center;
   animation: tgSlideUp .22s cubic-bezier(.22,.61,.36,1);
 }
 
 .exit-confirm-title {
-  color: #fff;
-  font-size: clamp(15px, 2.4vmin, 18px);
+  color: var(--gold);
+  font-size: clamp(20px, 3vmin, 28px);
   font-weight: 900;
-  margin-bottom: clamp(16px, 3vmin, 22px);
-  line-height: 1.3;
+  letter-spacing: 1.5px;
+  line-height: 1.25;
+  margin-bottom: 12px;
+}
+
+.exit-confirm-text {
+  color: var(--muted);
+  font-size: clamp(12px, 1.8vmin, 15px);
+  line-height: 1.5;
+  margin-bottom: 28px;
 }
 
 .exit-confirm-actions {
@@ -2093,32 +2092,26 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
 }
 .exit-confirm-actions button {
   flex: 1;
-  padding: clamp(10px, 1.8vmin, 14px) clamp(8px, 1.6vmin, 12px);
+  padding: clamp(14px, 2vmin, 18px) clamp(8px, 1.6vmin, 12px);
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #ffcb2b, #e0a800);
+  color: #1a1a1a;
   font-family: inherit;
   font-weight: 900;
-  font-size: clamp(12px, 1.8vmin, 14px);
-  letter-spacing: 1px;
+  font-size: clamp(14px, 2vmin, 17px);
+  letter-spacing: 1.5px;
   text-transform: uppercase;
-  min-height: 44px;
+  box-shadow: 0 3px 0 #8a6508, inset 0 1px 0 rgba(255,255,255,.35);
   touch-action: manipulation;
+  min-height: 52px;
   transition: transform .08s ease, filter .08s ease;
   cursor: pointer;
 }
-#exit-confirm-yes {
-  background: linear-gradient(180deg, #c94b3d, #8a2a1f);
-  color: #fff;
-  box-shadow: 0 3px 0 #5a1a12, inset 0 1px 0 rgba(255,255,255,.2);
-}
-#exit-confirm-no {
-  background: linear-gradient(180deg, #ffcb2b, #e0a800);
-  color: #1a1a1a;
-  box-shadow: 0 3px 0 #8a6508, inset 0 1px 0 rgba(255,255,255,.35);
-}
 .exit-confirm-actions button:active {
-  transform: scale(0.96);
+  transform: translateY(2px);
   filter: brightness(1.1);
+  box-shadow: 0 1px 0 #8a6508, inset 0 1px 0 rgba(255,255,255,.35);
 }
 
 #final-overlay {
@@ -2523,7 +2516,8 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
 
   <div id="exit-confirm-overlay" role="dialog" aria-modal="true" aria-labelledby="exit-confirm-title-el">
     <div class="exit-confirm-box">
-      <div class="exit-confirm-title" id="exit-confirm-title-el">Выйти из игры?</div>
+      <div class="exit-confirm-title" id="exit-confirm-title-el">Вы хотите выйти из игры?</div>
+      <div class="exit-confirm-text">Если вы выйдете из игры, приложение закроется и вы вернётесь на главную страницу.</div>
       <div class="exit-confirm-actions">
         <button id="exit-confirm-yes" type="button">Да</button>
         <button id="exit-confirm-no" type="button">Нет</button>
@@ -2539,7 +2533,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar,
   <div id="start-overlay">
     <div class="start-card">
       <h1>Prana Poker</h1>
-      <p>Тренируй свои покерные навыки</p>
+      <p>Тренажёр логики и интуиции за покерным столом.</p>
       <button id="btn-start">Начать игру</button>
     </div>
   </div>
@@ -5881,20 +5875,16 @@ const UI = (() => {
   window.__ppToggleTurnTime = function() { toggleTurnTimeOption(); };
 
   window.__ppAppActivate = function() {
-    // При каждом входе в приложение стартовый экран показывается заново.
     if (session.active && session.state && !session.state.handOver) {
-      // активная игра — просто снимаем со стартового оверлея
       if (el.startOverlay) el.startOverlay.classList.add('hidden');
       return;
     }
-    // иначе игра считается завершённой — показываем стартовый экран
     session.active = false;
     session.appStarted = false;
     if (el.startOverlay) el.startOverlay.classList.remove('hidden');
   };
 
   window.__ppAppDeactivate = function() {
-    // При уходе в лендинг ставим игру на паузу.
     if (session.active && session.state && !session.state.handOver && !session.waitingForHero) {
       pauseGame();
     } else if (session.waitingForHero) {
@@ -5977,7 +5967,6 @@ const UI = (() => {
     session.streetRevealTimers = [];
   }
 
-  /* === EXIT CONFIRM === */
   function showExitConfirm() {
     if (!el.exitConfirmOverlay) return;
     el.exitConfirmOverlay.classList.add('visible');
@@ -5995,7 +5984,6 @@ const UI = (() => {
     hideExitConfirm();
     session.exitConfirmPaused = false;
     session.pendingLandingNavigation = true;
-    // Полный сброс приложения
     resetAppStateForExit();
     if (typeof window.__ppShowLanding === 'function') window.__ppShowLanding();
   }
@@ -6004,7 +5992,6 @@ const UI = (() => {
     hideExitConfirm();
     if (!session.exitConfirmPaused) return;
     session.exitConfirmPaused = false;
-    // Возврат в игру ровно с того места, где стояли.
     if (inHistoryMode()) resumeReplayIfPausedByWindow();
     else resumeGameFromPause();
   }
@@ -6014,7 +6001,6 @@ const UI = (() => {
     if (!state) return;
     session.isPaused = false;
     if (state.handOver) {
-      // hand-over: если была открыта пауза, продолжаем — просто не перезапускаем таймер
       if (session.autoNextTimerId === null) {
         session.autoNextTimerId = setTimeout(() => {
           if (!session.active || session.viewingIndex >= 0) return;
@@ -6086,7 +6072,6 @@ const UI = (() => {
     if (el.startOverlay) el.startOverlay.classList.remove('hidden');
   }
 
-  /* === TAPS === */
   function bindHandsHistoryTap() {
     if (!el.handsHistoryRow) return;
     let lastTapTs = 0;
